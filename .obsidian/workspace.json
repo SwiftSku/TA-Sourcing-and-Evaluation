@@ -1,0 +1,230 @@
+{
+  "main": {
+    "id": "f75e67557c60bdd4",
+    "type": "split",
+    "children": [
+      {
+        "id": "ffd27a65b2655e8e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6699da8d683ccaf3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "JD--AMD_Recruiting_Coord.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "JD--AMD_Recruiting_Coord"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1feee652931ed5a4",
+    "type": "split",
+    "children": [
+      {
+        "id": "5581a5c8105c3c89",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b45e017c5aac33d3",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "ff947827e7eeced6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d07ea086fd80a07c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b31c511a384a9f1b",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b8529ead2b5be15",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "93b6d585a24f852e",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "CSV_Cleanup_Agent.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for CSV_Cleanup_Agent"
+            }
+          },
+          {
+            "id": "cc8abae1a4b86cca",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "CSV_Cleanup_Agent.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from CSV_Cleanup_Agent"
+            }
+          },
+          {
+            "id": "4e5d592150680edf",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "57034c90e55e6e25",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "a6a4a7bd81ace869",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "CSV_Cleanup_Agent.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of CSV_Cleanup_Agent"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "6699da8d683ccaf3",
+  "lastOpenFiles": [
+    "TA-Pipeline-Builder",
+    "sync_csv_to_xlsx.py",
+    "JD--Acct_Mgr.md",
+    "CSV_Cleanup_Agent.md",
+    "~$_OUTPUT--AMD_Recruiting_Coord.xlsx",
+    "_OUTPUT--AMD_Recruiting_Coord.xlsx",
+    "JD--AMD_Recruiting_Coord.md.tmp.5.1774301159075",
+    "JD--AMD_Recruiting_Coord.md.tmp.5.1774301150941",
+    "Z_Search_Cache.json",
+    "URL_Extractor.md",
+    "Z_Old_Chat_Logs/Chat_Log-AMD_RC_LIR_Search_v1-2026-03-23-1710.md",
+    "_OUTPUT--AMD_Recruiting_Coord.csv",
+    "Save_To_LIR.md",
+    "REF--LIR_Interface_Learnings.md",
+    "GSheet_Formater.md",
+    "2_Pipeline_Orchestrator.md",
+    "JD--AMD_Recruiting_Coord.md",
+    "JD--AMD_Recruiting_Coord.md.tmp.5.1774299472399",
+    "JD--Acct_Mgr.md.tmp.5.1774299467851",
+    "Pipeline_Orchestrator.md.tmp.5.1774299315825",
+    "Pipeline_Orchestrator.md",
+    "1_Pipeline_Starter.md",
+    "Z_Chat_Log--Agent_Maker.md",
+    "_Agent_Flowchart.png",
+    "LIR_Interface_Learnings.md",
+    "Z_Pipeline_Error_Log.md",
+    "ZZ_Archived_Not_Needed/__PROPOSED--Agent_Flowchart.png",
+    "ZZ_Archived_Not_Needed/Search_Optimizer.md",
+    "ZZ_Archived_Not_Needed/Bulk_Processor.md",
+    "Z_Old_Chat_Logs/Chat_Log-Manus_3-2026-03-22-2130.md",
+    "Z_Old_Chat_Logs/Chat_Log-Manus_2_50_linkedin_urls-2026-03-22-0414.md",
+    "Z_Old_Chat_Logs/Chat_Log-Manual_Batch_v2-2026-03-22-1913.md",
+    "Z_Old_Chat_Logs/Chat_Log-Manual_Batch-2026-03-22-1714.md",
+    "Z_Old_Chat_Logs/Chat_Log-Company_Targeted_v2-2026-03-22-1735.md",
+    "Z_Old_Chat_Logs/Chat_Log-ACM_Agents_V6-2026-03-21-0307.md",
+    "Z_Old_Chat_Logs/Chat_Log-ACM_Agents_V5.2-2026-03-22-0413.md",
+    "Z_Old_Chat_Logs/Chat_Log-ACM_Agents_V5.3-2026-03-22-1900.md",
+    "Z_Old_Chat_Logs/Chat_Log-ACM_Agents_V5-2026-03-20-1956.md",
+    "Z_Archived_Not_Needed/__PROPOSED--Agent_Flowchart.png",
+    "__PROPOSED--Agent_Flowchart.png",
+    "Agent_Pipeline_Flowchart.png"
+  ]
+}

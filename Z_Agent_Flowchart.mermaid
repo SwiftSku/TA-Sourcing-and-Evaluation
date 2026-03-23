@@ -1,0 +1,129 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#F5A623', 'primaryBorderColor': '#E09000', 'secondaryColor': '#34A853', 'tertiaryColor': '#FBBC04', 'lineColor': '#555', 'fontSize': '14px'}}}%%
+
+flowchart TD
+    %% ===== PHASE 0: PRE-FLIGHT =====
+    subgraph phase0["Phase 0 · Pre-Flight"]
+        USER["👤 Dan answers 4 startup questions"]
+        STARTER["📄 <b>1_Pipeline_Starter.md</b><br/><i>Q1: Which role? (numbered JD list)<br/>Q2: Source name · Q3: Source URL · Q4: Run params<br/>Selects active JD file → loads Pipeline Config<br/>Canary token (4-word, verify every 10 cands)<br/>Hard cap = 60 · A-target = 20 · run counters<br/>All sub-agents = Sonnet · Parent = Opus</i>"]
+        ORCH["🟡 <b>2_Pipeline_Orchestrator.md</b> · Opus parent<br/><i>Role-agnostic: reads JD config for all role-specific values<br/>Company-targeted: Tier 1 proven + Tier 2 research<br/>NO Chrome — only spawns sub-agents<br/>Creates per-run log: Z_Old_Chat_Logs/Chat_Log-*.md</i>"]
+        COMPANY_RESEARCH["🟢 <b>Company Research Agent</b> · Sonnet<br/><i>Runs IN PARALLEL with Tier 1 searches<br/>Discovers US-HQ B2B SaaS w/ Gujarat presence<br/>Writes company_research.json → feeds Tier 2</i>"]
+        PREFLIGHT_CLEAN["🟢 Pre-flight CSV Cleanup · Sonnet"]
+        USER --> STARTER --> ORCH
+        ORCH --> PREFLIGHT_CLEAN
+        ORCH -.->|"parallel spawn"| COMPANY_RESEARCH
+    end
+
+    %% ===== SOURCE DECISION =====
+    subgraph source_check["Source Type Check"]
+        SRC{"🔶 <b>Source type?</b>"}
+    end
+
+    %% ===== PHASE 1: URL EXTRACTION =====
+    subgraph phase1["Phase 1 · URL Extraction (LinkedIn sources)"]
+        URL_EXT["🟢 <b>URL_Extractor.md</b> · Sonnet<br/><i>Opens LIR → VERIFY filters READ-ONLY (never click)<br/>→ Step 5.5 pre-filter using negative_keywords from JD config<br/>→ extract 5 non-dup URLs → Step 6b URL validation<br/>(regex: /talent/profile/[A-Za-z0-9_-]{20,})<br/>→ PAGE/POS tracking → exhaustion flags<br/>(PAGE_EXHAUSTED / SEARCH_EXHAUSTED)</i>"]
+    end
+
+    %% ===== STATIC SOURCE =====
+    subgraph static["Phase 1 · Static Source (PDF/spreadsheet/Manus)"]
+        STATIC_DEDUP["🟡 <b>Orchestrator dedup</b><br/><i>Check CSV for name (case-insensitive) +<br/>normalized public LI URL before each CE spawn<br/>URL Extractor NOT used for static sources</i>"]
+    end
+
+    %% ===== PHASE 2: CANDIDATE EVALUATION =====
+    subgraph phase2["Phase 2 · Evaluate (sequential, 1 at a time)"]
+        CE["🟢 <b>[active JD file]</b> · Sonnet<br/><i>Reads rubric, auto-DQ triggers, and scoring<br/>from the active JD file's Pipeline Config<br/>Writes 1 row to [output_csv from JD config] (38 cols)</i>"]
+        DELAY["⏱️ 45-200s anti-detection delay<br/><i>(LinkedIn sources only)</i>"]
+        HANDOFF["🟡 Update Z_Search_Cache.json<br/><i>After first 5 CEs: write top5_summary<br/>Each A-rated: append to a_rated_cache<br/>Both caches protect against scoring variance</i>"]
+        CE --> HANDOFF --> DELAY
+    end
+
+    %% ===== PHASE 3: DECISIONS =====
+    subgraph phase3["Phase 3 · Quality Gates"]
+        QG{"🔶 <b>Quality Gate</b><br/><i>Initial: ≥1 A in first 5?<br/>Rolling: 20% A-rate in last 5?<br/>0 A in last 10 → search dead</i>"}
+        REFINE["🟣 Search Refinement<br/><i>Analyze verdict patterns →<br/>adjust filters / next company<br/>Company-targeted → next co<br/>Keyword fallback → refine filters</i>"]
+    end
+
+    %% ===== PHASE 4: CLEANUP =====
+    subgraph phase4["Phase 4 · Cleanup (every 10 + final)"]
+        CLEANUP["🟢 <b>CSV_Cleanup_Agent.md</b> · Sonnet<br/><i>NEVER delete rows → mark DUPLICATE / TRUE<br/>Step 1b: rubric change → rescore ALL (reads active JD file)<br/>Step 1c: normalize public LI URLs<br/>Step 1d: dedup (name + URL)<br/>Step 3: validation suite (S/I/T/SC/D/A/SG tests)<br/>Step 4: re-eval broken rows (handoff cache protection)<br/>Step 6a: fix misplaced public URLs (no Chrome)<br/>Step 6b MANDATORY: Chrome → fill missing URLs + names<br/>Cleaned? values: TRUE / DUPLICATE / ENRICHMENT_FAILED / empty</i>"]
+        CG{"🔶 <b>Uncleaned = 0?</b><br/><i>HARD gate on final pass<br/>ENRICHMENT_FAILED counts as clean<br/>3+ stuck loops → warn user</i>"}
+        CLEANUP --> CG
+    end
+
+    %% ===== TERMINATION CHECK =====
+    subgraph check["Termination Check"]
+        CAP{"🔶 <b>Hard cap 60?<br/>20 A-rated?</b><br/><i>Compaction? Canary fail?</i>"}
+    end
+
+    %% ===== PIPELINE COMPLETE =====
+    subgraph complete["Pipeline Complete"]
+        GSHEET["🟢 <b>GSheet_Formater.md</b> · Sonnet<br/><i>Opens existing gsheet (NEVER create new)<br/>Row heights 25px · freeze row 1 + col A<br/>Tier colors: A=#00C853 B=#69F0AE C=#FFD600<br/>D=#FF9800 F=#F44336 0=#9E9E9E (auto-DQ)<br/>% format 0% (no decimals) · wrap all · clip URLs<br/>Col AK Hindi_Signal: Y/N only<br/>Future-proof: ranges to last_row + 1000</i>"]
+        LEGACY["🟡 Write <b>Context_Legacy_Prompt.md</b><br/><i>Full résumé for next session<br/>Run counters + page/pos + A-rated cache</i>"]
+        SUMMARY["🟡 Output Summary · STOP"]
+        GSHEET --> LEGACY --> SUMMARY
+    end
+
+    %% ===== SELF-DESTRUCT =====
+    subgraph destruct["🔴 Self-Destruct"]
+        direction LR
+        SD["<b>Write Context_Legacy_Prompt.md → STOP</b><br/><i>Triggers: hard cap 60 · compaction detected<br/>· canary fail · scoring drift<br/>Full resume prompt for new session<br/>Carries forward run counters + page/pos</i>"]
+    end
+
+    %% ===== MANUAL SAVE =====
+    subgraph manual["🔧 MANUAL — Separate Invocation"]
+        SAVE["👤 <b>Save_To_LIR.md</b> · Double confirmation required<br/><i>Step 1: present candidate list by tier → user confirms<br/>Step 2: confirm LIR project name → user confirms<br/>Step 3.5: check 'In X project' badge BEFORE each save<br/>Sequential: open → badge check → save → 30-90s delay<br/>Closes each tab immediately after saving</i>"]
+    end
+
+    %% ===== SHARED FILES =====
+    subgraph shared["📁 Shared Files (read/write during run)"]
+        direction LR
+        FILES["<b>[output_csv from JD config]</b> (38 cols) · canonical candidate list<br/><b>Z_Search_Cache.json</b> · scoring variance protection<br/><b>company_research.json</b> · Tier 2 company discoveries<br/><b>Z_Old_Chat_Logs/Chat_Log-*.md</b> · per-run black box<br/><b>Z_Pipeline_Error_Log.md</b> · append-only error log<br/><b>REF--LIR_Interface_Learnings.md</b> · LinkedIn quirks/workarounds"]
+    end
+
+    %% ===== CONNECTIONS =====
+    PREFLIGHT_CLEAN --> SRC
+    SRC -->|"LinkedIn<br/>Recruiter"| URL_EXT
+    SRC -->|"Static list<br/>(PDF/spreadsheet/Manus)"| STATIC_DEDUP
+
+    URL_EXT --> CE
+    STATIC_DEDUP --> CE
+    DELAY -->|"Next candidate<br/>(repeat ×5)"| CE
+    DELAY -->|"Batch of 5 done"| QG
+
+    QG -->|"✅ Pass"| CLEANUP
+    QG -->|"❌ Fail"| REFINE
+    REFINE -->|"Fresh URL Extractor<br/>next company or<br/>adjusted filters"| URL_EXT
+
+    CG -->|"✅ Pass"| CAP
+    CG -.-|"❌ Fail<br/>re-clean"| CLEANUP
+
+    CAP -->|"No →<br/>next batch"| SRC
+    CAP -->|"Yes → done"| GSHEET
+    CAP -.-|"Canary fail /<br/>compaction"| SD
+
+    COMPANY_RESEARCH -.->|"company_research.json<br/>feeds Tier 2 queue"| ORCH
+
+    %% ===== STYLES =====
+    classDef user fill:#4285F4,stroke:#3367D6,color:#fff,stroke-width:2px
+    classDef opus fill:#F5A623,stroke:#E09000,color:#fff,stroke-width:2px
+    classDef sonnet fill:#34A853,stroke:#2E8B47,color:#fff,stroke-width:2px
+    classDef decision fill:#FBBC04,stroke:#E0A800,color:#333,stroke-width:2px
+    classDef refine fill:#E8D5F5,stroke:#7B4DB5,color:#333,stroke-width:2px
+    classDef destructNode fill:#EA4335,stroke:#C62828,color:#fff,stroke-width:2px
+    classDef phaseStyle fill:#f8f9fa,stroke:#bdc3c7,stroke-width:1px
+    classDef sharedStyle fill:#E8EAF6,stroke:#5C6BC0,stroke-width:1px
+
+    class USER user
+    class STARTER,ORCH,HANDOFF,SUMMARY,STATIC_DEDUP,LEGACY opus
+    class PREFLIGHT_CLEAN,URL_EXT,CE,CLEANUP,GSHEET,COMPANY_RESEARCH sonnet
+    class QG,CG,CAP,SRC decision
+    class REFINE refine
+    class SD destructNode
+    class DELAY opus
+    class SAVE user
+    class FILES sonnet
+
+    class phase0,phase1,phase2,phase3,phase4,check,complete,source_check,static phaseStyle
+    class shared sharedStyle
+
+    style destruct fill:#FFEBEE,stroke:#EA4335,stroke-width:2px
+    style manual fill:#E3F2FD,stroke:#4285F4,stroke-width:2px,stroke-dasharray:5

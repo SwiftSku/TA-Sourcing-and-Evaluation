@@ -1,0 +1,68 @@
+{
+  "discovered_at": "2026-03-22 12:00:00",
+  "companies": [
+    {
+      "name": "Atlassian",
+      "hq": "San Francisco, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers, SWEs, and support engineers in Ahmedabad on LinkedIn; B2B SaaS platform (Jira, Confluence, Trello)"
+    },
+    {
+      "name": "HubSpot",
+      "hq": "Boston, Massachusetts",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (Boston); Multiple marketing professionals and business development staff in Ahmedabad on LinkedIn; B2B SaaS marketing automation/CRM platform per G2"
+    },
+    {
+      "name": "Zendesk",
+      "hq": "San Francisco, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Francisco); Multiple customer support and operations staff in Ahmedabad on LinkedIn; B2B SaaS customer support platform per G2"
+    },
+    {
+      "name": "Datadog",
+      "hq": "New York, New York",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (New York); Multiple SRE, site reliability, and data engineers in Ahmedabad on LinkedIn; B2B SaaS monitoring and observability platform per G2"
+    },
+    {
+      "name": "Twilio",
+      "hq": "San Francisco, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers (L3+) and infrastructure staff in Ahmedabad on LinkedIn; B2B SaaS communications platform per G2"
+    },
+    {
+      "name": "Okta",
+      "hq": "San Francisco, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers, SWE interns, and certifications staff in Ahmedabad on LinkedIn; B2B SaaS identity/IAM platform per G2"
+    },
+    {
+      "name": "MongoDB",
+      "hq": "New York, New York",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (New York); Multiple consulting engineers and database specialists in Ahmedabad on LinkedIn; B2B SaaS database platform per G2"
+    },
+    {
+      "name": "ServiceNow",
+      "hq": "San Jose, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Jose); Multiple senior staff product managers and technical leads in Ahmedabad on LinkedIn; B2B SaaS IT service management platform per G2"
+    },
+    {
+      "name": "MoEngage",
+      "hq": "San Francisco, California",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ per LinkedIn company page (San Francisco); Sr. CSM (Aastha Pandya) in Ahmedabad on LinkedIn; B2B SaaS customer engagement platform per company website and G2"
+    }
+  ]
+}
