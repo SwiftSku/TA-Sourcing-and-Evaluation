@@ -2264,3 +2264,106 @@ Read all 7 pipeline agent files + both JD files. Identified 3 discrepancies:
 ### 127. Git Best Practices Discussion (2026-03-23)
 **Dan:** "what's the best practice for using git with claude cowork? Should I use the github desktop gui or do git commits from the chat here?"
 **Claude:** Recommended GitHub Desktop — workspace folder is on Dan's machine so Desktop sees real-time changes. Dan reviews diffs visually and commits when ready. Claude can run git read commands (status/diff/log) if asked but should not commit/push without explicit instruction.
+
+### 128. Markdown Cleanup — Sync All Files with External Changes (2026-03-23)
+**Dan:** "clean up the local markdown files" + "this should actually be whichever is the final file. don't use a temp file"
+**Claude:**
+External changes detected: RC JD weights changed (Dim2: 2→3×, Dim7: 1→2×, Dim8: 1→0.6×, max 33.8→39.6), output format changed to xlsx (`output_file` instead of `output_csv`), gsheet fields removed from RC, temp CSV + sync workflow added to Orchestrator.
+Dan clarified: no temp files — write directly to the final output file.
+
+Files updated:
+1. `1_Pipeline_Starter.md` — replaced stale `output_csv`/`gsheet_url` refs with generic `output_file` or `output_csv`. GSheet Formatter now conditional on gsheet_url presence
+2. `2_Pipeline_Orchestrator.md` — removed temp CSV + sync_csv_to_xlsx.py workflow. CE now writes directly to `[output file from JD config]`. Updated Active JD File section. Replaced all `[output_csv from JD config]` → `[output file from JD config]` globally
+3. `CSV_Cleanup_Agent.md` — replaced 3x `[output_csv from JD config]` → `[output file from JD config]`
+4. `URL_Extractor.md` — updated CSV_PATH description
+5. `Save_To_LIR.md` — updated CSV_PATH default
+6. `Z_Agent_Flowchart.mermaid` — CE node writes to "output file", GSheet node marked conditional, shared files updated, removed sync node
+7. `gen_flowchart_v7.py` — CE node, GSheet node, file inventory, rubric panel all updated. Rubric now shows "weights vary per role" with AM=33.8, RC=39.6. Regenerated PNG.
+
+### 129. No-Batch Write Rule + Gitignore Setup (2026-03-23)
+**Dan:** (1) "update that no matter what role we are working on that we must update the csv or excel file as soon as a candidate is evaluated. one at a time. no batching." (2) "add these files to the git ignore list" (.obsidian/workspace.json, _OUTPUT--AMD_Recruiting_Coord.xlsx) (3) "all files that have the word output should be on the git ignore list"
+**Claude:**
+1. Added "write IMMEDIATELY after scoring — no batching" rule to 4 locations: both JD files (Step 6), 2_Pipeline_Orchestrator.md (Phase 2), 1_Pipeline_Starter.md (spawning rules)
+2. Created `.gitignore` with: `.obsidian/`, `*OUTPUT*`, `*output*`, `.DS_Store`
+
+### 130. Fix Gitignore — Specific Files + Untrack (2026-03-23)
+**Dan:** "this is fucking silly. look at the files that have output in them and ignore those files" + "Why do I see some files here that should be ignored?"
+**Claude:**
+1. Replaced wildcard patterns (`*OUTPUT*`, `*output*`) with specific filenames: `_OUTPUT--Acct_Mgr.csv`, `_OUTPUT--Acct_Mgr.xlsx`, `_OUTPUT--Acct_Mgr.gsheet`, `_OUTPUT--AMD_Recruiting_Coord.xlsx`
+2. Ran `git rm --cached` on `.obsidian/` and all 4 output files — they were already tracked before `.gitignore` existed, so the ignore rules had no effect. Now removed from index (files still on disk).
+
+### 131. Major RC Rubric Restructure — New Dims + Startup Bonus (2026-03-23)
+**Dan:** (1) Remove Dim6 Location — it's an auto-DQ anyway. (2) Dim7 Startup/VC should be a "cherry on top" bonus, not required. (3) "Experience hiring sales people should have a 3× weight." (4) "Experience hiring in volume should have a 2.5× weight."
+**Claude:**
+1. **Removed Dim6 (Location Fit)** — was redundant with Gujarat/Gujarati auto-DQ
+2. **Demoted Dim7 (Startup/VC) to additive bonus** — score × 2 added to raw score but NOT to max denominator. Can push % above 100%. Cherry on top.
+3. **Added Dim6: Sales Hiring Experience (3× weight, max 3 = 9.0 pts)** — recruited for SDRs, AEs, AMs, BDRs. New core dimension.
+4. **Added Dim9: High-Volume Hiring (2.5× weight, max 3 = 7.5 pts)** — quantified sourcing metrics, cold calling, bulk pipelines. New heavy dimension.
+5. **New base max = 44.1** (was 39.6 → 35.6 → 44.1). Formula: `Base = (Dim1×3)+(Dim2×3)+(Dim3×0.8)+(Dim4×0.5)+(Dim5×0.3)+(Dim6×3)+(Dim9×2.5)+(Dim8×0.6)`, then `Raw = Base + (Dim7×2)`.
+6. **Column count: 38 → 42.** Added: Dim6_SalesHiring_Score, Dim6_Note, Dim9_HighVolume_Score, Dim9_Note, Dim7_Startup_Bonus_Score, Dim7_Note (bonus), Base_Score, Startup_Bonus. Removed: Dim6_Location_Score, Dim6_Note.
+7. Updated: formula, mental model tiers, column schema, example row (verified math), comparison table, priority signals, mermaid flowchart (generic col count).
+8. **RC rubric now has 8 scored dims + 1 bonus dim** (was 8 scored, no bonus). Core dims (SaaS 3×, Title 3×, Sales Hiring 3×) = 68% of base max.
+
+### 132. Remove "Universal Dimensions" Concept (2026-03-23)
+**Dan:** "get rid of the concept of universal dimensions because each dimension will have different weight for different roles"
+**Claude:**
+1. Removed `### UNIVERSAL DIMENSIONS` and `### ROLE-SPECIFIC DIMENSIONS` section headers + descriptions from RC JD
+2. All dimensions now listed flat under Step 3 — no universal/role-specific grouping
+3. Reference table renamed from "Universal vs. Role-Specific Rubric Reference" → "Rubric Summary — Recruiting Coordinator" with single flat table
+4. Added note: "Each role has its own dimensions and weights. There are no 'universal' dimensions."
+5. AM JD already had no universal framing — no changes needed there.
+
+### 133. Reorder Dims by Weight + Weight Changes (2026-03-23)
+**Dan:** (1) "put the dimensions in order of most weight to least weight" (2) "make these two have 5x weight: Sales Hiring Experience, Recruiting Coordination" (3) "Tenure & Stability should be .3x weight" (4) "Education & Credentials should be .7x weight" (5) "make sure the dimensions are in order in the file"
+**Claude:**
+1. Reordered all dimension definitions, column schema, example row, and reference table by weight descending: Dim6 Sales Hiring (5×) → Dim2 Title (5×) → Dim1 SaaS (3×) → Dim9 High-Volume (2.5×) → Dim3 US Company (0.8×) → Dim5 Education (0.7×) → Dim8 Recruiting Ops (0.6×) → Dim4 Tenure (0.3×) → Bonus Dim7 Startup (×2)
+2. Weight changes: Dim6 3×→5×, Dim2 3×→5×, Dim4 0.5×→0.3×, Dim5 0.3×→0.7×
+3. New base max = **56.7** (was 44.1). Formula updated. Example row math verified.
+4. Mental model tiers updated: "Critical" tier added for 5× dims (53% of base max)
+5. Dan will recalculate existing candidate scores in a separate session.
+
+### 134. Auto-DQ: Skip Why Columns (2026-03-23)
+**Dan:** "Don't give the 3 whys when a candidate is auto disqualified. This is universal for all roles"
+**Claude:** Updated Step 2 (Auto-Disqualifiers) in both JD files (RC + AM): "leave Why_1/Why_2/Why_3 empty (only fill DQ_Reason)"
+
+### 135. US Company → Bonus Dimension (2026-03-23)
+**Dan:** "Make US Company (0.8×) also bonus"
+**Claude:**
+1. Moved Dim3 (US Company, 0.8×) from scored to bonus — same additive mechanic as Startup/VC
+2. New base max = **54.3** (was 56.7). 7 scored dims + 2 bonus dims.
+3. Column count 42 → 43. Added US_Co_Bonus column (#31) between Base_Score and Startup_Bonus.
+4. Updated: formula, column schema, example row (verified: base=42.1, US bonus=1.6, startup bonus=6.0, raw=49.7, pct=91.5%), reference table, mental model.
+
+### 136. High-Volume → 4× Weight (2026-03-23)
+**Dan:** "make high volume a 4x multiplier"
+**Claude:**
+1. Updated Dim9 (High-Volume Hiring) from 2.5× → 4×. Now weighted max = 12.0 (was 7.5).
+2. Reordered: Dim9 now before Dim1 (4× > 3×) in dimension definitions, column schema, and example row.
+3. New base max = **58.8** (was 54.3). Formula, example row (verified: base=45.1, raw=52.7, pct=89.6%), reference table, mental model all updated.
+
+### 137. Hide Columns + Wrap Cells in RC Output (2026-03-23)
+**Dan:** (1) "hide these columns in the coordinator recruiter file: LIR URL, Source, Date Added" (2) "make all cells wrapped in the excel file" (3) "update the flow chart when you finish"
+**Claude:**
+1. Removed LIR URL, Source, Date Added columns from RC JD column schema — 43 → 40 columns. Renumbered all columns. Updated example row. Removed timestamp rule (no Date Added column). Simplified Public LI URL note.
+2. Added xlsx text wrap rule to Step 6: `Alignment(wrap_text=True)` on every cell.
+3. Updated gen_flowchart_v7.py rubric panel: new dims/weights, RC base max 58.8, bonus dims. CE node now "per JD schema". Regenerated PNG.
+
+### 138. Merge Why_1/Why_2/Why_3 → Single Whys Column (2026-03-23)
+**Dan:** "Let's put the three whys as bullets in one column with line break between each and get rid of 2 columns. Go ahead and perform the operation on the existing data we have for both the roles and then update all the documentation with this change."
+**Claude:**
+1. **RC JD** (`JD--AMD_Recruiting_Coord.md`): Replaced Why_1 (#35), Why_2 (#36), Why_3 (#37) with single Whys (#35) using `• bullet\n• format`. Column count 40 → 38. Renumbered Concern (#36), DQ_Reason (#37), Cleaned? (#38). Updated auto-DQ rule: "leave Whys empty". Updated Priority Signals section: "Whys column" (was "Why_1/Why_2/Why_3 columns"). Updated example row.
+2. **AM JD** (`JD--Acct_Mgr.md`): Same merge — Why_1/Why_2/Why_3 → single Whys column. Column count 38 → 36. Updated auto-DQ rule: "leave Whys empty".
+3. **Data migration** — all 3 output files updated:
+   - `_OUTPUT--AMD_Recruiting_Coord.xlsx`: 12 data rows, merged 3 Why cols → 1 with bullet format, text wrap applied.
+   - `_OUTPUT--Acct_Mgr.csv`: 542 data rows, merged 3 Why cols → 1.
+   - `_OUTPUT--Acct_Mgr.xlsx`: 542 data rows, merged 3 Why cols → 1, text wrap applied.
+4. No data loss — empty Whys left empty, partial Whys (1 or 2 populated) handled correctly.
+5. **GSheet_Formater.md** updated: Why_1/Why_2/Why_3 (AG/AH/AI) → single Whys (AG). Shifted Concern→AH, Hindi_Signal→AI, Cleaned?→AJ. Updated all column references, ranges (AL→AJ), alignment rules, Step 8 Hindi_Signal column (AK→AI), and checklist.
+
+### 139. Auto-DQ: "Zero SaaS" → "Zero SaaS or Software Product" (2026-03-23)
+**Dan:** "in the auto dq section of the AMD recruiting coord JD file, it says 'Zero SaaS exposure' — Let's change it to 'Zero SaaS or Software Product exposure'"
+**Claude:** Updated both instances in RC JD — the auto-DQ table (Step 2) and the rubric summary at bottom.
+
+### 140. Auto-DQ: Expand SaaS Trigger to Include VC-Backed Tech (2026-03-23)
+**Dan:** "Let's change it to 'Zero SaaS or Software Product exposure or worked at a venture backed technology company'"
+**Claude:** Updated both instances in RC JD — auto-DQ table (Step 2) and rubric summary.

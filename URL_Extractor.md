@@ -24,7 +24,7 @@ The parent passes ALL of these in the spawn template:
 | `PAGE` | Page number to navigate to (1-indexed) |
 | `START_POS` | Position on page to start from (1-indexed, e.g., 6 means skip first 5 on this page) |
 | `LIR_LEARNINGS_PATH` | Full path to `REF--LIR_Interface_Learnings.md` |
-| `CSV_PATH` | Full path to the output CSV (from JD config `output_csv`) |
+| `CSV_PATH` | Full path to the output file from JD config (`output_file` or `output_csv`) |
 | `SKIP_NAMES` | Comma-separated list of candidate names already processed this run (for dedup) |
 
 ---

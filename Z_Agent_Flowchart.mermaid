@@ -30,7 +30,7 @@ flowchart TD
 
     %% ===== PHASE 2: CANDIDATE EVALUATION =====
     subgraph phase2["Phase 2 · Evaluate (sequential, 1 at a time)"]
-        CE["🟢 <b>[active JD file]</b> · Sonnet<br/><i>Reads rubric, auto-DQ triggers, and scoring<br/>from the active JD file's Pipeline Config<br/>Writes 1 row to [output_csv from JD config] (38 cols)</i>"]
+        CE["🟢 <b>[active JD file]</b> · Sonnet<br/><i>Reads rubric, auto-DQ triggers, and scoring<br/>from the active JD file's Pipeline Config<br/>Writes 1 row to output file (per JD schema)</i>"]
         DELAY["⏱️ 45-200s anti-detection delay<br/><i>(LinkedIn sources only)</i>"]
         HANDOFF["🟡 Update Z_Search_Cache.json<br/><i>After first 5 CEs: write top5_summary<br/>Each A-rated: append to a_rated_cache<br/>Both caches protect against scoring variance</i>"]
         CE --> HANDOFF --> DELAY
@@ -56,7 +56,7 @@ flowchart TD
 
     %% ===== PIPELINE COMPLETE =====
     subgraph complete["Pipeline Complete"]
-        GSHEET["🟢 <b>GSheet_Formater.md</b> · Sonnet<br/><i>Opens existing gsheet (NEVER create new)<br/>Row heights 25px · freeze row 1 + col A<br/>Tier colors: A=#00C853 B=#69F0AE C=#FFD600<br/>D=#FF9800 F=#F44336 0=#9E9E9E (auto-DQ)<br/>% format 0% (no decimals) · wrap all · clip URLs<br/>Col AK Hindi_Signal: Y/N only<br/>Future-proof: ranges to last_row + 1000</i>"]
+        GSHEET["🟢 <b>GSheet_Formater.md</b> · Sonnet<br/><i>CSV+GSheet roles only (skip for xlsx roles)<br/>Opens existing gsheet (NEVER create new)<br/>Row heights 25px · freeze row 1 + col A<br/>Tier colors: A=#00C853 B=#69F0AE C=#FFD600<br/>D=#FF9800 F=#F44336 0=#9E9E9E (auto-DQ)</i>"]
         LEGACY["🟡 Write <b>Context_Legacy_Prompt.md</b><br/><i>Full résumé for next session<br/>Run counters + page/pos + A-rated cache</i>"]
         SUMMARY["🟡 Output Summary · STOP"]
         GSHEET --> LEGACY --> SUMMARY
@@ -76,7 +76,7 @@ flowchart TD
     %% ===== SHARED FILES =====
     subgraph shared["📁 Shared Files (read/write during run)"]
         direction LR
-        FILES["<b>[output_csv from JD config]</b> (38 cols) · canonical candidate list<br/><b>Z_Search_Cache.json</b> · scoring variance protection<br/><b>company_research.json</b> · Tier 2 company discoveries<br/><b>Z_Old_Chat_Logs/Chat_Log-*.md</b> · per-run black box<br/><b>Z_Pipeline_Error_Log.md</b> · append-only error log<br/><b>REF--LIR_Interface_Learnings.md</b> · LinkedIn quirks/workarounds"]
+        FILES["<b>[output file from JD config]</b> (per JD schema) · canonical candidate list<br/><b>Z_Search_Cache.json</b> · scoring variance protection<br/><b>company_research.json</b> · Tier 2 company discoveries<br/><b>Z_Old_Chat_Logs/Chat_Log-*.md</b> · per-run black box<br/><b>Z_Pipeline_Error_Log.md</b> · append-only error log<br/><b>REF--LIR_Interface_Learnings.md</b> · LinkedIn quirks/workarounds"]
     end
 
     %% ===== CONNECTIONS =====

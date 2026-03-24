@@ -58,12 +58,9 @@
 | **AD** | **Percentage** |
 | **AE** | **Tier** |
 | AF | Verdict |
-| AG | Why_1 |
-| AH | Why_2 |
-| AI | Why_3 |
-| AJ | Concern |
-| AK | Hindi_Signal |
-| AL | Cleaned? |
+| AG | Whys |
+| AH | Concern |
+| AI | Cleaned? |
 
 ---
 
@@ -97,7 +94,7 @@ Select row 1 by clicking the row number.
 
 **CRITICAL:** Only the Tier column (AE) should have colored cell backgrounds (applied via conditional formatting in Step 7). All other data cells must be white.
 
-- Select all data rows: Name Box → type `A2:AL{last_row + 1000}` → Enter
+- Select all data rows: Name Box → type `A2:AI{last_row + 1000}` → Enter
 - Format → Fill color → **White** (`FFFFFF`)
 - This resets every data cell to white. The Tier column (AE) will re-apply its colors via conditional formatting rules from Step 7.
 - Row 1 (header) is NOT affected — it keeps its white/default background from Step 3.
@@ -128,15 +125,13 @@ Select each range (Name Box → type range → Enter → `Ctrl+L`):
 | Range | Column Name |
 |-------|-------------|
 | `AA:AA` | Dim8_Note |
-| `AG:AG` | Why_1 |
-| `AH:AH` | Why_2 |
-| `AI:AI` | Why_3 |
-| `AJ:AJ` | Concern |
+| `AG:AG` | Whys |
+| `AH:AH` | Concern |
 
 ### Center-align — short text / numbers:
-- Name Box → type `C:AL` → Enter → `Ctrl+E`
+- Name Box → type `C:AI` → Enter → `Ctrl+E`
 - **Explicitly verify** AD (Percentage) and AE (Tier) are centered — these are the most visible columns and must not be left-aligned
-- Also verify AF (Verdict), AK (Hindi_Signal), and AL (Cleaned?) are centered
+- Also verify AF (Verdict) and AI (Cleaned?) are centered
 - Then re-apply left-align to the long-text columns above (they override)
 
 ---
@@ -174,21 +169,9 @@ Condition: **Text is exactly**
 
 ---
 
-## 8. Hindi_Signal Column (AK) — Standardize to Y/N
-
-All values in AK must be exactly `Y` or `N` (single character, uppercase). No "Yes", "No", "yes", "no", etc.
-
-- Select the entire AK column by clicking the **AK column header** (this sets the range to `MAIN_LIVE!AK:AK`)
-- Edit → Find and replace → check **Match entire cell contents**, Search: **Specific range** = `MAIN_LIVE!AK:AK`
-- Find `Yes` → Replace with `Y` → Replace all
-- Find `No` → Replace with `N` → Replace all
-- Repeat with lowercase variants if needed (`yes`, `no`)
-
----
-
-## 9. Delete Empty Rows/Columns
+## 8. Delete Empty Rows/Columns
 - Scroll to the bottom of data — delete any empty rows below last entry
-- Check for empty columns to the right of AL — delete if found
+- Check for empty columns to the right of AI — delete if found
 - Any row or column with zero content must be deleted (per Notion guide)
 
 ---
@@ -199,13 +182,12 @@ All values in AK must be exactly `Y` or `N` (single character, uppercase). No "Y
 - [ ] Row 1: bold, centered horizontally, white/default background, black/default text
 - [ ] Row 1 + Col A frozen; Col A bold
 - [ ] All cells: Wrap; Col B:C only: Clip
-- [ ] Long-text cols (AG, AH, AI, AJ, AA): left-aligned
-- [ ] C:AL: center-aligned (with left overrides on note cols)
+- [ ] Long-text cols (AG, AH, AA): left-aligned
+- [ ] C:AI: center-aligned (with left overrides on note cols)
 - [ ] AD2:AD{last_row + 1000}: formatted as `0%`, center-aligned
 - [ ] AE (Tier) center-aligned
 - [ ] CF rules: all 6 Tier colors applied to **AE2:AE{last_row + 1000}**
 - [ ] ALL data cell backgrounds are WHITE except Tier column (AE) which uses conditional formatting colors
 - [ ] No columns are hidden (all visible unless user explicitly requests hiding)
-- [ ] AK column: all values are `Y` or `N` only
 - [ ] No empty rows/cols
 - [ ] No `HYPERLINK()` formulas used

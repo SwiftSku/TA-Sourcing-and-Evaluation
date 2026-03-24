@@ -7,7 +7,7 @@
 
 > **Model note:** This agent runs on **Sonnet** (`model: "sonnet"`). The parent orchestrator must set this when spawning.
 
-This agent validates every unchecked row in `[output_csv from JD config]`. For rows that are structurally valid, it marks them `TRUE`. For rows that are broken (wrong column count, corrupted data), it **re-runs the Candidate Evaluator** on that specific candidate to get a clean row — it does NOT attempt manual structural repair.
+This agent validates every unchecked row in `[output file from JD config]`. For rows that are structurally valid, it marks them `TRUE`. For rows that are broken (wrong column count, corrupted data), it **re-runs the Candidate Evaluator** on that specific candidate to get a clean row — it does NOT attempt manual structural repair.
 
 If a row is so corrupted that the candidate can't even be identified, it stays in the CSV for manual review — LinkedIn's "hide previously viewed" filter means deleting a row could make that candidate permanently undiscoverable.
 
@@ -29,7 +29,7 @@ The Candidate Evaluator sometimes writes free-text values containing commas with
 
 ### Step 1: Read the CSV
 
-Read `[output_csv from JD config]` at the provided path using Python's `csv` module (which handles quoted fields correctly).
+Read `[output file from JD config]` at the provided path using Python's `csv` module (which handles quoted fields correctly).
 
 ### Step 1b: Detect Rubric Change — Rescore ALL Rows If Needed
 
@@ -105,7 +105,7 @@ Evaluate this ONE candidate:
 - Source: {extracted_source}
 
 Write the result row to the CSV at:
-[FULL PATH to [output_csv from JD config]]
+[FULL PATH to [output file from JD config]]
 
 Return ONLY this summary line:
 {Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}

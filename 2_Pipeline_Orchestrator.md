@@ -8,7 +8,7 @@ Every decision you make — search filters, refinement strategy, keyword changes
 
 ## Active JD File
 
-The Pipeline Starter specifies which JD file to use. At startup, parse the JD file's `Pipeline Config` block to extract all role-specific values: `role_name`, `output_csv`, `gsheet_url`, `gsheet_tab`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, `passthrough_rule`, `refinement_patterns`, and `a_rate_signals`. Store these in memory and reference them throughout the run. **Never hardcode role-specific values in this file.**
+The Pipeline Starter specifies which JD file to use. At startup, parse the JD file's `Pipeline Config` block to extract all role-specific values: `role_name`, `output_file` (or `output_csv`), `gsheet_url` + `gsheet_tab` (if present), `tier1_companies`, `lir_title_filters`, `negative_keywords`, `passthrough_rule`, `refinement_patterns`, and `a_rate_signals`. Store these in memory and reference them throughout the run. **Never hardcode role-specific values in this file.**
 
 ## Purpose
 
@@ -104,7 +104,7 @@ Extract candidates from this search:
 - PAGE: {page_number}
 - START_POS: {start_pos}
 - LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
-- CSV_PATH: [FULL PATH to [output_csv from JD config]]
+- CSV_PATH: [FULL PATH to [output file from JD config]]
 - SKIP_NAMES: {comma_separated_names}
 
 Return ONLY: PAGE X | POS Y | N candidates, followed by numbered list of Name | URL.
@@ -127,21 +127,16 @@ Evaluate this ONE candidate:
 - Profile URL or identifier: {lir_profile_url}
 - Source: {source_name}
 
-Write the result row to the CSV at:
-[FULL PATH to temp CSV]
+Write the result row to:
+[FULL PATH to output file from JD config]
 
 Return ONLY this summary line:
 {Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
 ```
 
-⛔ **MANDATORY: Update the output Excel file AFTER EVERY SINGLE CE verdict.** The pipeline uses a temp CSV as the intermediate working format (CE agents append rows there), but the user-facing deliverable is the `.xlsx` file specified in the JD config's `output_file` field. After each CE sub-agent returns:
+⛔ **The output file MUST be updated immediately after every single CE verdict — one candidate, one write, no batching.** This applies to ALL output formats (CSV or xlsx). Dan must be able to open the file at any point during the run and see every candidate evaluated so far.
 
-1. Run `sync_csv_to_xlsx.py` (in this directory) to rebuild the Excel from the temp CSV
-2. This ensures the Excel is always current — the user can open it at any time mid-run
-
-The temp CSV lives at `/sessions/awesome-determined-brown/_temp_rc.csv` (NOT in the user's folder). The Excel lives at the `output_file` path from the JD config (in the user's folder).
-
-ALL candidates get CSV rows regardless of tier. There is no D/F exclusion.
+ALL candidates get rows regardless of tier. There is no D/F exclusion.
 
 ### Phase 3: Quality Check — Initial Gate
 
@@ -356,7 +351,7 @@ You are a CSV cleanup agent. Read your instructions at:
 [FULL PATH to CSV_Cleanup_Agent.md]
 
 Validate and clean the CSV at:
-[FULL PATH to [output_csv from JD config]]
+[FULL PATH to [output file from JD config]]
 
 For scoring variance protection, check the handoff file at:
 [FULL PATH to Z_Search_Cache.json]
@@ -522,7 +517,7 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - `URL_Extractor.md` → URL extractor sub-agents read from disk, you pass the path
 - `[active JD file]` → CE sub-agents read from disk, you pass the path
 - `CSV_Cleanup_Agent.md` → cleanup sub-agents read from disk, you pass the path
-- `[output_csv from JD config]` → sub-agents write here, you pass the path
+- `[output file from JD config]` → sub-agents write here, you pass the path
 - `Z_Chat_Log--Agent_Maker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors
 - `GSheet_Formater.md` → formatting sub-agent reads from disk at end of run
@@ -633,7 +628,7 @@ The orchestrator's context should contain ONLY:
 - `URL_Extractor.md` — sub-agents read from disk
 - `[active JD file]` — sub-agents read from disk
 - `CSV_Cleanup_Agent.md` — cleanup sub-agents read from disk
-- `[output_csv from JD config]` — sub-agents handle all CSV operations
+- `[output file from JD config]` — sub-agents handle all CSV operations
 - `GSheet_Formater.md` — formatting sub-agent reads from disk
 - `Z_Chat_Log--Agent_Maker.md` — append at end of run only
 - `Z_Pipeline_Error_Log.md` — append errors, don't read past ones

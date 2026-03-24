@@ -72,7 +72,7 @@ Read the CSV at the provided path. If the candidate's name already appears in th
 
 ### Step 2: Auto-Disqualifiers
 
-Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, still write the row to CSV.
+Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, **leave Whys empty** (only fill DQ_Reason), still write the row to CSV.
 
 | Disqualifier                                             | Red Flag Signs                                                                                                                                              |
 | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -195,11 +195,13 @@ Percentage = Raw Score / 33.8 × 100 (include the `%` suffix when writing to CSV
 | 35–49%  | D    | **No** — doesn't meet bar            |
 | <35%    | F    | **Hard No** — skip                   |
 
-### Step 6: Write to CSV
+### Step 6: Write to Output File
 
-Append one row to the CSV. Do NOT batch. Do NOT create a new CSV.
+⛔ **Write IMMEDIATELY after scoring — one row, one candidate, no batching.** The output file must be updated the instant a candidate is evaluated so Dan can check progress at any time.
 
-⛔ **MANDATORY: Use Python's `csv` module with `quoting=csv.QUOTE_ALL` for ALL CSV writes.** Do NOT write CSV rows manually with string concatenation, f-strings, or echo commands. Fields like Location and Company often contain commas (e.g., "Ahmedabad, Gujarat") which will corrupt the row if not properly quoted. Example:
+Append one row to the output file specified in the JD config (`output_file` or `output_csv`). Do NOT batch. Do NOT create a new file.
+
+⛔ **MANDATORY: Use Python's `csv` module with `quoting=csv.QUOTE_ALL` for ALL writes (CSV or xlsx).** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Fields like Location and Company often contain commas (e.g., "Ahmedabad, Gujarat") which will corrupt the row if not properly quoted. Example:
 
 ```python
 import csv
@@ -210,7 +212,7 @@ with open(csv_path, 'a', newline='') as f:
 
 **Timestamp rule:** The `Date Added` column must be the **exact current time at the moment the row is written**, in **US Eastern time (America/New_York)**. Do not estimate, backdate, or space timestamps apart. Run `TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S'` (or equivalent) to get the real time right before writing the row. Format: `YYYY-MM-DD HH:MM:SS` Eastern.
 
-**CSV column order (exactly 38 columns — Cleaned? is #38):**
+**CSV column order (exactly 36 columns — Cleaned? is #36):**
 
 ⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. That's 16 dimension columns total (8 scores + 8 notes), NOT 8 combined columns.**
 
@@ -247,12 +249,10 @@ with open(csv_path, 'a', newline='') as f:
 30. Percentage (with % suffix)
 31. Tier (A/B/C/D/F)
 32. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
-33. Why_1
-34. Why_2
-35. Why_3
-36. Concern
-37. Hindi_Signal (Y/N)
-38. Cleaned? (always write as empty string — cleanup agent fills this)
+33. Whys (bullet list with \n between each — leave empty if Auto_DQ)
+34. Concern
+35. Hindi_Signal (Y/N)
+36. Cleaned? (always write as empty string — cleanup agent fills this)
 ```
 
 **Example row (score columns are JUST numbers, notes are JUST text):**
@@ -290,12 +290,10 @@ writer.writerow([
     "67.8%",                             # 30. Percentage
     "B",                                 # 31. Tier
     "Yes",                               # 32. Verdict
-    "Good title match",                  # 33. Why_1
-    "Gujarat-based, Ahmedabad",          # 34. Why_2
-    "Some US client exposure",           # 35. Why_3
-    "SaaS co not on validated list",     # 36. Concern
-    "Y",                                 # 37. Hindi_Signal
-    "",                                  # 38. Cleaned? (always empty)
+    "• Good title match\n• Gujarat-based, Ahmedabad\n• Some US client exposure",  # 33. Whys
+    "SaaS co not on validated list",     # 34. Concern
+    "Y",                                 # 35. Hindi_Signal
+    "",                                  # 36. Cleaned? (always empty)
 ])
 ```
 

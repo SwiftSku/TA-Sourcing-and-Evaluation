@@ -58,7 +58,7 @@ Only after BOTH confirmations proceed to execution.
 |-------|---------|-------------|
 | `THRESHOLD` | `A` (Tier = A, i.e., ≥80%) | Minimum tier or percentage to include. User can override: "save B and above", "save ≥85%", etc. |
 | `LIR_PROJECT` | None — must be provided by user | The LinkedIn Recruiter project name or URL to save candidates into |
-| `CSV_PATH` | `[output_csv from JD config]` in this directory | Path to the scored CSV |
+| `CSV_PATH` | `[output file from JD config]` in this directory | Path to the scored output file |
 | `EXCLUDE_ALREADY_SAVED` | `true` | Skip candidates already marked as saved (see Tracking below) |
 
 ---
