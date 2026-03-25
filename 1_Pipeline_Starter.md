@@ -36,6 +36,7 @@ These files exist in this same folder. Sub-agents read them from disk. You only 
 - `URL_Extractor.md` — URL extractor sub-agents read this, not you. Pass the path in spawn templates.
 - `[active JD file]` — CE sub-agents read this, not you. Pass the path in spawn templates.
 - `Output_Cleanup.md` — cleanup sub-agents read this, not you. Pass the path in spawn templates.
+- `Target_Companies/Company_Research_Agent.md` — company research sub-agent reads this, not you. Pass the path in spawn templates.
 - `[output file from JD config]` — sub-agents write here. You never read it yourself. Pass the path.
 - `Z_Chat_Log--Agent_Maker.md` — update this ONCE at end of run with a summary entry. Do NOT read the full history.
 - `Z_Pipeline_Error_Log.md` — log errors here during the run. Do NOT read past errors.

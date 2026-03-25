@@ -81,7 +81,7 @@ There is **no separate validation phase**. The pipeline goes straight to process
 3. Create per-run chat log (see Per-Run Chat Log below)
 4. If LinkedIn source: read `REF--LIR_Interface_Learnings.md`
 5. **Spawn two parallel agents** (neither uses Chrome, no conflict):
-   - **Company Research Agent** — see section below. Runs in background; results feed Tier 2.
+   - **Company Research Agent** — reads instructions from `Target_Companies/Company_Research_Agent.md`. Runs in background; results feed Tier 2.
    - **Pre-Flight Cleanup Agent** — see Cleanup Agent Spawn Template below. Validates existing output file before new rows are added. Must finish before Phase 1 starts.
 
 ### Phase 1: URL Extraction (batch of 5)
@@ -205,7 +205,7 @@ Spawned in Phase 0 step 5 **in parallel with Company Research** (neither uses Ch
 Read `tier1_companies` from the active JD file's Pipeline Config block.
 
 **Tier 2 — Research-discovered (populated by Company Research Agent during the run):**
-Starts empty. The Company Research Agent (see below) runs in parallel during Phase 0 and appends companies here. Check `Target_Companies/company_research.json` for updates before each new company search.
+Starts empty. The Company Research Agent (instructions in `Target_Companies/Company_Research_Agent.md`) runs in parallel during Phase 0 and appends companies here. Check `Target_Companies/company_research.json` for updates before each new company search.
 
 ### Company-Targeted Search Execution
 
@@ -227,47 +227,23 @@ Read `a_rate_signals` from the active JD file's Pipeline Config for role-specifi
 
 ## Company Research Agent
 
-> **This agent runs IN PARALLEL with candidate processing.** Spawn it during Phase 0 and don't wait for it. Its results feed Tier 2 of the target company list.
+> **Moved to `Target_Companies/Company_Research_Agent.md`.** The sub-agent reads its instructions from that file at runtime. The orchestrator only needs the path for the spawn template.
 
 **Spawn Template:**
 ```
-You are a company research agent. Your job is to find US-headquartered B2B SaaS companies with offices or significant employee presence in Gujarat, India (especially Ahmedabad, Vadodara, Gandhinagar, Surat, Rajkot).
+You are a company research agent. Read your instructions at:
+[FULL PATH to Target_Companies/Company_Research_Agent.md]
 
-**How to research:**
-1. Open Chrome. Search LinkedIn using the `lir_title_filters` from the active JD config + Gujarat/Ahmedabad. Note which COMPANIES appear repeatedly.
-2. Search Google for: "US SaaS companies Ahmedabad office", "SaaS companies Gujarat India", "US tech companies Vadodara"
-3. Search Wellfound/AngelList for SaaS startups with India/Gujarat offices
-4. Search G2/Capterra top SaaS companies, cross-reference with India office presence
-5. Check Glassdoor for US SaaS companies hiring in Ahmedabad/Vadodara
+Also read the company research specs at:
+[FULL PATH to Target_Companies/Company_Research_Specs.md]
 
-**Already known (DO NOT include these):**
-[Insert the `tier1_companies` list from the active JD file's Pipeline Config here]
-
-**Output:** Write results to [FULL PATH]/Target_Companies/company_research.json in this format:
-{
-  "discovered_at": "YYYY-MM-DD HH:MM:SS",
-  "companies": [
-    {"name": "...", "hq": "...", "gujarat_city": "...", "confidence": "high/medium", "source": "where you found this"},
-    ...
-  ]
-}
-
-Aim for at least 10 new companies. Prioritize HIGH confidence (verified Gujarat office) over quantity.
-
-**⛔ VALIDATION REQUIREMENTS — every company you include MUST have:**
-1. **Verified US HQ** — you must find a source confirming the company is US-headquartered (LinkedIn company page HQ field, Crunchbase, or company website "About" page). Indian-HQ SaaS companies (Zoho, Freshworks pre-2018, etc.) do NOT count unless they have since re-domiciled to the US.
-2. **Verified Gujarat presence** — at least ONE of: (a) LinkedIn shows employees with Gujarat/Ahmedabad/Vadodara in their location at this company, (b) Glassdoor/Indeed shows open roles in Gujarat, (c) company website lists a Gujarat office. "India office" alone is NOT enough — it could be Bangalore/Hyderabad/Pune.
-3. **B2B SaaS confirmed** — the company must sell software to businesses, not consumers. Check G2, Capterra, or company website.
-
-For each company, record the SPECIFIC evidence for all 3 checks in the "source" field. Example:
-  "source": "US HQ per LinkedIn company page; 4 CSMs in Ahmedabad on LinkedIn; listed on G2 as B2B SaaS"
-
-Companies with only MEDIUM confidence (e.g., "I think they have a Gujarat office but couldn't verify") should be marked as such and placed LAST in the list. The orchestrator will search HIGH confidence companies first.
+The active JD file is:
+[FULL PATH to [active JD file]]
 
 Return ONLY: RESEARCH | {count} companies found ({high_count} high, {medium_count} medium)
 ```
 
-**Rules:**
+**Rules (kept here — these are orchestrator behavior):**
 - Runs on `model: "sonnet"` — same as other sub-agents
 - Spawned once during Phase 0, runs in parallel with Tier 1 company searches
 - The orchestrator checks for `Target_Companies/company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
@@ -499,6 +475,7 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - `URL_Extractor.md` → URL extractor sub-agents read from disk, you pass the path
 - `[active JD file]` → CE sub-agents read from disk, you pass the path
 - `Output_Cleanup.md` → cleanup sub-agents read from disk, you pass the path
+- `Target_Companies/Company_Research_Agent.md` → company research sub-agent reads from disk, you pass the path
 - `[output file from JD config]` → sub-agents write here, you pass the path
 - `Z_Chat_Log--Agent_Maker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors

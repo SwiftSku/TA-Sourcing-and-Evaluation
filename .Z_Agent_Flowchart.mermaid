@@ -6,7 +6,7 @@ flowchart TD
         USER["👤 Dan answers 4 startup Qs"]
         STARTER["📄 <b>1_Pipeline_Starter.md</b><br/>Role selection → JD config → run params<br/>Canary token · Hard cap 60 · A-target 20"]
         ORCH["🟡 <b>2_Pipeline_Orchestrator.md</b> · Opus<br/>Role-agnostic · NO Chrome · spawns sub-agents<br/>Company-targeted: Tier 1 → Tier 2 → keyword fallback"]
-        COMPANY_RESEARCH["🟢 <b>Company Research</b> · Sonnet<br/>Parallel: finds US-HQ B2B SaaS w/ Gujarat office<br/>→ Target_Companies/company_research.json → feeds Tier 2"]
+        COMPANY_RESEARCH["🟢 <b>Target_Companies/Company_Research_Agent.md</b> · Sonnet<br/>Parallel: finds US-HQ B2B SaaS w/ Gujarat office<br/>→ Target_Companies/company_research.json → feeds Tier 2"]
         PREFLIGHT_CLEAN["🟢 <b>Pre-flight Cleanup</b> · Sonnet"]
         USER --> STARTER --> ORCH
         ORCH -.->|"parallel (no Chrome)"| PREFLIGHT_CLEAN
