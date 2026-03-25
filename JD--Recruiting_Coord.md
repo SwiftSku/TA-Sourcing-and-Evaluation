@@ -241,6 +241,8 @@ Append one row to the output xlsx file specified in the JD config (`output_file`
 
 ⛔ **Header row formatting:** Row 1 height must be exactly **30**. Column widths must be auto-fit so all header text is visible without truncation. Use bold, centered, wrapped text for all header cells. When creating or modifying the xlsx, calculate width as `len(header) * 1.15 + 2` (minimum 10).
 
+**Timestamp rule:** The `Date Added` column must be the **exact current time at the moment the row is written**, in **US Eastern time (America/New_York)**. Do not estimate, backdate, or space timestamps apart. Run `TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S'` (or equivalent) to get the real time right before writing the row. Format: `YYYY-MM-DD HH:MM:SS` Eastern.
+
 ⛔ **MANDATORY: Use Python's `openpyxl` module for ALL writes to the output xlsx file.** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Example:
 
 ```python
@@ -248,13 +250,13 @@ from openpyxl import load_workbook
 wb = load_workbook(output_path)
 ws = wb.active
 next_row = ws.max_row + 1
-values = [candidate, greenhouse_url, public_li_url, title, company, ..., '']  # last column is Cleaned? — always write as empty string
+values = [candidate, greenhouse_url, public_li_url, lir_url, date_added, title, company, ..., '']  # last column is Cleaned? — always write as empty string
 for col_idx, val in enumerate(values, 1):
     ws.cell(row=next_row, column=col_idx, value=val)
 wb.save(output_path)
 ```
 
-**Column order (exactly 38 columns — Cleaned? is #38):**
+**Column order (exactly 40 columns — Cleaned? is #40):**
 
 ⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 7 scored dims (14 cols) + 2 bonus dims (4 cols) = 18 dimension columns total.**
 
@@ -262,41 +264,43 @@ wb.save(output_path)
  1. Candidate
  2. Greenhouse URL
  3. Public LI URL
- 4. Current Title
- 5. Company
- 6. Location
- 7. Gujarat/Gujarati (EXPLICIT - Y/N)
- 8. Auto_DQ (Y/N)
- 9. DQ_Reason
-10. Dim1_Title_Score (0-3)              ← NUMBER ONLY  [CRITICAL — 5×]
-11. Dim1_Note                           ← TEXT ONLY
-12. Dim2_HighVolume_Score (0-3)         ← NUMBER ONLY  [CORE — 4×]
-13. Dim2_Note                           ← TEXT ONLY
-14. Dim3_SalesHiring_Score (0-3)        ← NUMBER ONLY  [CORE — 3×]
-15. Dim3_Note                           ← TEXT ONLY
-16. Dim4_SaaS_Score (0-4)              ← NUMBER ONLY  [CORE — 3×]
-17. Dim4_Note                           ← TEXT ONLY
-18. Dim5_Education_Score (0-3)          ← NUMBER ONLY  [STANDARD — 0.7×]
-19. Dim5_Note                           ← TEXT ONLY
-20. Dim6_RecruitingOps_Score (0-3)      ← NUMBER ONLY  [STANDARD — 0.6×]
-21. Dim6_Note                           ← TEXT ONLY
-22. Dim7_Tenure_Score (0-3)             ← NUMBER ONLY  [MINOR — 0.3×]
-23. Dim7_Note                           ← TEXT ONLY
-24. Bonus1_US_Co_Score (0-3)        ← NUMBER ONLY  [BONUS — ×0.8 additive]
-25. Bonus1_Note                           ← TEXT ONLY
-26. Bonus2_Startup_Score (0-4)      ← NUMBER ONLY  [BONUS — ×2 additive]
-27. Bonus2_Note                           ← TEXT ONLY
-28. Base_Score
-29. US_Co_Bonus (Bonus1 × 0.8)
-30. Startup_Bonus (Bonus2 × 2)
-31. Raw_Score (Base + Bonuses)
-32. Max_Score (always 52.8)
-33. Percentage (with % suffix — can exceed 100%)
-34. Tier (A/B/C/D/F)
-35. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
-36. Whys (bullet list with \n between each — leave empty if Auto_DQ)
-37. Concern
-38. Cleaned? (always write as empty string — cleanup agent fills this)
+ 4. LIR URL
+ 5. Date Added (YYYY-MM-DD HH:MM:SS ET)
+ 6. Current Title
+ 7. Company
+ 8. Location
+ 9. Gujarat/Gujarati (EXPLICIT - Y/N)
+10. Auto_DQ (Y/N)
+11. DQ_Reason
+12. Dim1_Title_Score (0-3)              ← NUMBER ONLY  [CRITICAL — 5×]
+13. Dim1_Note                           ← TEXT ONLY
+14. Dim2_HighVolume_Score (0-3)         ← NUMBER ONLY  [CORE — 4×]
+15. Dim2_Note                           ← TEXT ONLY
+16. Dim3_SalesHiring_Score (0-3)        ← NUMBER ONLY  [CORE — 3×]
+17. Dim3_Note                           ← TEXT ONLY
+18. Dim4_SaaS_Score (0-4)              ← NUMBER ONLY  [CORE — 3×]
+19. Dim4_Note                           ← TEXT ONLY
+20. Dim5_Education_Score (0-3)          ← NUMBER ONLY  [STANDARD — 0.7×]
+21. Dim5_Note                           ← TEXT ONLY
+22. Dim6_RecruitingOps_Score (0-3)      ← NUMBER ONLY  [STANDARD — 0.6×]
+23. Dim6_Note                           ← TEXT ONLY
+24. Dim7_Tenure_Score (0-3)             ← NUMBER ONLY  [MINOR — 0.3×]
+25. Dim7_Note                           ← TEXT ONLY
+26. Bonus1_US_Co_Score (0-3)            ← NUMBER ONLY  [BONUS — ×0.8 additive]
+27. Bonus1_Note                         ← TEXT ONLY
+28. Bonus2_Startup_Score (0-4)          ← NUMBER ONLY  [BONUS — ×2 additive]
+29. Bonus2_Note                         ← TEXT ONLY
+30. Base_Score
+31. US_Co_Bonus (Bonus1 × 0.8)
+32. Startup_Bonus (Bonus2 × 2)
+33. Raw_Score (Base + Bonuses)
+34. Max_Score (always 52.8)
+35. Percentage (with % suffix — can exceed 100%)
+36. Tier (A/B/C/D/F)
+37. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
+38. Whys (bullet list with \n between each — leave empty if Auto_DQ)
+39. Concern
+40. Cleaned? (always write as empty string — cleanup agent fills this)
 ```
 
 **Example row (score columns are JUST numbers, notes are JUST text):**
@@ -305,41 +309,43 @@ writer.writerow([
     "Priya Patel",                          # 1. Candidate
     "",                                     # 2. Greenhouse URL (empty — filled manually or via Greenhouse integration)
     "https://linkedin.com/in/priyapatel",   # 3. Public LI URL
-    "Recruiting Coordinator",               # 4. Title
-    "BrowserStack",                         # 5. Company
-    "Ahmedabad, Gujarat, India",            # 6. Location
-    "Y",                                    # 7. Gujarat/Gujarati
-    "No",                                   # 8. Auto_DQ
-    "",                                     # 9. DQ_Reason
-    "3",                                    # 10. Dim1 Title [CRITICAL 5×]
-    "Recruiting Coordinator title at SaaS", # 11. Dim1 NOTE
-    "2",                                    # 12. Dim2 HighVolume [CORE 4×]
-    "Multiple reqs, busy hiring env",       # 13. Dim2 NOTE
-    "2",                                    # 14. Dim3 SalesHiring [CORE 3×]
-    "Recruited for Sales-adjacent roles",   # 15. Dim3 NOTE
-    "3",                                    # 16. Dim4 SaaS [CORE 3×]
-    "BrowserStack — non-US SaaS validated", # 17. Dim4 NOTE
-    "1",                                    # 18. Dim5 Edu [STD 0.7×]
-    "Bachelor's in HR",                     # 19. Dim5 NOTE
-    "3",                                    # 20. Dim6 RecruitingOps [STD 0.6×]
-    "Greenhouse + built interview workflows",# 21. Dim6 NOTE
-    "2",                                    # 22. Dim7 Tenure [MINOR 0.3×]
-    "2.5 yrs at BrowserStack",             # 23. Dim7 NOTE
-    "2",                                    # 24. Bonus1 US_Co BONUS [×0.8]
-    "India co, US client base",             # 25. Bonus1 NOTE
-    "3",                                    # 26. Bonus2 Startup BONUS [×2]
-    "BrowserStack was VC-backed pre-IPO",   # 27. Bonus2 NOTE
-    "38.1",                                 # 28. Base_Score
-    "1.6",                                  # 29. US_Co_Bonus (Bonus1 × 0.8)
-    "6.0",                                  # 30. Startup_Bonus (Bonus2 × 2)
-    "45.7",                                 # 31. Raw_Score
-    "52.8",                                 # 32. Max_Score
-    "86.6%",                                # 33. Percentage
-    "A",                                    # 34. Tier
-    "Strong Yes",                           # 35. Verdict
-    "• SaaS recruiting coord at BrowserStack\n• Ahmedabad-based, Gujarati speaker\n• Greenhouse experience — zero ramp-up",  # 36. Whys
-    "No US HQ company experience",          # 37. Concern
-    "",                                     # 38. Cleaned? (always empty)
+    "https://linkedin.com/talent/...",      # 4. LIR URL
+    "2026-03-25 10:30:00",                  # 5. Date Added
+    "Recruiting Coordinator",               # 6. Title
+    "BrowserStack",                         # 7. Company
+    "Ahmedabad, Gujarat, India",            # 8. Location
+    "Y",                                    # 9. Gujarat/Gujarati
+    "No",                                   # 10. Auto_DQ
+    "",                                     # 11. DQ_Reason
+    "3",                                    # 12. Dim1 Title [CRITICAL 5×]
+    "Recruiting Coordinator title at SaaS", # 13. Dim1 NOTE
+    "2",                                    # 14. Dim2 HighVolume [CORE 4×]
+    "Multiple reqs, busy hiring env",       # 15. Dim2 NOTE
+    "2",                                    # 16. Dim3 SalesHiring [CORE 3×]
+    "Recruited for Sales-adjacent roles",   # 17. Dim3 NOTE
+    "3",                                    # 18. Dim4 SaaS [CORE 3×]
+    "BrowserStack — non-US SaaS validated", # 19. Dim4 NOTE
+    "1",                                    # 20. Dim5 Edu [STD 0.7×]
+    "Bachelor's in HR",                     # 21. Dim5 NOTE
+    "3",                                    # 22. Dim6 RecruitingOps [STD 0.6×]
+    "Greenhouse + built interview workflows",# 23. Dim6 NOTE
+    "2",                                    # 24. Dim7 Tenure [MINOR 0.3×]
+    "2.5 yrs at BrowserStack",             # 25. Dim7 NOTE
+    "2",                                    # 26. Bonus1 US_Co BONUS [×0.8]
+    "India co, US client base",             # 27. Bonus1 NOTE
+    "3",                                    # 28. Bonus2 Startup BONUS [×2]
+    "BrowserStack was VC-backed pre-IPO",   # 29. Bonus2 NOTE
+    "38.1",                                 # 30. Base_Score
+    "1.6",                                  # 31. US_Co_Bonus (Bonus1 × 0.8)
+    "6.0",                                  # 32. Startup_Bonus (Bonus2 × 2)
+    "45.7",                                 # 33. Raw_Score
+    "52.8",                                 # 34. Max_Score
+    "86.6%",                                # 35. Percentage
+    "A",                                    # 36. Tier
+    "Strong Yes",                           # 37. Verdict
+    "• SaaS recruiting coord at BrowserStack\n• Ahmedabad-based, Gujarati speaker\n• Greenhouse experience — zero ramp-up",  # 38. Whys
+    "No US HQ company experience",          # 39. Concern
+    "",                                     # 40. Cleaned? (always empty)
 ])
 ```
 

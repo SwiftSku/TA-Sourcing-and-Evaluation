@@ -200,7 +200,7 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| S1 | Column count | `len(row) == expected_col_count` (AM=37, RC=38 — read from JD file) | Unquoted commas split a field, or columns are missing |
+| S1 | Column count | `len(row) == expected_col_count` (AM=37, RC=40 — read from JD file) | Unquoted commas split a field, or columns are missing |
 | S2 | No completely empty row | At least columns 1-4 are non-empty | Row was written as blank/partial |
 | S3 | No header duplication | Row[0] ≠ `"Candidate"` | Header was accidentally re-written as data |
 
@@ -214,13 +214,13 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 | I2b | Public LI URL completeness | If Column 4 is a LinkedIn Recruiter URL (`/talent/`), then Column 3 MUST be non-empty | Row has an LIR URL that could yield a public URL but enrichment hasn't been done yet — do NOT mark as `TRUE` until Step 6 enrichment has been attempted for this row |
 | I2c | Public LI URL slug-name match | If Column 3 is non-empty, extract the slug (the part after `/in/`), split it on `-`, remove any trailing alphanumeric hash segments (segments that are all digits or >6 chars of mixed alphanumeric), then check if at least ONE word from the candidate's name (Column 1, case-insensitive) appears in the slug parts. E.g., "Priya Patel" + slug `priya-patel-a1b2c3` → match ("priya" found). "Faizan Shaikh" + slug `faizan-shaikh` → match. But "Faizan Shaikh" + slug `john-doe-developer` → FAIL. | **The public URL likely belongs to a different person with the same name.** This is a critical data integrity issue — the CE may have guessed/constructed the URL instead of extracting it from the LIR profile's "Public profile" link. Clear Column 3 (set to empty) and leave `Cleaned?` empty so enrichment is re-attempted in Step 6. Log: `URL_SLUG_MISMATCH: {Name} | {URL} — slug does not match candidate name, cleared.` |
 | I3 | LIR URL format | Column 4 starts with `https://www.linkedin.com/` OR is a valid non-LinkedIn URL starting with `http` | Internal URL is garbled or shifted |
-| I4 | Source exists | Column 5 is non-empty | Source field is blank |
+| I4 | Source exists | Column 5 is non-empty (AM only; RC has no Source column — skip this test) | Source field is blank |
 
 ### Timestamp Tests
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| T1 | Date format | Date Added column matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` (AM: Column 6; RC: no Date Added column — skip this test) | Timestamp is garbled or in wrong format |
+| T1 | Date format | Date Added column matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` (AM: Column 6; RC: Column 5) | Timestamp is garbled or in wrong format |
 | T2 | Date is plausible | Year is 2025 or 2026, month 01-12, day 01-31 | Timestamp has impossible values |
 
 ### Scoring Tests — Dynamic Weight Recalculation
@@ -324,6 +324,5 @@ In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRU
 
 When column counts, max scores, or dimension weights change in a JD file, the following must also be updated:
 
-1. **`render_mermaid.py`** — legend section hardcodes column counts and max scores per role (search for the `<li><code>JD--` lines). Update to match the new values.
-2. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
-3. **`Z__In_Use_Ref_Files/_Agent_Flowchart.mermaid`** — if agent names, file names, or pipeline flow changes, update the mermaid source and regenerate the PNG.
+1. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
+2. **`_Agent_Flowchart.png`** — if agent names, file names, or pipeline flow changes, regenerate the PNG using `Z__In_Use_Ref_Files/_Flowchart_Preferences.md`.

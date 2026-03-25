@@ -152,7 +152,7 @@ For each candidate in the save list:
 
 After all candidates are processed, update the output xlsx. Add a note to the candidate's `Dim8_Note` column (or whichever appropriate text field) appending: `[Saved to LIR project: {project_name} on {date}]`
 
-⚠️ Do NOT add new columns to the output file — the column structure is locked (AM=37, RC=38).
+⚠️ Do NOT add new columns to the output file — the column structure is locked (AM=37, RC=40).
 
 ---
 
