@@ -10,7 +10,7 @@
 
 - **Chrome icon:** `Z__In_Use_Ref_Files/Chrome_Icon.png` — paste on every agent box that uses Chrome (URL Extractor, Candidate Evaluator, Cleanup Agent enrichment, Save_To_LIR)
 - **Chrome icon size:** 22×22px, positioned top-right corner of the box
-- **Chrome in legend:** Include Chrome icon with "= uses Chrome" label
+- **Chrome in legend:** No — the icon is self-explanatory. Do NOT add a Chrome legend entry.
 
 ## Color Scheme
 
@@ -36,7 +36,7 @@
 
 ## Layout
 
-- **Canvas width:** 1200px
+- **Canvas sizing:** NEVER hardcode width or height. Render all content to a large scratch canvas, compute the actual bounding box of all drawn pixels, then crop to `bbox + 20px` padding on each side. The canvas should be exactly as wide and tall as the content requires — no wasted whitespace.
 - **Layout pattern:** Center spine — main flow runs straight down the vertical center
 - **Side branches:** Parallel/optional agents branch left or right off the center spine
 - **Loop-back arrows:** Curved arrows returning to an earlier node (e.g., "next batch" loops back to URL Extractor, refinement loops back to CE)
@@ -58,10 +58,10 @@
 - Show which model runs each agent (Opus vs Sonnet)
 - Note "NO Chrome" on orchestrator explicitly
 - Include shared files section listing all cross-agent files
-- Include key files per agent in a legend/footer section
+- Include key file name(s) as tiny 8px grey text inside each agent box (bottom of box, `#888` color). No separate footer section.
 - Include column counts and max scores per role in footer
 - Highlight `CE_Spawn_Template.md` callout near CE box in purple (`#7B4DB5`)
-- Auto-crop canvas height to content + 20px padding
+- Auto-crop both width AND height to content bounding box + 20px padding per side
 
 ## Flow Structure (top-down)
 
@@ -78,6 +78,17 @@ The pipeline flows top-to-bottom through these stages on the center spine:
 9. **Decision: Terminate?** — diamond: "next batch" loops back to URL Extractor; "yes" branches to Self-Destruct
 10. **Self-Destruct** (red container) — branches right off terminate diamond
 11. **Save_To_LIR** (manual, Chrome) — separate branch, user-invoked only
+
+## Text Fitting Rules (Critical)
+
+- **Measure first, draw second:** Always use `textbbox()` to measure every text string BEFORE sizing the box. Never hardcode box dimensions without measuring the text that goes inside.
+- **Word-wrap all body text:** Use a `wrap_text()` helper that splits on words and checks pixel width against `max_inner_width` (~280px). Never assume text will fit a fixed-width box.
+- **Padding budget:** 14px horizontal, 10px vertical inside each box. Title gets 6px gap before body lines. Body lines get 3px inter-line spacing.
+- **Chrome icon allowance:** When a box has a Chrome icon (22×22, top-right), add 28px to the title width measurement so the icon doesn't overlap title text.
+- **Diamond text:** Keep to 1–2 very short words (≤7 chars/line). Use `DIAMOND_FONT` (Bold 11px). Center each line independently within the diamond. **NEVER hardcode diamond size** — always use `measure_diamond()` which computes the minimum half-size from `(max_text_dimension + padding) / √2`. Pass text as a list of lines, not a `\n`-joined string.
+- **Title area:** Measure both title and subtitle text heights with `textbbox()`, then allocate `title_h + subtitle_h + 14px` gap before the first phase. Never use a hardcoded offset like `+40`.
+- **Footer text:** Use 9px body font, 11px bold for labels. Measure each `label + file` pair to ensure it fits within `canvas_width - 2*margin - 40px`.
+- **Shared files line:** Join with ` | ` separator, then word-wrap to canvas width minus margins. Use 10px font.
 
 ## When to Regenerate
 

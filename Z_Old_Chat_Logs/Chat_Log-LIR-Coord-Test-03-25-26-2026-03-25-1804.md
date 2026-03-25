@@ -68,3 +68,28 @@ Recalled: bridge amber copper quartz — PASS
 Result: 0 A-rated out of 10 (2C, 1D, 6F, 1 error) → Quality gate says STOP.
 run_total_count: 10 | run_a_rated_count: 0
 
+## SEARCH REFINED
+Added company filters: BrowserStack, Freshworks, eClinicalWorks, Automation Anywhere, Karat
+Results: 71K → 66 candidates
+First result: Dhara Bharadiya (DUPLICATE, prior B 79.9%)
+
+## CANDIDATES (Refined search)
+11. Shefali Patel | B | 72.35% | Yes | Matrix Comsec
+12. Aman Jobanputra | B | 75.0% | Yes | Adani Group
+13. Shlesh Patel | B | 70.5% | Yes | eClinicalWorks
+14. Tilak B. | C | 64.4% | Maybe | VC ERP Consulting
+15. Jennifer M. | D | 49.8% | No | Si2 Technologies
+
+run_total_count: 15 | run_a_rated_count: 0 | Refined search: 3B, 1C, 1D out of 5
+
+## CANDIDATES (Refined batch 2)
+16. Shefali M. | B | 73.68% | Yes | Infocusp Innovations
+17. Krupal Panchal | D | 48.7% | No | eClinicalWorks
+18. Ekta Amar Mehta | B | 70.5% | Yes | Confidential
+19. Shubhangini V | D | 48.5% | No | L&T Technology Services
+20. Alisha Mittal | D | 36.5% | No | MSBC Group
+
+## CANARY CHECK (at 20)
+Recalled: bridge amber copper quartz — PASS
+run_total_count: 20 | run_a_rated_count: 0 | Refined search totals: 5B, 2C, 3D out of 10
+
