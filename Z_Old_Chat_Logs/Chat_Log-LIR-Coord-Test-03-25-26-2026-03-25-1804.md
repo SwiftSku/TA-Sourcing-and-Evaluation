@@ -37,3 +37,34 @@ PAGE 1 | POS 6 | 5 candidates extracted
 Result: Mixed (1C, 4F, 0A) → Continue for 1 more batch, reassess at 10.
 run_total_count: 5 | run_a_rated_count: 0
 
+## URL_EXTRACT (Batch 2)
+PAGE 1 | POS 11 | 4 new candidates (skipped Vipul P. dup)
+6. Dhwani Saija
+7. Roger Sequeira
+8. Manasha Ranjan
+9. Prachi Parmar
+
+## CANDIDATES (Batch 2)
+6. Dhwani Saija | F | 0% | Hard No | E2M Solutions
+7. Roger Sequeira | F | 0% | Hard No | Microlink Solutions
+8. Manasha Ranjan | F | 33.1% | Hard No | MSBC Group
+9. Prachi Parmar | D | 37.1% | No | Skynet Technologies
+
+## URL_EXTRACT (Batch 3)
+PAGE 1 | POS 17 | 5 candidates
+10. Bhagyashree Joglekar
+11. Liladhar Suthar
+12. Jyoti Tiwari
+13. Suresh Vaghela
+14. Mariya D.
+
+## CANDIDATES (Batch 3 - partial)
+10. Bhagyashree Joglekar | C | 54.7% | Maybe | Silver Touch Technologies Ltd
+
+## CANARY CHECK (at 10)
+Recalled: bridge amber copper quartz — PASS
+
+## QUALITY CHECK (at 10)
+Result: 0 A-rated out of 10 (2C, 1D, 6F, 1 error) → Quality gate says STOP.
+run_total_count: 10 | run_a_rated_count: 0
+

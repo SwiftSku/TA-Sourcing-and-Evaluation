@@ -101,7 +101,7 @@ For each broken row:
 7. **After the re-evaluation writes a new clean row**, mark the NEW row as `Cleaned?` = `TRUE`.
 8. **Now remove the OLD broken row** — but ONLY if the new row was successfully written (or was reconstructed from handoff data in step 1). Verify the new row exists in the output file before removing the old one. If the sub-agent failed or didn't write a row, **keep the broken row as-is**. This is the ONLY circumstance in which a row may be removed: when it is being replaced by a freshly evaluated row for the same candidate.
 
-⛔ **Sequential only** — same rules as the Pipeline Orchestrator. One sub-agent at a time. Mandatory 45-200 second random delay between candidates (LinkedIn sources).
+⛔ **Sequential only** — one sub-agent at a time. Anti-detection delays per `REF--Anti_Detection.md` §4 (LinkedIn sources).
 
 ### Step 5: Handle Rows Where URL Can't Be Found
 
@@ -326,4 +326,4 @@ When column counts, max scores, or dimension weights change in a JD file, the fo
 
 1. **`render_mermaid.py`** — legend section hardcodes column counts and max scores per role (search for the `<li><code>JD--` lines). Update to match the new values.
 2. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
-3. **`.Z_Agent_Flowchart.mermaid`** — if agent names, file names, or pipeline flow changes, update the mermaid source and regenerate the PNG via `python render_mermaid.py`.
+3. **`Z__In_Use_Ref_Files/_Agent_Flowchart.mermaid`** — if agent names, file names, or pipeline flow changes, update the mermaid source and regenerate the PNG.

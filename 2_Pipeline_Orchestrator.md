@@ -322,9 +322,13 @@ Validate and clean the output file at:
 For scoring variance protection, check the handoff file at:
 [FULL PATH to Z_Search_Cache.json]
 
-If you need to re-evaluate broken rows, spawn Candidate Evaluator sub-agents using:
-- Evaluation framework: [FULL PATH to [active JD file]]
-- LinkedIn learnings: [FULL PATH to REF--LIR_Interface_Learnings.md]
+If you need to re-evaluate broken rows, use the CE spawn template at:
+[FULL PATH to CE_Spawn_Template.md]
+
+Fill in parameters using these paths:
+- JD_FILE_PATH: [FULL PATH to [active JD file]]
+- LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
+- ANTI_DETECTION_PATH: [FULL PATH to REF--Anti_Detection.md]
 
 Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Uncleaned: {N}
 ```
