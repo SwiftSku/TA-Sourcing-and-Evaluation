@@ -21,7 +21,7 @@ This agent is spawned by the **Pipeline Orchestrator** every 10 candidates, or c
 
 The Candidate Evaluator sometimes writes free-text values containing commas without proper CSV quoting. Example: `Ahmedabad, Gujarat, India` becomes 3 columns instead of 1, shifting all subsequent columns right. Other corruption includes missing columns, merged fields, or garbled data.
 
-**Expected column count:** 38 (37 original + 1 `Cleaned?` column)
+**Expected column count:** Read from the active JD file's column schema. Count the numbered columns in the "CSV column order" block. AM = 37 columns, RC = 38 columns. Do NOT hardcode.
 
 ---
 
@@ -44,7 +44,7 @@ Before checking individual rows, scan for a rubric change:
 
 ### Step 1c: Normalize Public LinkedIn URLs
 
-Before any validation, normalize all Public LI URLs (Column 2) to a canonical form. This prevents duplicates caused by subdomain variants (`in.linkedin.com`, `ca.linkedin.com`, `uk.linkedin.com`, etc.) all pointing to the same profile.
+Before any validation, normalize all Public LI URLs (Column 3) to a canonical form. This prevents duplicates caused by subdomain variants (`in.linkedin.com`, `ca.linkedin.com`, `uk.linkedin.com`, etc.) all pointing to the same profile.
 
 **Normalization rule:** Replace any `https://{subdomain}.linkedin.com/in/` with `https://www.linkedin.com/in/`. Examples:
 - `https://in.linkedin.com/in/abhivyaktisrivastava` → `https://www.linkedin.com/in/abhivyaktisrivastava`
@@ -56,7 +56,7 @@ Apply this to every row, including `TRUE`-marked rows. This is a pure string ope
 ### Step 1d: Detect & Merge Duplicate Candidates
 
 After URL normalization, scan for duplicates. Two rows are duplicates if:
-1. **Same normalized Public LI URL** (Column 2, case-insensitive), OR
+1. **Same normalized Public LI URL** (Column 3, case-insensitive), OR
 2. **Same candidate name** (Column 1, case-insensitive after stripping whitespace)
 
 **When duplicates are found:**
@@ -135,18 +135,18 @@ After all structural validation and re-evaluation is done, make a second pass ov
 
 #### Step 6a: Fix Misplaced Public URLs (no Chrome needed)
 
-Before opening any profiles, scan every row. If Column 3 (LIR URL) contains a **public LinkedIn URL** (matches `https://www.linkedin.com/in/` or `https://in.linkedin.com/in/`) instead of a LinkedIn Recruiter URL:
-1. **Copy** the URL from Column 3 into Column 2 (Public LI URL) — but only if Column 2 is currently empty
-2. **Clear** Column 3 (set to empty string) — that URL is not an LIR URL and should not stay there
+Before opening any profiles, scan every row. If Column 4 (LIR URL) contains a **public LinkedIn URL** (matches `https://www.linkedin.com/in/` or `https://in.linkedin.com/in/`) instead of a LinkedIn Recruiter URL:
+1. **Copy** the URL from Column 4 into Column 3 (Public LI URL) — but only if Column 3 is currently empty
+2. **Clear** Column 4 (set to empty string) — that URL is not an LIR URL and should not stay there
 
 This is a pure data-fix pass. No Chrome, no delays.
 
 #### Step 6b: Enrich via Chrome (one row at a time)
 
-For each row that has a **non-empty LIR URL** (Column 3, starting with `https://www.linkedin.com/talent/`), check if it needs enrichment:
+For each row that has a **non-empty LIR URL** (Column 4, starting with `https://www.linkedin.com/talent/`), check if it needs enrichment:
 
 **Enrichment triggers (check both):**
-1. **Missing Public LI URL** — Column 2 is empty
+1. **Missing Public LI URL** — Column 3 is empty
 2. **First-name-only candidate** — Column 1 contains only a single word (no space) or looks like a first name only (e.g., "Dharmik" instead of "Dharmik Inamdar")
 
 If EITHER trigger applies, process that row **completely before moving to the next**:
@@ -159,7 +159,7 @@ If EITHER trigger applies, process that row **completely before moving to the ne
    - Pause for 3-8 seconds total while "reading" the profile
    - This step is mandatory for anti-detection — do NOT skip it
 4. **Extract** what's needed:
-   - **Public LI URL:** Locate the candidate's public LinkedIn profile URL on the LIR page (e.g., "View on LinkedIn" link). Format: `https://www.linkedin.com/in/username`. If not found, leave Column 2 empty — do not guess.
+   - **Public LI URL:** Locate the "Public profile" link on the LIR page (near the candidate's name/photo area). Read the `href` — format: `https://www.linkedin.com/in/{slug}`. ⛔ **NEVER guess or construct a URL from the candidate's name.** If the link is not present, leave Column 3 empty. After extracting, run the I2c slug-name sanity check: at least one word from the candidate's name must appear in the URL slug. If it doesn't match, the link may point to a different person — discard it and leave Column 3 empty.
    - **Full name (if first-name-only):** Read the candidate's full name from the LIR profile page. Update Column 1. If only first name + last initial visible (e.g., "Dharmik I."), use that.
 5. **Write the updated row to the CSV immediately** — use Python `csv` module with `quoting=csv.QUOTE_ALL`. Do NOT batch writes. Each row's enrichment is written before the next profile is opened.
 6. **Close** the profile tab — only close tabs YOU opened, do not close any other tabs
@@ -216,7 +216,7 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| S1 | Column count | `len(row) == 38` | Unquoted commas split a field, or columns are missing |
+| S1 | Column count | `len(row) == expected_col_count` (AM=37, RC=38 — read from JD file) | Unquoted commas split a field, or columns are missing |
 | S2 | No completely empty row | At least columns 1-4 are non-empty | Row was written as blank/partial |
 | S3 | No header duplication | Row[0] ≠ `"Candidate"` | Header was accidentally re-written as data |
 
@@ -225,16 +225,18 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
 | I1 | Candidate name exists | Column 1 is non-empty, contains at least 2 characters | Name field is blank or corrupted |
-| I2 | Public LI URL format | Column 2 is empty OR is a valid LinkedIn public profile URL (matches `https://(www\|in\|ca\|uk\|fr\|de\|br\|au\|sg).linkedin.com/in/` or `https://linkedin.com/in/`) | Public URL is garbled (empty is OK — not always available). Note: LinkedIn uses country subdomains like `in.linkedin.com` for India, `ca.linkedin.com` for Canada, etc. All are valid. |
-| I2b | Public LI URL completeness | If Column 3 is a LinkedIn Recruiter URL (`/talent/`), then Column 2 MUST be non-empty | Row has an LIR URL that could yield a public URL but enrichment hasn't been done yet — do NOT mark as `TRUE` until Step 6 enrichment has been attempted for this row |
-| I3 | LIR URL format | Column 3 starts with `https://www.linkedin.com/` OR is a valid non-LinkedIn URL starting with `http` | Internal URL is garbled or shifted |
-| I4 | Source exists | Column 4 is non-empty | Source field is blank |
+| I1b | Greenhouse URL format | Column 2 is empty OR is a valid Greenhouse URL (matches `https://app*.greenhouse.io/`) | Greenhouse URL is garbled (empty is OK — filled manually) |
+| I2 | Public LI URL format | Column 3 is empty OR is a valid LinkedIn public profile URL (matches `https://(www\|in\|ca\|uk\|fr\|de\|br\|au\|sg).linkedin.com/in/` or `https://linkedin.com/in/`) | Public URL is garbled (empty is OK — not always available). Note: LinkedIn uses country subdomains like `in.linkedin.com` for India, `ca.linkedin.com` for Canada, etc. All are valid. |
+| I2b | Public LI URL completeness | If Column 4 is a LinkedIn Recruiter URL (`/talent/`), then Column 3 MUST be non-empty | Row has an LIR URL that could yield a public URL but enrichment hasn't been done yet — do NOT mark as `TRUE` until Step 6 enrichment has been attempted for this row |
+| I2c | Public LI URL slug-name match | If Column 3 is non-empty, extract the slug (the part after `/in/`), split it on `-`, remove any trailing alphanumeric hash segments (segments that are all digits or >6 chars of mixed alphanumeric), then check if at least ONE word from the candidate's name (Column 1, case-insensitive) appears in the slug parts. E.g., "Priya Patel" + slug `priya-patel-a1b2c3` → match ("priya" found). "Faizan Shaikh" + slug `faizan-shaikh` → match. But "Faizan Shaikh" + slug `john-doe-developer` → FAIL. | **The public URL likely belongs to a different person with the same name.** This is a critical data integrity issue — the CE may have guessed/constructed the URL instead of extracting it from the LIR profile's "Public profile" link. Clear Column 3 (set to empty) and leave `Cleaned?` empty so enrichment is re-attempted in Step 6. Log: `URL_SLUG_MISMATCH: {Name} | {URL} — slug does not match candidate name, cleared.` |
+| I3 | LIR URL format | Column 4 starts with `https://www.linkedin.com/` OR is a valid non-LinkedIn URL starting with `http` | Internal URL is garbled or shifted |
+| I4 | Source exists | Column 5 is non-empty | Source field is blank |
 
 ### Timestamp Tests
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| T1 | Date format | Column 5 matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` | Timestamp is garbled or in wrong format |
+| T1 | Date format | Date Added column matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` (AM: Column 6, RC: Column 6) | Timestamp is garbled or in wrong format |
 | T2 | Date is plausible | Year is 2025 or 2026, month 01-12, day 01-31 | Timestamp has impossible values |
 
 ### Scoring Tests — Dynamic Weight Recalculation

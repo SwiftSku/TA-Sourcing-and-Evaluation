@@ -4,8 +4,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils import get_column_letter
 
-CSV_PATH = "/sessions/awesome-determined-brown/_temp_rc.csv"
-XLSX_PATH = "/sessions/awesome-determined-brown/mnt/TA-ACM/_OUTPUT--AMD_Recruiting_Coord.xlsx"
+CSV_PATH = "/sessions/wizardly-dazzling-dirac/mnt/TA-ACM/_OUTPUT--Acct_Mgr.csv"
+XLSX_PATH = "/sessions/wizardly-dazzling-dirac/mnt/TA-ACM/_OUTPUT--Acct_Mgr.xlsx"
 
 wb = Workbook()
 ws = wb.active
@@ -33,7 +33,7 @@ for col, w in widths.items():
     ws.column_dimensions[get_column_letter(col)].width = w
 
 ws.freeze_panes = 'B2'
-ws.auto_filter.ref = f"A1:{get_column_letter(37)}1"
+ws.auto_filter.ref = f"A1:{get_column_letter(36)}1"
 
 wb.save(XLSX_PATH)
 print(f"Synced {row_idx - 1} data rows to {XLSX_PATH}")

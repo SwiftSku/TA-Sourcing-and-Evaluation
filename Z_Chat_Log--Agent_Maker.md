@@ -2367,3 +2367,69 @@ Files updated:
 ### 140. Auto-DQ: Expand SaaS Trigger to Include VC-Backed Tech (2026-03-23)
 **Dan:** "Let's change it to 'Zero SaaS or Software Product exposure or worked at a venture backed technology company'"
 **Claude:** Updated both instances in RC JD — auto-DQ table (Step 2) and rubric summary.
+
+### 141. Remove Hindi_Signal from RC + Broaden SaaS Auto-DQ + Un-DQ 3 Candidates (2026-03-24)
+**Dan:** (1) "hindi isn't important for this role. Remove the column Hindi_Signal (Y/N)" (2) "recheck the auto dq for saas and rerun them if they had other kinds of experience that now makes them suitable"
+**Claude:**
+1. **Removed Hindi_Signal from RC JD** — column schema 38 → 37 columns. Renumbered Cleaned? from #38 to #37. Updated column list, example row.
+2. **Removed Hindi_Signal from RC xlsx** — deleted column 37, now 37 columns.
+3. **GSheet_Formater.md** — initially incorrectly removed Hindi_Signal (GSheet is for AM role which STILL has Hindi_Signal). Fixed: restored Hindi_Signal at AI, Cleaned? at AJ, Step 8 (Y/N standardization), all range references, and checklist.
+4. **Broadened SaaS auto-DQ trigger** (entry 140): "Zero SaaS or Software Product exposure or worked at a venture backed technology company"
+5. **Re-checked 17 SaaS-DQ'd candidates** via LinkedIn profiles. Results: 11 still DQ'd, 3 unverifiable (404/wrong LI URL), 3 un-DQ'd and re-scored:
+   - **Nandini Parmar** (Row 16): Creole Studios (software dev). Score 16.6/58.8 = 28.2% → F/Hard No.
+   - **Runali Joshi** (Row 26): Moksh Tech (AI/web dev). Score 20.6/58.8 = 35.0% → D/No.
+   - **Urvashi Ghodke** (Row 28): ProductSquads (AI tech). Score 26.2/58.8 = 44.6% → D/No.
+6. All 3 scored low — no sales hiring, no SaaS specifically, limited high-volume evidence. Un-DQ'd but not competitive.
+
+### 142. Header Row Formatting + Column Auto-Fit for RC xlsx (2026-03-24)
+**Dan:** "make excel header row height for the recruiting coordinator be static at 30 and adjust the width of all columns so that all text is always a fit for the header row. add that to mark down file"
+**Claude:**
+1. Applied to `_OUTPUT--AMD_Recruiting_Coord.xlsx`: header row height = 30, column widths auto-fit to header text (`len * 1.15 + 2`, min 10), bold centered wrapped header cells.
+2. Updated RC JD (`JD--AMD_Recruiting_Coord.md`) Step 6: added header row formatting rule — row 1 height 30, auto-fit column widths, bold/centered/wrapped headers.
+
+### 143. Renumber RC Dims by Weight + Header Formatting + Update Cleaner (2026-03-24)
+**Dan:** (1) "dimension labeling of header row should be numbered in order... most weight to least, left to right" (2) "update the cleaner file for this specific job"
+**Claude:**
+1. **Renumbered RC dimensions** — old arbitrary numbering (Dim6, Dim2, Dim9, Dim1, Dim5, Dim8, Dim4) → sequential by weight: Dim1 (Sales Hiring 5×) → Dim2 (Title 5×) → Dim3 (High-Volume 4×) → Dim4 (SaaS 3×) → Dim5 (Education 0.7×) → Dim6 (Recruiting Ops 0.6×) → Dim7 (Tenure 0.3×). Bonuses: Dim3/Dim7 → Bonus1 (US Co)/Bonus2 (Startup).
+2. **Updated RC xlsx** — all 37 column headers renamed to new numbering.
+3. **Updated RC JD** — all dimension references, column schema, example row, formula, priority signals, rubric summary table updated with new numbering.
+4. **Updated CSV_Cleanup_Agent.md** — removed hardcoded column count "38", replaced with instruction to read from active JD file (AM=36, RC=37).
+5. **Header formatting** — row height 30, column widths auto-fit for 2-line wrapped headers.
+
+### 144. Reduce Sales Hiring Weight 5× → 3× + Re-evaluate All Candidates + Open C+ in LIR (2026-03-24)
+**Dan:** "let's reduce sales hiring weight to 3x — then re evaluate all candidates in the excel file — then when done open all candidates C rated or higher in linkedin recruiter profile tabs"
+**Claude:**
+1. **Reduced Sales Hiring weight from 5× to 3×** in RC JD (`JD--AMD_Recruiting_Coord.md`).
+2. **Reordered dimensions by weight**: Dim1 Title (5×) → Dim2 High-Volume (4×) → Dim3 Sales Hiring (3×) → Dim4 SaaS (3×) → Dim5 Education (0.7×) → Dim6 Recruiting Ops (0.6×) → Dim7 Tenure (0.3×). Updated: dimension sections, formula, base max (58.8 → 52.8), column schema, example row, priority signals, rubric summary table, mental model.
+3. **Removed duplicate rubric table** (stale copy of High-Volume scoring table that was accidentally left after the SaaS dimension section).
+4. **Re-evaluated ALL 61 candidates** in `_OUTPUT--AMD_Recruiting_Coord.xlsx` with new weights. Swapped column order (Dim1=Title, Dim2=HighVol, Dim3=SalesHiring), recalculated Base_Score, Raw_Score, Percentage, Tier, Verdict for every row against new max of 52.8.
+5. **Tier shifts from reweighting:**
+   - Aastha Bhadani: 75.2% B → 79.9% B (nearly A)
+   - Deepali Tanna: 73.0% B → 72.5% B
+   - Ishita Kamani: 73.3% B → 74.1% B
+   - Faizan Shaikh: 56.5% C → 59.1% C
+   - Ronak Laddha: 56.5% C → 59.1% C
+   - Prince Kandachalil: 54.1% C → 56.4% C
+   - Binod Kumar Samal: 51.0% C → 53.0% C
+   - No tier changes (all stayed same letter grade). Percentages shifted slightly due to lower denominator.
+6. **Opened 7 C+ candidates in LinkedIn Recruiter tabs**: Aastha Bhadani (B 79.9%), Ishita Kamani (B 74.1%), Deepali Tanna (B 72.5%), Ronak Laddha (C 59.1%), Faizan Shaikh (C 59.1%), Prince Kandachalil (C 56.4%), Binod Kumar Samal (C 53.0%).
+
+---
+
+### 145
+
+**Dan:** "make a second sheet in the work book that is just a transposed version of the first and it just stays that way"
+**Claude:**
+Added a "Transposed" sheet to `_OUTPUT--AMD_Recruiting_Coord.xlsx`. Rows and columns swapped (37 cols × 62 rows → 62 cols × 37 rows), formatting preserved. Static values (not linked formulas), so it persists as a snapshot.
+
+---
+
+### 146
+
+**Dan:** "Why is Faizan Shaikh (C, 59.1%) in the list? he doesn't even do recruiting?" → then "NO. open the profile you opened for me. You found a random fucking profile. wtf" → then "yes, flag it, but also, what should we change in your markdown files to prevent this from happening?"
+**Claude:**
+1. **Root cause identified:** The CE guessed/constructed `linkedin.com/in/faizan-shaikh` as the public URL instead of extracting it from the LIR profile's "Public profile" link. That vanity URL belongs to a completely different person (Web UI Developer in Pune). The LIR profile match in the previous session also grabbed the wrong person (BDM at IMS nHance, not the recruiter at IMS Group).
+2. **DQ'd Faizan Shaikh** in xlsx (both sheets) — Auto_DQ=Yes, DQ_Reason=BAD URL, Tier=DQ, Verdict=Auto-DQ.
+3. **Fixed 3 markdown files to prevent recurrence:**
+   - **`JD--AMD_Recruiting_Coord.md`** + **`JD--Acct_Mgr.md`** (CE instructions): Replaced vague "Public LI URL" instruction with explicit extraction rules — NEVER guess/construct URLs from names, extract ONLY from "Public profile" link on LIR page, sanity-check slug matches candidate name, leave empty if not found.
+   - **`CSV_Cleanup_Agent.md`**: Added new validation test **I2c (slug-name match)** — extracts slug from public URL, checks that at least one word from candidate name appears in it. Fails → clears URL, forces re-enrichment. Also updated Step 6b enrichment to run I2c check on extracted URLs.

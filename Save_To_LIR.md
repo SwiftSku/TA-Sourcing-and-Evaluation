@@ -76,7 +76,7 @@ for row in csv:
                 add to save_list
 ```
 
-If a qualifying candidate has NO LIR URL (Column 3 empty), flag them separately:
+If a qualifying candidate has NO LIR URL (Column 4 empty), flag them separately:
 ```
 ⚠️ These candidates qualify but have no LIR URL — cannot save automatically:
 - [Name] | [Score] | [Public LI URL]
@@ -135,7 +135,7 @@ For each candidate, BEFORE attempting to save, check the LIR profile for the **"
 
 For each candidate in the save list:
 
-1. Open the candidate's LIR profile URL (Column 3 from CSV) in a new tab
+1. Open the candidate's LIR profile URL (Column 4 from CSV) in a new tab
 2. Wait for the profile to fully load (watch for the name to appear)
 3. **Run Step 3.5 check** — if already in target project, skip to next candidate
 4. Look for the **"Save to project"** button — this is a bordered button in the action row directly below the "Public profile" link, to the LEFT of the mail icon (✉️) and three-dot menu (•••). It is NOT in a dropdown — it's a visible button on the profile.
@@ -150,7 +150,7 @@ For each candidate in the save list:
 
 After all candidates are processed, update the CSV. Add a note to the candidate's `Dim8_Note` column (or whichever appropriate text field) appending: `[Saved to LIR project: {project_name} on {date}]`
 
-⚠️ Do NOT add new columns to the CSV — the 38-column structure is locked.
+⚠️ Do NOT add new columns to the CSV — the column structure is locked (AM=37, RC=38).
 
 ---
 

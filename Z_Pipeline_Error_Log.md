@@ -430,3 +430,27 @@ All 26 unchecked rows have this pattern:
 
 ### Summary
 CLEANUP | Checked: 512 | Valid: 502 | Rescored: 0 | Re-evaluated: 0 | Deduped: 0 | URLs filled: 2 | Names fixed: 0 | Stuck: 2 (marked TRUE) | Uncleaned: 0
+
+---
+
+## 2026-03-24 — CSV Cleanup Agent Run (Scheduled Task)
+
+### Structural Fixes
+- **5 misplaced public URLs:** Public LinkedIn URLs found in LIR column (Col 3) moved to Col 2, Col 3 cleared.
+- **1 rescored (old weights):** Row 540 (Nayan Patel) had Max_Score=41.6 (old rubric). Rescored to 33.8 (all zeros, Auto_DQ).
+- **6 Auto_DQ A2 violations fixed:** Rows 289 (Heena Alwani), 314 (Aashumi Shah), 459 (Yuvraj Solanki), 467 (Harshad Chauhan), 473 (Rajesh Mathew), 536 (Karan Doshi) had non-zero dimension scores despite Auto_DQ=Y. All scores zeroed per A2 rule.
+- **5 D9 score math fixes:** Rows 321 (Dharmendra Ahuja), 385 (N Kumar), 400 (Nilesh Chauhan), 408 (Nirva Amin), 439 (Umang Kanani) had Raw_Score not matching weighted sum of dimensions. Recalculated from current weights.
+
+### Enrichment
+- **Row 446 (Yogesh Panjari):** Public URL found via Google search: `https://www.linkedin.com/in/yogeshpanjari` (Ahmedabad, Gujarat). Marked TRUE.
+- **Row 463 (PROFILE_ID_AEMAABv5n_YBQTpsbwyAjIXtT9ley0RrxR6mqOo):** 2nd failed enrichment attempt (1st was 2026-03-23). Name still corrupted (profile ID, not real name). No Google search possible. Marked ENRICHMENT_FAILED per escape hatch rule.
+
+### Unevaluated Rows (3 — cannot clean without LIR access)
+- **Row 541 (Valay Patel):** Completely unevaluated (name + LIR URL only, no scores). LIR profile requires authentication which would sign out Dan's Safari session. Multiple Google results for "Valay Patel" in Gujarat — cannot disambiguate without company/location.
+- **Row 542 (Vijendra Jawa):** Same situation. Google shows "Vijendra Jawa - IT - Customer Experience" in Ahmedabad but cannot confirm match without LIR.
+- **Row 543 (Kamlesh Vyas):** Same situation. Multiple Kamlesh Vyas profiles in Gujarat — cannot disambiguate.
+
+**Note:** These 3 rows were added by a previous pipeline run with source "Unkown_Search" and have zero evaluation data. They require a Candidate Evaluator sub-agent with LIR access to evaluate. Cannot be cleaned by cleanup agent alone.
+
+### Summary
+CLEANUP | Checked: 542 | Valid: 525 | Rescored: 6 | Re-evaluated: 0 | Deduped: 0 | URLs filled: 1 | Names fixed: 0 | Stuck: 3 | Enrichment_Failed: 1 | Uncleaned: 3

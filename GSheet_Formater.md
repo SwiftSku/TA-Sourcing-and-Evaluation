@@ -48,19 +48,21 @@
 | Col | Name |
 |-----|------|
 | A | Candidate |
-| B | Public LI URL |
-| C | LIR URL |
-| D | Source |
-| E:Z | *(scoring sub-dimensions — visible)* |
-| AA | Dim8_Note |
-| AB | Raw_Score |
-| AC | Max_Score |
-| **AD** | **Percentage** |
-| **AE** | **Tier** |
-| AF | Verdict |
-| AG | Whys |
-| AH | Concern |
-| AI | Cleaned? |
+| B | Greenhouse URL |
+| C | Public LI URL |
+| D | LIR URL |
+| E | Source |
+| F:AA | *(scoring sub-dimensions — visible)* |
+| AB | Dim8_Note |
+| AC | Raw_Score |
+| AD | Max_Score |
+| **AE** | **Percentage** |
+| **AF** | **Tier** |
+| AG | Verdict |
+| AH | Whys |
+| AI | Concern |
+| AJ | Hindi_Signal |
+| AK | Cleaned? |
 
 ---
 
@@ -94,9 +96,9 @@ Select row 1 by clicking the row number.
 
 **CRITICAL:** Only the Tier column (AE) should have colored cell backgrounds (applied via conditional formatting in Step 7). All other data cells must be white.
 
-- Select all data rows: Name Box → type `A2:AI{last_row + 1000}` → Enter
+- Select all data rows: Name Box → type `A2:AK{last_row + 1000}` → Enter
 - Format → Fill color → **White** (`FFFFFF`)
-- This resets every data cell to white. The Tier column (AE) will re-apply its colors via conditional formatting rules from Step 7.
+- This resets every data cell to white. The Tier column (AF) will re-apply its colors via conditional formatting rules from Step 7.
 - Row 1 (header) is NOT affected — it keeps its white/default background from Step 3.
 
 ---
@@ -116,7 +118,7 @@ Select row 1 by clicking the row number.
 - Format → Wrapping → **Wrap**
 
 ### Step 2 — Clip URL-only columns:
-- Name Box → type `B:C` → Enter
+- Name Box → type `B:D` → Enter
 - Format → Wrapping → **Clip**
 
 ### Left-align — long text / notes:
@@ -124,14 +126,14 @@ Select each range (Name Box → type range → Enter → `Ctrl+L`):
 
 | Range | Column Name |
 |-------|-------------|
-| `AA:AA` | Dim8_Note |
-| `AG:AG` | Whys |
-| `AH:AH` | Concern |
+| `AB:AB` | Dim8_Note |
+| `AH:AH` | Whys |
+| `AI:AI` | Concern |
 
 ### Center-align — short text / numbers:
-- Name Box → type `C:AI` → Enter → `Ctrl+E`
-- **Explicitly verify** AD (Percentage) and AE (Tier) are centered — these are the most visible columns and must not be left-aligned
-- Also verify AF (Verdict) and AI (Cleaned?) are centered
+- Name Box → type `D:AK` → Enter → `Ctrl+E`
+- **Explicitly verify** AE (Percentage) and AF (Tier) are centered — these are the most visible columns and must not be left-aligned
+- Also verify AG (Verdict), AJ (Hindi_Signal), and AK (Cleaned?) are centered
 - Then re-apply left-align to the long-text columns above (they override)
 
 ---
@@ -169,9 +171,21 @@ Condition: **Text is exactly**
 
 ---
 
-## 8. Delete Empty Rows/Columns
+## 8. Hindi_Signal Column (AI) — Standardize to Y/N
+
+All values in AI must be exactly `Y` or `N` (single character, uppercase). No "Yes", "No", "yes", "no", etc.
+
+- Select the entire AI column by clicking the **AI column header** (this sets the range to `MAIN_LIVE!AI:AI`)
+- Edit → Find and replace → check **Match entire cell contents**, Search: **Specific range** = `MAIN_LIVE!AI:AI`
+- Find `Yes` → Replace with `Y` → Replace all
+- Find `No` → Replace with `N` → Replace all
+- Repeat with lowercase variants if needed (`yes`, `no`)
+
+---
+
+## 9. Delete Empty Rows/Columns
 - Scroll to the bottom of data — delete any empty rows below last entry
-- Check for empty columns to the right of AI — delete if found
+- Check for empty columns to the right of AJ — delete if found
 - Any row or column with zero content must be deleted (per Notion guide)
 
 ---
@@ -183,11 +197,12 @@ Condition: **Text is exactly**
 - [ ] Row 1 + Col A frozen; Col A bold
 - [ ] All cells: Wrap; Col B:C only: Clip
 - [ ] Long-text cols (AG, AH, AA): left-aligned
-- [ ] C:AI: center-aligned (with left overrides on note cols)
+- [ ] C:AJ: center-aligned (with left overrides on note cols)
 - [ ] AD2:AD{last_row + 1000}: formatted as `0%`, center-aligned
 - [ ] AE (Tier) center-aligned
 - [ ] CF rules: all 6 Tier colors applied to **AE2:AE{last_row + 1000}**
 - [ ] ALL data cell backgrounds are WHITE except Tier column (AE) which uses conditional formatting colors
 - [ ] No columns are hidden (all visible unless user explicitly requests hiding)
+- [ ] AI column: all values are `Y` or `N` only
 - [ ] No empty rows/cols
 - [ ] No `HYPERLINK()` formulas used

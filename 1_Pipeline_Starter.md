@@ -69,7 +69,6 @@ Sub-agent spawning rules:
 • Sequential only — ONE Chrome agent at a time (non-Chrome agents can run in parallel during delays)
 • 45-200s random delay between CE sub-agents (LinkedIn sources)
 • Each sub-agent gets: the PATH to its instruction file, the PATH to the active JD file, inputs, CSV path
-• Each CE sub-agent writes to the output file IMMEDIATELY after scoring — no batching, ever
 • Each CE sub-agent returns exactly: {Name} | {Tier} | {Score%} | {Verdict} | {Company}
 • You never read a candidate's profile yourself — only sub-agents do
 • All sub-agents spawn with model: "sonnet"

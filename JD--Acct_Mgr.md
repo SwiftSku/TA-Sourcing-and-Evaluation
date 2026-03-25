@@ -8,6 +8,7 @@ pipeline_label: "Senior AM Pipeline"
 output_csv: "_OUTPUT--Acct_Mgr.csv"
 gsheet_url: "https://docs.google.com/spreadsheets/d/10C1m1YZU7VEfgg_3K2y2SrCAkkQtDDGBEn6s55lnCDo/edit?gid=317798724#gid=317798724"
 gsheet_tab: "MAIN_LIVE"
+lir_project_name: "Account Manager / AE / Support"
 
 # Search filters (read by URL_Extractor)
 lir_title_filters: ["Customer Success", "Account Manager", "CSM", "Client Success"]
@@ -37,7 +38,7 @@ refinement_patterns:
     fix: "Tighten title filter to: Customer Success, CSM, Account Manager only"
 
 # A-rate signal reference (for Orchestrator search strategy)
-a_rate_signals: "93% of A-rated score SaaS=4 (US-HQ SaaS). 95% score Title=3 (CS/AM title). Company-targeted search guarantees both."
+a_rate_signals: "A-rated candidates need strong Title (5×) and SaaS/Software (2.5×) — these two base dimensions are 45.5% of max. Bonus from Startup/VC (2×) and KAM Metrics (2.5×) separates A from B."
 ```
 
 ## Purpose
@@ -82,28 +83,15 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 | Majority of career in non-tech traditional industry      | Banking (ICICI, HDFC, SBI, IndusInd, Paytm Bank), real estate CRM, pharma KAM (GSK, Cipla, AstraZeneca)                                                     |
 | Renewals Manager (primary/only title)                    | Title signals churn-prevention ops, not relationship management; flag unless backed by strong CS/AM titles elsewhere                                        |
 | No clear Gujarat/Gujarati connection                     | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count                                         |
-| Already in SwiftSku Greenhouse ATS                       | —                                                                                                                                                           |
 | Zero SaaS exposure across entire career                  | No tech company, product, or platform anywhere                                                                                                              |
 
 ### Step 3: Score Each Dimension
 
 Be conservative — a 4 or 3 should be genuinely impressive.
 
-#### Dimension 1: SaaS Experience (weight: 3×)
+### Base Dimensions
 
-| Score | Criteria |
-|---|---|
-| 4 | US HQ SaaS company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, etc.) |
-| 3 | Non-US SaaS company on the validated list below |
-| 2 | Clear SaaS company, not on validated list |
-| 1 | Mixed — some SaaS, some traditional |
-| 0 | Minimal SaaS exposure (passes zero-SaaS disqualifier but barely) |
-
-**Validated SaaS companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
-
-**US HQ SaaS (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics
-
-#### Dimension 2: Title Match — CS / AM (weight: 2×)
+#### Dimension 1: Title Match — CS / AM (weight: 5×)
 
 | Score | Criteria |
 |---|---|
@@ -114,7 +102,21 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 > **Note:** Business Development titles can score a 2 if the role clearly involved retention/expansion of existing accounts, but never a 3. Renewals Manager as the sole title is an auto-disqualifier (see Step 2).
 
-#### Dimension 3: US Company Experience (weight: 0.8×)
+#### Dimension 2: SaaS / Software Experience (weight: 2.5×)
+
+| Score | Criteria |
+|---|---|
+| 4 | US HQ SaaS or software company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, etc.) |
+| 3 | Non-US SaaS or software company on the validated list below |
+| 2 | Clear SaaS or software company, not on validated list |
+| 1 | Mixed — some SaaS/software, some traditional |
+| 0 | Minimal SaaS/software exposure (passes zero-SaaS disqualifier but barely) |
+
+**Validated SaaS/software companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
+
+**US HQ SaaS/software (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics
+
+#### Dimension 3: US Company Experience (weight: 2×)
 
 | Score | Criteria |
 |---|---|
@@ -123,7 +125,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Unclear / possible US exposure |
 | 0 | India-only, no US-facing work |
 
-#### Dimension 4: Tenure & Stability (weight: 0.5×)
+#### Dimension 4: Tenure & Stability (weight: 1.3×)
 
 | Score | Criteria |
 |---|---|
@@ -132,28 +134,29 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | 1–2 years in CS/AM roles |
 | 0 | Under 1 year of CS/AM experience |
 
-#### Dimension 5: Education & Credentials (weight: 0.3×)
+#### Dimension 5: Education & Credentials (weight: 0.2×)
 
 | Score | Criteria |
 |---|---|
 | 3 | MBA from recognized program (IIM, top-tier) + relevant undergrad |
-| 2 | MBA or PMP/CSPO or equivalent professional cert |
+| 2 | MBA, PMP/CSPO, equivalent professional cert, OR engineering degree (B.E./B.Tech) |
 | 1 | Bachelor's degree, relevant field |
 | 0 | No degree mentioned or unrelated degree only |
 
-#### Dimension 6: Location Fit — Gujarat (weight: 1×)
+### Bonus Dimensions (additive — no penalty if absent)
 
-> Everyone scored here has already passed the Gujarat/Gujarati auto-disqualifier.
+> Bonus dimensions reward candidates who have these qualities but do NOT penalize candidates who lack them. A score of 0 in a bonus dimension simply means no bonus is added.
+
+#### Dimension 6: KAM Performance Evidence (BONUS, weight: 2.5×)
 
 | Score | Criteria |
 |---|---|
-| 4 | Currently based in Ahmedabad |
-| 2 | Currently based in other Gujarat city (Vadodara, Surat, Rajkot, Gandhinagar, etc.) |
-| 1 | Based elsewhere in India but Gujarati explicitly listed as a language |
+| 3 | Explicit quantified metrics: upsell %, cross-sell revenue, retention rate, expansion ARR, feature adoption %, NPS, or similar |
+| 2 | Mentions upselling, cross-selling, account expansion, or retention work — but no hard numbers |
+| 1 | Implied account management responsibilities, no growth/retention evidence |
+| 0 | No evidence of account growth or retention work |
 
-> **Positive signal:** Hindi (हिन्दी) listed as a language is a bonus — note it.
-
-#### Dimension 7: Startup / VC-Backed Experience (weight: 1×)
+#### Dimension 7: Startup / VC-Backed Experience (BONUS, weight: 2×)
 
 | Score | Criteria |
 |---|---|
@@ -163,27 +166,34 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Primarily large enterprise, minor startup exposure |
 | 0 | Entire career at large enterprise / no startup exposure |
 
-#### Dimension 8: KAM Performance Evidence (weight: 1×)
+#### Dimension 8: Location Fit — Gujarat (BONUS, weight: 1×)
+
+> Everyone scored here has already passed the Gujarat/Gujarati auto-disqualifier.
 
 | Score | Criteria |
 |---|---|
-| 3 | Explicit quantified metrics: upsell %, cross-sell revenue, retention rate, expansion ARR, feature adoption %, NPS, or similar |
-| 2 | Mentions upselling, cross-selling, account expansion, or retention work — but no hard numbers |
-| 1 | Implied account management responsibilities, no growth/retention evidence |
-| 0 | No evidence of account growth or retention work |
+| 4 | Currently based in Ahmedabad |
+| 2 | Currently based in other Gujarat city (Vadodara, Surat, Rajkot, Gandhinagar, etc.) |
+| 0 | Not currently based in Gujarat |
+
+> **Note:** "Based elsewhere in India but Gujarati listed as a language" is NO LONGER a scoring criterion. Gujarat location on profile is required for any location bonus points.
+
+> **Positive signal:** Hindi (हिन्दी) listed as a language is a bonus — note it.
 
 ### Step 4: Calculate Score
 
 ```
-Raw Score = (Dim1 × 3) + (Dim2 × 2) + (Dim3 × 0.8) + (Dim4 × 0.5) + (Dim5 × 0.3) + (Dim6 × 1) + (Dim7 × 1) + (Dim8 × 1)
-Max possible = 12 + 6 + 2.4 + 1.5 + 0.9 + 4 + 4 + 3 = 33.8
-Percentage = Raw Score / 33.8 × 100 (include the `%` suffix when writing to CSV, e.g., `85.8%` not `85.8`)
+Base Score  = (Dim1 × 5) + (Dim2 × 2.5) + (Dim3 × 2) + (Dim4 × 1.3) + (Dim5 × 0.2)
+Bonus Score = (Dim6 × 2.5) + (Dim7 × 2) + (Dim8 × 1)
+Raw Score   = Base Score + Bonus Score
+Max possible = Base 35.5 + Bonus 19.5 = 55.0
+Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing to CSV, e.g., `85.8%` not `85.8`)
 ```
 
-> **Mental model — 3 tiers of weight:**
-> - **Core** (what the job IS): SaaS 3×, Title 2× → these two dimensions alone are ~53% of the max score
-> - **Standard** (differentiators): Location 1×, Startup 1×, KAM 1×, US Company 0.8× → context and quality signals
-> - **Minor** (tiebreakers): Tenure 0.5×, Education 0.3× → nice-to-haves that barely move the needle
+> **Mental model — Base vs Bonus:**
+> - **Base** (max 35.5, 64.5% of total): Dim1 Title 5× (27.3%), Dim2 SaaS/Software 2.5× (18.2%), Dim3 US Company 2× (10.9%), Dim4 Tenure 1.3× (7.1%), Dim5 Education 0.2× (1.1%)
+> - **Bonus** (max 19.5, 35.5% of total): Dim6 KAM Metrics 2.5× (13.6%), Dim7 Startup/VC 2× (14.5%), Dim8 Location Gujarat 1× (7.3%)
+> - Bonus dimensions are purely additive — a score of 0 means no bonus, NOT a penalty
 
 ### Step 5: Tier & Verdict
 
@@ -207,97 +217,109 @@ Append one row to the output file specified in the JD config (`output_file` or `
 import csv
 with open(csv_path, 'a', newline='') as f:
     writer = csv.writer(f, quoting=csv.QUOTE_ALL)
-    writer.writerow([candidate, public_li_url, lir_url, source, date_added, ..., ''])  # last column is Cleaned? — always write as empty string
+    writer.writerow([candidate, greenhouse_url, public_li_url, lir_url, source, date_added, ..., ''])  # last column is Cleaned? — always write as empty string
 ```
 
 **Timestamp rule:** The `Date Added` column must be the **exact current time at the moment the row is written**, in **US Eastern time (America/New_York)**. Do not estimate, backdate, or space timestamps apart. Run `TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S'` (or equivalent) to get the real time right before writing the row. Format: `YYYY-MM-DD HH:MM:SS` Eastern.
 
-**CSV column order (exactly 36 columns — Cleaned? is #36):**
+**CSV column order (exactly 37 columns — Cleaned? is #37):**
 
 ⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. That's 16 dimension columns total (8 scores + 8 notes), NOT 8 combined columns.**
 
 ```
  1. Candidate
- 2. Public LI URL
- 3. LIR URL
- 4. Source
- 5. Date Added (YYYY-MM-DD HH:MM:SS ET)
- 6. Current Title
- 7. Company
- 8. Location
- 9. Gujarat/Gujarati (EXPLICIT - Y/N)
-10. Auto_DQ (Y/N)
-11. DQ_Reason
-12. Dim1_SaaS_Score (0-4)          ← NUMBER ONLY       [CORE — 3×]
-13. Dim1_Note                       ← TEXT ONLY
-14. Dim2_Title_Score (0-3)          ← NUMBER ONLY       [CORE — 2×]
-15. Dim2_Note                       ← TEXT ONLY
-16. Dim3_US_Co_Score (0-3)          ← NUMBER ONLY       [STANDARD — 0.8×]
-17. Dim3_Note                       ← TEXT ONLY
-18. Dim4_Tenure_Score (0-3)         ← NUMBER ONLY       [MINOR — 0.5×]
-19. Dim4_Note                       ← TEXT ONLY
-20. Dim5_Education_Score (0-3)      ← NUMBER ONLY       [MINOR — 0.3×]
-21. Dim5_Note                       ← TEXT ONLY
-22. Dim6_Location_Score (1/2/4)     ← NUMBER ONLY       [STANDARD — 1×]
-23. Dim6_Note                       ← TEXT ONLY
-24. Dim7_Startup_Score (0-4)        ← NUMBER ONLY       [STANDARD — 1×]
-25. Dim7_Note                       ← TEXT ONLY
-26. Dim8_KAM_Metrics_Score (0-3)    ← NUMBER ONLY       [STANDARD — 1×]
-27. Dim8_Note                       ← TEXT ONLY
-28. Raw_Score
-29. Max_Score
-30. Percentage (with % suffix)
-31. Tier (A/B/C/D/F)
-32. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
-33. Whys (bullet list with \n between each — leave empty if Auto_DQ)
-34. Concern
-35. Hindi_Signal (Y/N)
-36. Cleaned? (always write as empty string — cleanup agent fills this)
+ 2. Greenhouse URL
+ 3. Public LI URL
+ 4. LIR URL
+ 5. Source
+ 6. Date Added (YYYY-MM-DD HH:MM:SS ET)
+ 7. Current Title
+ 8. Company
+ 9. Location
+10. Gujarat/Gujarati (EXPLICIT - Y/N)
+11. Auto_DQ (Y/N)
+12. DQ_Reason
+13. Dim1_Title_Score (0-3)          ← NUMBER ONLY       [BASE — 5×]
+14. Dim1_Note                       ← TEXT ONLY
+15. Dim2_SaaS_Score (0-4)           ← NUMBER ONLY       [BASE — 2.5×]
+16. Dim2_Note                       ← TEXT ONLY
+17. Dim3_US_Co_Score (0-3)          ← NUMBER ONLY       [BASE — 2×]
+18. Dim3_Note                       ← TEXT ONLY
+19. Dim4_Tenure_Score (0-3)         ← NUMBER ONLY       [BASE — 1.3×]
+20. Dim4_Note                       ← TEXT ONLY
+21. Dim5_Education_Score (0-3)      ← NUMBER ONLY       [BASE — 0.2×]
+22. Dim5_Note                       ← TEXT ONLY
+23. Dim6_KAM_Metrics_Score (0-3)    ← NUMBER ONLY       [BONUS — 2.5×]
+24. Dim6_Note                       ← TEXT ONLY
+25. Dim7_Startup_Score (0-4)        ← NUMBER ONLY       [BONUS — 2×]
+26. Dim7_Note                       ← TEXT ONLY
+27. Dim8_Location_Score (0/2/4)     ← NUMBER ONLY       [BONUS — 1×]
+28. Dim8_Note                       ← TEXT ONLY
+29. Raw_Score
+30. Max_Score
+31. Percentage (with % suffix)
+32. Tier (A/B/C/D/F)
+33. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
+34. Whys (bullet list with \n between each — leave empty if Auto_DQ)
+35. Concern
+36. Hindi_Signal (Y/N)
+37. Cleaned? (always write as empty string — cleanup agent fills this)
 ```
 
 **Example row (score columns are JUST numbers, notes are JUST text):**
 ```python
 writer.writerow([
     "John Doe",                          # 1. Candidate
-    "https://linkedin.com/in/johndoe",   # 2. Public LI URL
-    "https://linkedin.com/talent/...",   # 3. LIR URL
-    "ACM Agents V7",                     # 4. Source
-    "2026-03-22 10:30:00",               # 5. Date Added
-    "Account Manager",                   # 6. Title
-    "Leadsquared",                        # 7. Company
-    "Ahmedabad, Gujarat, India",         # 8. Location
-    "Y",                                 # 9. Gujarat/Gujarati
-    "No",                                # 10. Auto_DQ
-    "",                                  # 11. DQ_Reason
-    "2",                                 # 12. Dim1 SaaS SCORE [CORE 3×]
-    "Clear SaaS co, not on list",       # 13. Dim1 NOTE
-    "3",                                 # 14. Dim2 Title SCORE [CORE 2×]
-    "Account Manager title",            # 15. Dim2 NOTE
-    "2",                                 # 16. Dim3 US_Co SCORE [STD 0.8×]
-    "India co, explicit US clients",    # 17. Dim3 NOTE
-    "2",                                 # 18. Dim4 Tenure SCORE [MINOR 0.5×]
-    "3 yrs in CS/AM roles",             # 19. Dim4 NOTE
-    "1",                                 # 20. Dim5 Edu SCORE [MINOR 0.3×]
-    "Bachelor's, relevant field",       # 21. Dim5 NOTE
-    "4",                                 # 22. Dim6 Location SCORE [STD 1×]
-    "Based in Ahmedabad",               # 23. Dim6 NOTE
-    "2",                                 # 24. Dim7 Startup SCORE [STD 1×]
-    "Mixed startup + enterprise",       # 25. Dim7 NOTE
-    "2",                                 # 26. Dim8 KAM SCORE [STD 1×]
-    "Mentions upselling, no numbers",   # 27. Dim8 NOTE
-    "22.9",                              # 28. Raw_Score
-    "33.8",                              # 29. Max_Score
-    "67.8%",                             # 30. Percentage
-    "B",                                 # 31. Tier
-    "Yes",                               # 32. Verdict
-    "• Good title match\n• Gujarat-based, Ahmedabad\n• Some US client exposure",  # 33. Whys
-    "SaaS co not on validated list",     # 34. Concern
-    "Y",                                 # 35. Hindi_Signal
-    "",                                  # 36. Cleaned? (always empty)
+    "",                                  # 2. Greenhouse URL (empty — filled manually or via Greenhouse integration)
+    "https://linkedin.com/in/johndoe",   # 3. Public LI URL
+    "https://linkedin.com/talent/...",   # 4. LIR URL
+    "ACM Agents V7",                     # 5. Source
+    "2026-03-22 10:30:00",               # 6. Date Added
+    "Account Manager",                   # 7. Title
+    "Leadsquared",                        # 8. Company
+    "Ahmedabad, Gujarat, India",         # 9. Location
+    "Y",                                 # 10. Gujarat/Gujarati
+    "No",                                # 11. Auto_DQ
+    "",                                  # 12. DQ_Reason
+    "3",                                 # 13. Dim1 Title SCORE [BASE 5×]
+    "Account Manager title",            # 14. Dim1 NOTE
+    "2",                                 # 15. Dim2 SaaS SCORE [BASE 2.5×]
+    "Clear SaaS co, not on list",       # 16. Dim2 NOTE
+    "2",                                 # 17. Dim3 US_Co SCORE [BASE 2×]
+    "India co, explicit US clients",    # 18. Dim3 NOTE
+    "2",                                 # 19. Dim4 Tenure SCORE [BASE 1.3×]
+    "3 yrs in CS/AM roles",             # 20. Dim4 NOTE
+    "1",                                 # 21. Dim5 Edu SCORE [BASE 0.2×]
+    "Bachelor's, relevant field",       # 22. Dim5 NOTE
+    "2",                                 # 23. Dim6 KAM SCORE [BONUS 2.5×]
+    "Mentions upselling, no numbers",   # 24. Dim6 NOTE
+    "2",                                 # 25. Dim7 Startup SCORE [BONUS 2×]
+    "Mixed startup + enterprise",       # 26. Dim7 NOTE
+    "4",                                 # 27. Dim8 Location SCORE [BONUS 1×]
+    "Based in Ahmedabad",               # 28. Dim8 NOTE
+    "39.8",                              # 29. Raw_Score
+    "55.0",                              # 30. Max_Score
+    "72.4%",                             # 31. Percentage
+    "B",                                 # 32. Tier
+    "Yes",                               # 33. Verdict
+    "• Good title match\n• Gujarat-based, Ahmedabad\n• Some US client exposure",  # 34. Whys
+    "SaaS co not on validated list",     # 35. Concern  [Base=26.8 + Bonus=13.0 = 39.8]
+    "Y",                                 # 36. Hindi_Signal
+    "",                                  # 37. Cleaned? (always empty)
 ])
 ```
 
-**Public LI URL:** The candidate's public LinkedIn profile URL (e.g., `https://www.linkedin.com/in/username`). This is different from the internal LinkedIn Recruiter URL (LIR URL). If the source is LinkedIn Recruiter, find the public profile link on the candidate's profile page. If unavailable, leave empty.
+**Public LI URL — Extraction Rules:**
+
+⛔ **NEVER guess or construct a public LinkedIn URL from the candidate's name.** Vanity URLs like `linkedin.com/in/faizan-shaikh` are globally unique and often belong to a completely different person with the same name. A guessed URL = a wrong person = wasted outreach.
+
+**How to extract the Public LI URL from the LIR profile page:**
+1. Look for the "Public profile" link on the LIR profile page (usually near the candidate's name/photo area, shows the LinkedIn icon + "Public profile" text)
+2. Read the `href` from that link — it will be in the format `https://www.linkedin.com/in/{actual-slug}`
+3. Use that EXACT URL as-is. Do not modify, shorten, or reconstruct it.
+4. **If the "Public profile" link is not visible or not present**, leave Column 2 **empty**. The CSV Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
+
+**Validation before writing:** If you did extract a public URL, sanity-check that the slug loosely relates to the candidate's name (e.g., for "Priya Patel" the slug might be `priya-patel-a1b2c3d4` or `priyapatel123`). If the slug has zero resemblance to the candidate's name, it's likely the wrong link — leave Column 2 empty instead.
 
 ### Step 7: Anti-Detection Behavior (LinkedIn only)
 
