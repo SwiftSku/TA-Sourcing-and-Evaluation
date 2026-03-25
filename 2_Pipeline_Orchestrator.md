@@ -80,7 +80,9 @@ There is **no separate validation phase**. The pipeline goes straight to process
 2. Generate canary token (see Canary Token Setup below)
 3. Create per-run chat log (see Per-Run Chat Log below)
 4. If LinkedIn source: read `REF--LIR_Interface_Learnings.md`
-5. **Spawn Company Research Agent (parallel)** — see Company Research Agent section below. This runs in the background while you start processing Tier 1 companies. Its results feed Tier 2 of the target company list.
+5. **Spawn two parallel agents** (neither uses Chrome, no conflict):
+   - **Company Research Agent** — see section below. Runs in background; results feed Tier 2.
+   - **Pre-Flight Cleanup Agent** — see Cleanup Agent Spawn Template below. Validates existing output file before new rows are added. Must finish before Phase 1 starts.
 
 ### Phase 1: URL Extraction (batch of 5)
 
@@ -189,7 +191,7 @@ Loop: URL Extractor (5 URLs) → CE × 5 → check termination → next batch.
 
 ### Pre-Flight Cleanup
 
-Before processing ANY candidates, spawn a Cleanup Agent pass to ensure the output file is structurally sound before new rows are added.
+Spawned in Phase 0 step 5 **in parallel with Company Research** (neither uses Chrome). The orchestrator MUST wait for Pre-Flight Cleanup to finish before entering Phase 1, but does NOT need to wait for Company Research.
 
 ---
 

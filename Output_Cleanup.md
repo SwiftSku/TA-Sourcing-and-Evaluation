@@ -21,7 +21,7 @@ This agent is spawned by the **Pipeline Orchestrator** every 10 candidates, or c
 
 The Candidate Evaluator sometimes writes malformed data — missing columns, merged fields, or garbled data. Other corruption includes wrong column count or shifted fields.
 
-**Expected column count:** Read from the active JD file's column schema. Count the numbered columns in the "Column order" block. AM = 37 columns, RC = 38 columns. Do NOT hardcode.
+**Expected column count:** Read from the active JD file's column schema. Count the numbered columns in the "Column order" block. Do NOT hardcode — column counts change when dimensions are added/removed.
 
 ---
 
@@ -333,3 +333,13 @@ In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRU
 - Does NOT modify any other agent file
 - Does NOT skip broken rows — it either re-evaluates them or leaves them for human review
 - ⛔ Does NOT delete rows — EVER. LinkedIn's "hide previously viewed" makes deleted candidates permanently undiscoverable
+
+---
+
+## Maintenance Checklist — Keep These In Sync
+
+When column counts, max scores, or dimension weights change in a JD file, the following must also be updated:
+
+1. **`render_mermaid.py`** — legend section hardcodes column counts and max scores per role (search for the `<li><code>JD--` lines). Update to match the new values.
+2. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
+3. **`.Z_Agent_Flowchart.mermaid`** — if agent names, file names, or pipeline flow changes, update the mermaid source and regenerate the PNG via `python render_mermaid.py`.

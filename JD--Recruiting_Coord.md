@@ -5,7 +5,7 @@
 ```yaml
 role_name: "Recruiting Coordinator"
 pipeline_label: "Recruiting Coordinator Pipeline"
-output_file: "_OUTPUT--AMD_Recruiting_Coord.xlsx"
+output_file: "_OUTPUT--Recruiting_Coord.xlsx"
 
 # Search filters (read by URL_Extractor)
 lir_title_filters: ["Recruiting Coordinator", "Talent Acquisition Coordinator", "Interview Coordinator", "HR Coordinator"]

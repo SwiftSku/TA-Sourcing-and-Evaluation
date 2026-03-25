@@ -9,8 +9,8 @@ flowchart TD
         COMPANY_RESEARCH["🟢 <b>Company Research</b> · Sonnet<br/>Parallel: finds US-HQ B2B SaaS w/ Gujarat office<br/>→ Target_Companies/company_research.json → feeds Tier 2"]
         PREFLIGHT_CLEAN["🟢 <b>Pre-flight Cleanup</b> · Sonnet"]
         USER --> STARTER --> ORCH
-        ORCH --> PREFLIGHT_CLEAN
-        ORCH -.->|parallel| COMPANY_RESEARCH
+        ORCH -.->|"parallel (no Chrome)"| PREFLIGHT_CLEAN
+        ORCH -.->|"parallel (no Chrome)"| COMPANY_RESEARCH
     end
 
     %% ===== SOURCE DECISION =====
@@ -72,7 +72,7 @@ flowchart TD
     end
 
     %% ===== CONNECTIONS =====
-    PREFLIGHT_CLEAN --> SRC
+    PREFLIGHT_CLEAN -->|"must finish"| SRC
     SRC -->|"LinkedIn Recruiter"| URL_EXT
     SRC -->|"Static (PDF/spreadsheet)"| STATIC_DEDUP
 
