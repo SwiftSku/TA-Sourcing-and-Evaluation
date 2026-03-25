@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CE Spawn Template — Side-by-Side Comparison</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 24px; color: #222; }
+  h1 { font-size: 22px; margin-bottom: 8px; }
+  h2 { font-size: 16px; margin-bottom: 12px; color: #555; font-weight: 500; }
+  .section { margin-bottom: 40px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: white; border-radius: 10px; padding: 20px; border: 2px solid #ddd; }
+  .card.orch { border-color: #F5A623; }
+  .card.cleanup { border-color: #34A853; }
+  .card.merged { border-color: #4285F4; }
+  .card h3 { font-size: 14px; margin-bottom: 12px; padding: 6px 10px; border-radius: 6px; display: inline-block; }
+  .card.orch h3 { background: #FFF3E0; color: #E65100; }
+  .card.cleanup h3 { background: #E8F5E9; color: #2E7D32; }
+  .card.merged h3 { background: #E3F2FD; color: #1565C0; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-x: auto; }
+  .highlight { background: #fff3cd; color: #856404; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+  .missing { background: #f8d7da; color: #721c24; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+  .same { color: #888; }
+  .diff { color: #ff6b6b; font-weight: bold; }
+  .note { font-size: 13px; color: #666; margin-top: 8px; padding: 10px; background: #fffde7; border-left: 3px solid #fdd835; border-radius: 4px; }
+  .arrow-section { text-align: center; padding: 30px 0; }
+  .arrow-section .arrow { font-size: 40px; color: #4285F4; }
+  .arrow-section p { font-size: 14px; color: #666; margin-top: 8px; }
+  .full-width { grid-column: 1 / -1; }
+  .legend { display: flex; gap: 20px; margin-bottom: 20px; font-size: 13px; }
+  .legend span { padding: 3px 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h1>CE Spawn Template — Duplication Analysis</h1>
+<h2>Two copies exist today. Here's exactly what each says.</h2>
+
+<div class="legend">
+  <span class="highlight">Yellow = only in one version</span>
+  <span class="missing">Red = missing from this version</span>
+</div>
+
+<div class="section">
+<div class="grid">
+
+<!-- ORCHESTRATOR VERSION -->
+<div class="card orch">
+<h3>📄 2_Pipeline_Orchestrator.md (line 119-140)</h3>
+<pre>You are a single-candidate evaluator. Read the evaluation framework at:
+[FULL PATH to [active JD file]]
+
+Also read LinkedIn interface learnings at:
+[FULL PATH to REF--LIR_Interface_Learnings.md]
+
+Evaluate this ONE candidate:
+- Profile URL or identifier: <span class="diff">{lir_profile_url}</span>
+- Source: <span class="diff">{source_name}</span>
+<span class="highlight">- DELAY_SECONDS: {random 45-200}</span>
+<span class="highlight">- NEXT_URL: {next_candidate_url_or_empty}</span>
+
+Write the result row to:
+[FULL PATH to output file from JD config]
+
+<span class="highlight">After writing the row, perform idle behavior on the</span>
+<span class="highlight">profile page for DELAY_SECONDS, then navigate the same</span>
+<span class="highlight">tab to NEXT_URL (or close if empty). See Step 8 in the</span>
+<span class="highlight">JD file.</span>
+
+Return ONLY this summary line:
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}</pre>
+<div class="note">
+  <strong>Extra context around it:</strong> "The CE handles the anti-detection delay internally — the orchestrator does NOT sleep between spawns." + paragraph about tab reuse.
+</div>
+</div>
+
+<!-- CLEANUP VERSION -->
+<div class="card cleanup">
+<h3>📄 Output_Cleanup.md (line 96-112)</h3>
+<pre>You are a single-candidate evaluator. Read the evaluation framework at:
+[FULL PATH to [active JD file]]
+
+Also read LinkedIn interface learnings at:
+[FULL PATH to REF--LIR_Interface_Learnings.md]
+
+Evaluate this ONE candidate:
+- Profile URL or identifier: <span class="diff">{extracted_url}</span>
+- Source: <span class="diff">{extracted_source}</span>
+<span class="missing">⬚ (no DELAY_SECONDS)</span>
+<span class="missing">⬚ (no NEXT_URL)</span>
+
+Write the result row <span class="diff">to the output file</span> at:
+[FULL PATH to [output file from JD config]]
+
+<span class="missing">⬚ (no idle/tab-reuse instruction)</span>
+
+Return ONLY this summary line:
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}</pre>
+<div class="note">
+  <strong>Problem:</strong> Missing DELAY_SECONDS and NEXT_URL means CEs spawned by cleanup don't do anti-detection idle behavior. They'll just close the tab immediately — creating the exact bot-like pattern the orchestrator version avoids.
+</div>
+</div>
+
+</div><!-- grid -->
+</div><!-- section -->
+
+<!-- ARROW -->
+<div class="arrow-section">
+  <div class="arrow">⬇️</div>
+  <p><strong>Consolidated version:</strong> One file, both callers reference it</p>
+</div>
+
+<!-- CONSOLIDATED -->
+<div class="section">
+<div class="grid">
+<div class="card merged full-width">
+<h3>📄 PROPOSED: CE_Spawn_Template.md (new file — referenced by orchestrator + cleanup)</h3>
+<pre>## CE Spawn Template
+
+Spawn with `model: "sonnet"`. Sequential only — one CE at a time.
+
+### Prompt
+
+```
+You are a single-candidate evaluator. Read the evaluation framework at:
+[FULL PATH to [active JD file]]
+
+Also read LinkedIn interface learnings at:
+[FULL PATH to REF--LIR_Interface_Learnings.md]
+
+Also read anti-detection rules at:
+[FULL PATH to REF--Anti_Detection.md]
+
+Evaluate this ONE candidate:
+- Profile URL or identifier: {profile_url}
+- Source: {source_name}
+- DELAY_SECONDS: {delay_seconds}
+- NEXT_URL: {next_url_or_empty}
+
+Write the result row to:
+[FULL PATH to output file from JD config]
+
+After writing the row, follow the anti-detection idle procedure
+(REF--Anti_Detection.md §3) for DELAY_SECONDS, then navigate
+to NEXT_URL (or close tab if empty).
+
+Return ONLY this summary line:
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
+```
+
+### Inputs (spawner fills these in)
+
+| Input              | Description                                               |
+|--------------------|-----------------------------------------------------------|
+| profile_url        | LIR profile URL or public LinkedIn URL                    |
+| source_name        | Source column value (e.g., "ACM LIR Search v5")           |
+| delay_seconds      | Random 45-200, never same twice in a row (spawner picks)  |
+| next_url_or_empty  | Next candidate's URL, or empty if last in batch           |
+
+### Expected Return
+
+```
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
+```</pre>
+<div class="note">
+  <strong>What changes:</strong><br>
+  • Orchestrator's CE Spawn Template section → replaced with: "Spawn a CE using the template in <code>CE_Spawn_Template.md</code>"<br>
+  • Cleanup's Step 4 spawn template → replaced with: "Spawn a CE using the template in <code>CE_Spawn_Template.md</code>"<br>
+  • Anti-detection idle instructions → removed from template, now just says "follow REF--Anti_Detection.md §3"<br>
+  • Both callers now always pass DELAY_SECONDS and NEXT_URL (cleanup was missing these)
+</div>
+</div>
+</div><!-- grid -->
+</div><!-- section -->
+
+</body>
+</html>

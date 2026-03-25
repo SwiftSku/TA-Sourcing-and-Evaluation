@@ -114,26 +114,15 @@ If page exhausted, append PAGE_EXHAUSTED. If entire search exhausted, append SEA
 
 ### Phase 2: Candidate Evaluation (one at a time)
 
-For each URL returned by the extractor, spawn a **Candidate Evaluator** sub-agent (`model: "sonnet"`). Sequential only — ONE at a time. Random 45-200s delay between each.
+For each URL returned by the extractor, spawn a **Candidate Evaluator** sub-agent (`model: "sonnet"`). Sequential only — ONE at a time. The CE handles the anti-detection delay internally (see `REF--Anti_Detection.md` §3) — the orchestrator does NOT sleep between spawns.
 
-**CE Spawn Template:**
-```
-You are a single-candidate evaluator. Read the evaluation framework at:
-[FULL PATH to [active JD file]]
+**CE Spawn Template:** Use the template in `CE_Spawn_Template.md`. Fill in all parameters per that file's "Pipeline Orchestrator (Phase 2)" section. Key inputs:
+- `PROFILE_URL` = the LIR profile URL from the URL Extractor batch
+- `SOURCE_NAME` = the run's source name
+- `DELAY_SECONDS` = random 45-200 (generate here, never same twice in a row)
+- `NEXT_URL` = next candidate URL in batch, or empty if last
 
-Also read LinkedIn interface learnings at:
-[FULL PATH to REF--LIR_Interface_Learnings.md]
-
-Evaluate this ONE candidate:
-- Profile URL or identifier: {lir_profile_url}
-- Source: {source_name}
-
-Write the result row to:
-[FULL PATH to output file from JD config]
-
-Return ONLY this summary line:
-{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
-```
+**Tab reuse:** The CE agent keeps the profile tab open after evaluation, idles with random movements during the delay, then navigates to the next candidate URL in the same tab. This avoids the bot-like pattern of close-wait-open. If `NEXT_URL` is empty (last candidate in batch, or batch done), the CE closes the tab before returning.
 
 ⛔ **The output file MUST be updated immediately after every single CE verdict — one candidate, one write, no batching.** Dan must be able to open the xlsx file at any point during the run and see every candidate evaluated so far.
 
@@ -395,11 +384,11 @@ When an extractor returns `SEARCH_EXHAUSTED`:
 
 ## Anti-Detection Delays
 
-⛔ **MANDATORY DELAY BETWEEN CANDIDATES (LinkedIn sources):** After each CE sub-agent returns its verdict, **wait a random delay of 45-200 seconds** before spawning the next sub-agent. Use `sleep $((RANDOM % 156 + 45))` or equivalent. Randomize each time — never the same gap twice in a row.
+> **📄 Read `REF--Anti_Detection.md` for all anti-detection rules.** That file is the single source of truth. Key sections for the orchestrator:
+> - **§3** — CE delay ownership: orchestrator generates `DELAY_SECONDS` (random 45-200, never same twice), passes it to CE. CE handles idle + tab reuse. Orchestrator does NOT sleep.
+> - **§6** — Chrome concurrency: one Chrome sub-agent at a time. Non-Chrome agents OK in parallel.
 
-⛔ **Only ONE Chrome sub-agent active at a time.** Non-Chrome agents (Cleanup, Company Research, handoff updates) can run in parallel during anti-detection delays. Wait for each Chrome sub-agent to finish before spawning the next Chrome sub-agent.
-
-No delay is needed between the URL Extractor returning and the first CE spawn (different activity type).
+⛔ **Orchestrator responsibilities:** Generate `DELAY_SECONDS` and `NEXT_URL` for each CE spawn. Do NOT sleep between spawns — the CE handles the delay internally. See CE Spawn Template above for parameter format.
 
 ---
 
@@ -475,6 +464,7 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - `URL_Extractor.md` → URL extractor sub-agents read from disk, you pass the path
 - `[active JD file]` → CE sub-agents read from disk, you pass the path
 - `Output_Cleanup.md` → cleanup sub-agents read from disk, you pass the path
+- `CE_Spawn_Template.md` → both orchestrator and cleanup read at spawn time, you pass the path
 - `Target_Companies/Company_Research_Agent.md` → company research sub-agent reads from disk, you pass the path
 - `[output file from JD config]` → sub-agents write here, you pass the path
 - `Z_Chat_Log--Agent_Maker.md` → update at end of run only
@@ -586,6 +576,7 @@ The orchestrator's context should contain ONLY:
 - `URL_Extractor.md` — sub-agents read from disk
 - `[active JD file]` — sub-agents read from disk
 - `Output_Cleanup.md` — cleanup sub-agents read from disk
+- `CE_Spawn_Template.md` — both orchestrator and cleanup read at spawn time
 - `[output file from JD config]` — sub-agents handle all xlsx operations
 - `Z_Chat_Log--Agent_Maker.md` — append at end of run only
 - `Z_Pipeline_Error_Log.md` — append errors, don't read past ones

@@ -133,6 +133,8 @@ For each candidate, BEFORE attempting to save, check the LIR profile for the **"
 
 ### Step 4: Save Each Candidate (Sequential)
 
+> **📄 Read `REF--Anti_Detection.md` for all anti-detection rules.** Key sections for Save_To_LIR: **§1** (profile browsing), **§4** (inter-profile delay, 30-90s variant), **§5** (tab hygiene).
+
 For each candidate in the save list:
 
 1. Open the candidate's LIR profile URL (Column 4 from output file) in a new tab

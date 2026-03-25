@@ -173,8 +173,4 @@ The parent handles all retry logic. You just report what happened.
 
 ## Anti-Detection
 
-- Scroll naturally — 2-3 seconds between scrolls, vary scroll distance
-- Do NOT rapid-fire click through results
-- Do NOT use keyboard shortcuts to navigate search results
-- Behave like a human recruiter scanning a page — pause, scroll, read
-- You are extracting from search result cards only — you do NOT open individual profile pages (that's the CE's job later)
+> **📄 Read `REF--Anti_Detection.md` for all anti-detection rules.** That file is the single source of truth. Key sections for URL Extractor: **§2** (search results browsing), **§5** (tab hygiene — close all tabs you opened before dying).

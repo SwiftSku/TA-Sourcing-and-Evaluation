@@ -91,25 +91,11 @@ For each broken row:
 2. **Extract the candidate's LIR URL** (or identifier) — scan all columns for a value starting with `http`. Column 4 is the expected location for the LIR URL, Column 3 for the Public LI URL. Check all columns in case of shift.
 3. **Extract the Source** — column 5 in a normal row, but look for known source patterns if shifted.
 4. **Do NOT touch the broken row yet.** Leave it in the output file while the re-evaluation happens.
-5. **Spawn a Candidate Evaluator sub-agent** with `model: "sonnet"` using the standard spawn template:
-
-```
-You are a single-candidate evaluator. Read the evaluation framework at:
-[FULL PATH to [active JD file]]
-
-Also read LinkedIn interface learnings at:
-[FULL PATH to REF--LIR_Interface_Learnings.md]
-
-Evaluate this ONE candidate:
-- Profile URL or identifier: {extracted_url}
-- Source: {extracted_source}
-
-Write the result row to the output file at:
-[FULL PATH to [output file from JD config]]
-
-Return ONLY this summary line:
-{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
-```
+5. **Spawn a Candidate Evaluator sub-agent** with `model: "sonnet"` using the template in `CE_Spawn_Template.md`. Fill in all parameters per that file's "Cleanup Agent (Step 4)" section. Key inputs:
+   - `PROFILE_URL` = extracted from the broken row
+   - `SOURCE_NAME` = extracted from the broken row
+   - `DELAY_SECONDS` = random 45-200 (generate here, never same twice in a row)
+   - `NEXT_URL` = empty (cleanup processes one at a time)
 
 6. **Wait for the sub-agent to finish** before processing the next broken row.
 7. **After the re-evaluation writes a new clean row**, mark the NEW row as `Cleaned?` = `TRUE`.
@@ -143,6 +129,8 @@ This is a pure data-fix pass. No Chrome, no delays.
 
 #### Step 6b: Enrich via Chrome (one row at a time)
 
+> **📄 Read `REF--Anti_Detection.md` for all anti-detection rules.** Key sections for Cleanup enrichment: **§1** (profile browsing), **§4** (inter-profile delay), **§5** (tab hygiene — close each tab after processing).
+
 For each row that has a **non-empty LIR URL** (Column 4, starting with `https://www.linkedin.com/talent/`), check if it needs enrichment:
 
 **Enrichment triggers (check both):**
@@ -153,19 +141,15 @@ If EITHER trigger applies, process that row **completely before moving to the ne
 
 1. **Open** the LIR URL in Chrome
 2. **Wait** for the profile to load (3+ seconds)
-3. **Mimic human browsing** before extracting anything:
-   - Scroll down the profile 2-4 times at random intervals (1-3 seconds between scrolls)
-   - Vary scroll distance (some short, some long)
-   - Pause for 3-8 seconds total while "reading" the profile
-   - This step is mandatory for anti-detection — do NOT skip it
+3. **Anti-detection browsing** per `REF--Anti_Detection.md` §1 — dwell, scroll, highlight before extracting
 4. **Extract** what's needed:
    - **Public LI URL:** Locate the "Public profile" link on the LIR page (near the candidate's name/photo area). Read the `href` — format: `https://www.linkedin.com/in/{slug}`. ⛔ **NEVER guess or construct a URL from the candidate's name.** If the link is not present, leave Column 3 empty. After extracting, run the I2c slug-name sanity check: at least one word from the candidate's name must appear in the URL slug. If it doesn't match, the link may point to a different person — discard it and leave Column 3 empty.
    - **Full name (if first-name-only):** Read the candidate's full name from the LIR profile page. Update Column 1. If only first name + last initial visible (e.g., "Dharmik I."), use that.
 5. **Write the updated row to the xlsx immediately** — use Python `openpyxl`. Do NOT batch writes. Each row's enrichment is written before the next profile is opened.
-6. **Close** the profile tab — only close tabs YOU opened, do not close any other tabs
-7. **Wait 45-200 seconds** (randomized, never the same gap twice in a row) before opening the next profile
+6. **Close** the profile tab — only close tabs YOU opened
+7. **Wait 45-200 seconds** per `REF--Anti_Detection.md` §4 before opening the next profile
 
-⛔ **ONE ROW AT A TIME.** Open profile → scroll/browse → extract → write to xlsx → close tab → wait 45-200s → next row. Never batch. Never parallelize. Never skip the delay or the scrolling.
+⛔ **ONE ROW AT A TIME.** Open profile → browse → extract → write → close tab → wait → next row. Never batch. Never parallelize.
 
 **Rules:**
 - Only attempt Chrome enrichment for LinkedIn Recruiter URLs (starting with `https://www.linkedin.com/talent/`)

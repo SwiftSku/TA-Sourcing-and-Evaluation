@@ -351,20 +351,14 @@ writer.writerow([
 
 ### Step 7: Anti-Detection Behavior (LinkedIn only)
 
-**Before extracting any data from the profile**, mimic human browsing:
-1. **Dwell on the profile for 20-30 seconds** before starting to read/extract data
-2. **Scroll down slowly** through the profile (at least 2-3 scroll actions at random intervals)
-3. **Highlight a random piece of text** on the profile (e.g., a job title or company name) as a human would while reading
+> **📄 Read `REF--Anti_Detection.md` for all anti-detection rules.** That file is the single source of truth. Key sections for CE agents:
+> - **§1** — Pre-extraction browsing (dwell, scroll, highlight)
+> - **§3** — Inter-candidate idle behavior + tab reuse (`DELAY_SECONDS`, `NEXT_URL`)
+> - **§5** — Tab hygiene (CE agents do NOT close tabs between candidates)
 
-**After the sub-agent finishes and before the next candidate is spawned**, the parent orchestrator must enforce a **random delay of 45-200 seconds** (randomized each time, never the same gap twice in a row). This delay is the parent's responsibility, not the sub-agent's.
+The anti-detection delay is YOUR responsibility, not the parent's. After evaluation, you idle on the profile page per §3, then navigate to `NEXT_URL` in the same tab.
 
-### Step 8: Close the Profile Tab
-
-If you opened the candidate's LinkedIn profile in a new tab, **close that tab now** before returning your summary. Do not leave profile tabs open — they accumulate and clutter the browser.
-
-⛔ **Only close tabs YOU opened.** If you opened the candidate's profile in a new tab, close that tab. Do not close any other tabs that may be open in the browser — they may belong to other processes.
-
-### Step 9: Return Summary
+### Step 8: Return Summary
 
 Return ONLY this single line to the parent agent:
 

@@ -27,7 +27,8 @@ You are running the Pipeline Orchestrator for SwiftSku's candidate hiring pipeli
 
 1. `2_Pipeline_Orchestrator.md` — your primary instructions. This is who you are and what you do.
 2. `REF--LIR_Interface_Learnings.md` — if the source is LinkedIn, read BEFORE any navigation.
-3. The active JD file's `Pipeline Config` block — parse `output_file`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, and `refinement_patterns`. These drive all role-specific behavior.
+3. `REF--Anti_Detection.md` — single source of truth for all anti-detection behavior. Every Chrome-using agent reads this.
+4. The active JD file's `Pipeline Config` block — parse `output_file`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, and `refinement_patterns`. These drive all role-specific behavior.
 
 ## PATHS ONLY — do NOT read these into your context:
 
@@ -36,6 +37,7 @@ These files exist in this same folder. Sub-agents read them from disk. You only 
 - `URL_Extractor.md` — URL extractor sub-agents read this, not you. Pass the path in spawn templates.
 - `[active JD file]` — CE sub-agents read this, not you. Pass the path in spawn templates.
 - `Output_Cleanup.md` — cleanup sub-agents read this, not you. Pass the path in spawn templates.
+- `CE_Spawn_Template.md` — the canonical CE spawn template. Both orchestrator and cleanup read this at spawn time. Pass the path.
 - `Target_Companies/Company_Research_Agent.md` — company research sub-agent reads this, not you. Pass the path in spawn templates.
 - `[output file from JD config]` — sub-agents write here. You never read it yourself. Pass the path.
 - `Z_Chat_Log--Agent_Maker.md` — update this ONCE at end of run with a summary entry. Do NOT read the full history.

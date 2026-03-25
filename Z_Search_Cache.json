@@ -1,23 +1,24 @@
 {
   "status": "processing",
-  "source": "https://www.linkedin.com/talent/hire/1873158594/discover/recruiterSearch?searchContextId=4dc87cc4-1155-4c15-9750-81f7d403d5a3&searchHistoryId=20922559668&searchRequestId=6bd3eaae-67da-49cb-af6e-964fa9f77142&start=0&uiOrigin=FACET_SEARCH",
-  "started_at": "2026-03-22 04:13:00",
+  "source": "https://www.linkedin.com/talent/hire/1894950466/discover/recruiterSearch?searchContextId=312cab47-3c39-4273-839d-0cf94cae521c&searchHistoryId=20947970570&searchRequestId=749d83a2-b005-4d82-a255-6d122443d4a2&start=0",
+  "started_at": "2026-03-25 18:04:00",
   "top5_summary": [
-    {"name": "Ankitt Lohar", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Uigamy Digital Private Limited", "raw_score": "0/33.8", "wrote_to_csv": true},
-    {"name": "Ketul Prajapati", "tier": "D", "score_pct": "40.2%", "verdict": "No", "company": "In4Velocity Systems", "raw_score": "13.6/33.8", "wrote_to_csv": true},
-    {"name": "Guddu Dubey", "tier": "D", "score_pct": "47.0%", "verdict": "No", "company": "Future Building Nursing Prep Centre", "raw_score": "15.9/33.8", "wrote_to_csv": true},
-    {"name": "Avantika Rajput", "tier": "D", "score_pct": "47.3%", "verdict": "No", "company": "iConsultera", "raw_score": "16.0/33.8", "wrote_to_csv": true},
-    {"name": "Disha Shukla", "tier": "D", "score_pct": "46.2%", "verdict": "No", "company": "7Span", "raw_score": "15.6/33.8", "wrote_to_csv": true}
+    {"name": "Paras Shah", "tier": "C", "score_pct": "57.4%", "verdict": "Maybe", "company": "Accenture", "raw_score": "30.3/52.8", "wrote_to_file": true},
+    {"name": "Anamika Pandit", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "SUDERO ADVISORS AND CONSULTING", "raw_score": "0/52.8", "wrote_to_file": true},
+    {"name": "Iramben Saumil Virani", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "HGS / IMS People Possible", "raw_score": "0/52.8", "wrote_to_file": true},
+    {"name": "Yash Raj", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Hirextra", "raw_score": "0/52.8", "wrote_to_file": true},
+    {"name": "Vipul P.", "tier": "F", "score_pct": "0%", "verdict": "Unable to Evaluate", "company": "N/A", "raw_score": "0/52.8", "wrote_to_file": true}
   ],
   "a_rated_count": 0,
   "total_candidates_in_search": "unknown",
   "run_parameters": {
-    "a_rated_target": 20,
-    "hard_cap": 100
+    "a_rated_target": 1,
+    "hard_cap": 60
   },
   "run_counters": {
     "run_a_rated_count": 0,
     "run_total_count": 5
   },
-  "notes": "Quality check failed at 5 — all D/F. Search refined with SaaS company filters and tighter titles."
+  "a_rated_cache": [],
+  "notes": "top5_summary is the canonical record of initial scores — if a row is corrupted, use these scores instead of re-evaluating (re-eval introduces scoring variance). Quality check at 5: Mixed (1C, 4F) — continuing for 1 more batch."
 }
