@@ -325,4 +325,4 @@ In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRU
 When column counts, max scores, or dimension weights change in a JD file, the following must also be updated:
 
 1. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
-2. **`_Agent_Flowchart.png`** — if agent names, file names, or pipeline flow changes, regenerate the PNG using `Z__In_Use_Ref_Files/_Flowchart_Preferences.md`.
+2. **`_Agent_Flowchart.svg`** — if agent names, file names, or pipeline flow changes, regenerate using `render_flowchart_svg.py` per `Z__In_Use_Ref_Files/_Flowchart_Preferences.md`.

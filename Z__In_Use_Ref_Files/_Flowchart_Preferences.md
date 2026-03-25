@@ -3,8 +3,10 @@
 ## Rendering
 
 - **Engine:** PIL (Pillow) — no external network dependencies (mermaid-py, npm, playwright all fail in sandbox)
-- **Output:** `_Agent_Flowchart.png` in the TA-ACM root
-- **Source:** This preferences file + the PIL script are the source of truth. No mermaid file — PIL renders everything directly.
+- **Render script:** `render_flowchart_svg.py` in the session root. Run with `python3 render_flowchart_svg.py` to regenerate.
+- **Output:** `_Agent_Flowchart.svg` in the TA-ACM root (SVG — vector, crisp at any zoom, ~39KB vs ~147KB PNG)
+- **Source of truth:** This preferences file defines style/layout rules. The SVG script implements them. The `.Z_Agent_Flowchart.mermaid` file is a reference only — it does NOT drive rendering. **NEVER use `render_mermaid.py`** — it produces a completely different layout.
+- **Legacy:** `_Agent_Flowchart.png` may still exist but is no longer the canonical output. The SVG is the source of truth.
 
 ## Icons
 
@@ -22,6 +24,7 @@
 | User / manual | `#4285F4` | `#3367D6` | `#333` |
 | Self-destruct | `#EA4335` | `#C62828` | `#fff` |
 | Refinement | `#E8D5F5` | `#7B4DB5` | `#333` |
+| Coming Soon / placeholder | `#FFFF00` | `#CCB800` | `#333` |
 | Phase backgrounds | `#F8F9FA` | `#BDC3C7` | — |
 | Shared files bg | `#E8EAF6` | `#5C6BC0` | — |
 | Canvas | `#FFFFFF` | — | — |
@@ -68,16 +71,15 @@
 The pipeline flows top-to-bottom through these stages on the center spine:
 
 1. **Pipeline Starter** (user/manual) → triggers Orchestrator
-2. **Pipeline Orchestrator** (Opus, NO Chrome) — center spine anchor
-3. **Decision: Source type?** — diamond: LIR branch left, Public LI branch right
-4. **URL Extractor** (Sonnet, Chrome) — branches back to center
-5. **Candidate Evaluator** (Sonnet, Chrome) — spawned per candidate; CE Spawn Template callout in purple nearby
-6. **Decision: Quality Gate** — diamond: pass/fail
-7. **Output Cleanup Agent** (Sonnet, Chrome for re-evals) — runs on output file
+2. **Pipeline Orchestrator** (Opus, NO Chrome) — center spine anchor; **Company Research** + **Pre-Flight Cleanup** spawn as parallel branches (no Chrome)
+3. **Decision: Source type?** — diamond: LIR branch left (→ URL Extractor), Static branch right (→ Orchestrator Dedup)
+4. **URL Extractor** (Sonnet, Chrome) — extracts 5 non-dup URLs per invocation
+5. **Candidate Evaluator** (Sonnet, Chrome) — spawned per candidate; CE Spawn Template callout in purple nearby; handoff cache update + 45-200s delay loop
+6. **Decision: Quality Gate** — diamond: pass continues, fail → **Search Refinement** (purple, loops back to URL Extractor)
+7. **Output Cleanup Agent** (Sonnet, Chrome for enrichment) — runs on output file
 8. **Decision: Uncleaned=0?** — diamond: loop back if no, continue if yes
-9. **Decision: Terminate?** — diamond: "next batch" loops back to URL Extractor; "yes" branches to Self-Destruct
-10. **Self-Destruct** (red container) — branches right off terminate diamond
-11. **Save_To_LIR** (manual, Chrome) — separate branch, user-invoked only
+9. **Decision: Terminate?** (60 total? 20 A?) — "no" loops back to Source type diamond; "yes" → Output Summary; canary/compaction → **Self-Destruct** (red container, right branch)
+10. **Manual — Post Pipeline** (dashed container): **Save_To_LIR** (Chrome) + **COMING SOON: Send to Greenhouse**
 
 ## Text Fitting Rules (Critical)
 
