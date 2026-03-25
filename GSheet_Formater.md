@@ -24,8 +24,8 @@
 - [x] **Re-hide columns E:Z** — ~~got unhidden during a browser crash~~ RESOLVED: E:Z are now UNHIDDEN per user instruction (2026-03-22). Only hide columns user explicitly requests.
 - [x] **AK157 manual fix** — RESOLVED: No "Unknown" values found in AK column (verified 2026-03-22)
 - [x] **Verify AK column is fully clean** — RESOLVED: F&R confirmed all values are Y or N only (2026-03-22)
-- [x] **Confirm AD2:AD205 shows `0%` (no decimals)** — RESOLVED: Verified, no decimals (2026-03-22)
-- [x] **Step 8 range fix (this file)** — RESOLVED: Step 8 text updated with correct range `MAIN_LIVE!AK:AK`
+- [x] **Confirm AD2:AD205 shows `0%` (no decimals)** — RESOLVED: Verified, no decimals (2026-03-22). Note: Percentage column is now AE after Greenhouse URL column was added.
+- [x] **Step 8 range fix (this file)** — RESOLVED: Step 8 text updated with correct range `MAIN_LIVE!AJ:AJ`
 
 ---
 
@@ -37,7 +37,7 @@
 **⚠️ Do NOT touch:** Apps Script `CSV_Live_Refresh`
 **⚠️ Do NOT hide columns** unless the user explicitly requests it. All columns should be visible by default.
 **⚠️ Do NOT use `HYPERLINK()` formulas** — apply links directly, never via formula
-**⚠️ Cell backgrounds:** ONLY the Tier column (AE) should have colored cell highlighting (via conditional formatting). ALL other cells must have a WHITE/default background (#FFFFFF) — including the header row.
+**⚠️ Cell backgrounds:** ONLY the Tier column (AF) should have colored cell highlighting (via conditional formatting). ALL other cells must have a WHITE/default background (#FFFFFF) — including the header row.
 
 ### 🔮 FUTURE-PROOFING RULE
 > **Always apply ranges to 1000 rows ahead of the current last data row.** The pipeline continuously adds new candidates. Instead of using `{last_row}`, use `{last_row + 1000}` for ALL range-based operations (percentage formatting, conditional formatting, etc.). For example, if data ends at row 345, apply to row 1345. This avoids needing to re-run formatting every time new rows appear.
@@ -94,7 +94,7 @@ Select row 1 by clicking the row number.
 
 ## 3b. Clear All Data Cell Backgrounds (White Only)
 
-**CRITICAL:** Only the Tier column (AE) should have colored cell backgrounds (applied via conditional formatting in Step 7). All other data cells must be white.
+**CRITICAL:** Only the Tier column (AF) should have colored cell backgrounds (applied via conditional formatting in Step 7). All other data cells must be white.
 
 - Select all data rows: Name Box → type `A2:AK{last_row + 1000}` → Enter
 - Format → Fill color → **White** (`FFFFFF`)
@@ -113,7 +113,7 @@ Select row 1 by clicking the row number.
 
 ## 5. Column Wrapping & Alignment
 
-### Step 1 — Wrap everything (including hidden cols E:Z):
+### Step 1 — Wrap everything (including hidden cols F:AA):
 - Press `Ctrl+A` to select all cells
 - Format → Wrapping → **Wrap**
 
@@ -138,19 +138,19 @@ Select each range (Name Box → type range → Enter → `Ctrl+L`):
 
 ---
 
-## 6. Percentage Column (AD) — Format as %
+## 6. Percentage Column (AE) — Format as %
 - **Determine last data row** — scroll to the bottom of column A or check row count. Use that as `{last_row}`.
 - **Apply future-proofing:** add 1000 to `{last_row}` → use `{last_row + 1000}` as the range end
-- Name Box → type `AD2:AD{last_row + 1000}` → Enter
+- Name Box → type `AE2:AE{last_row + 1000}` → Enter
 - Format → Number → Custom number format → type `0%` → Apply
-- **Verify center-alignment** on AD after formatting — reapply `Ctrl+E` if needed
+- **Verify center-alignment** on AE after formatting — reapply `Ctrl+E` if needed
 
 ---
 
-## 7. Conditional Formatting — Tier Column (AE)
+## 7. Conditional Formatting — Tier Column (AF)
 
 Go to: **Format → Conditional formatting**
-Set range to `AE2:AE{last_row + 1000}` for each rule (same future-proofed range from step 6).
+Set range to `AF2:AF{last_row + 1000}` for each rule (same future-proofed range from step 6).
 Condition: **Text is exactly**
 
 | Value | Fill Color | Hex | Bold? |
@@ -164,19 +164,19 @@ Condition: **Text is exactly**
 
 **For each rule:**
 1. Click **+ Add another rule**
-2. Set range: `AE2:AE{last_row + 1000}`
+2. Set range: `AF2:AF{last_row + 1000}`
 3. Format cells if: **Text is exactly** → type the value
 4. Set the fill color and bold (for A only) in Formatting style
 5. Click **Done**
 
 ---
 
-## 8. Hindi_Signal Column (AI) — Standardize to Y/N
+## 8. Hindi_Signal Column (AJ) — Standardize to Y/N
 
-All values in AI must be exactly `Y` or `N` (single character, uppercase). No "Yes", "No", "yes", "no", etc.
+All values in AJ must be exactly `Y` or `N` (single character, uppercase). No "Yes", "No", "yes", "no", etc.
 
-- Select the entire AI column by clicking the **AI column header** (this sets the range to `MAIN_LIVE!AI:AI`)
-- Edit → Find and replace → check **Match entire cell contents**, Search: **Specific range** = `MAIN_LIVE!AI:AI`
+- Select the entire AJ column by clicking the **AJ column header** (this sets the range to `MAIN_LIVE!AJ:AJ`)
+- Edit → Find and replace → check **Match entire cell contents**, Search: **Specific range** = `MAIN_LIVE!AJ:AJ`
 - Find `Yes` → Replace with `Y` → Replace all
 - Find `No` → Replace with `N` → Replace all
 - Repeat with lowercase variants if needed (`yes`, `no`)
@@ -185,7 +185,7 @@ All values in AI must be exactly `Y` or `N` (single character, uppercase). No "Y
 
 ## 9. Delete Empty Rows/Columns
 - Scroll to the bottom of data — delete any empty rows below last entry
-- Check for empty columns to the right of AJ — delete if found
+- Check for empty columns to the right of AK — delete if found
 - Any row or column with zero content must be deleted (per Notion guide)
 
 ---
@@ -195,14 +195,14 @@ All values in AI must be exactly `Y` or `N` (single character, uppercase). No "Y
 - [ ] Row heights = 25px
 - [ ] Row 1: bold, centered horizontally, white/default background, black/default text
 - [ ] Row 1 + Col A frozen; Col A bold
-- [ ] All cells: Wrap; Col B:C only: Clip
-- [ ] Long-text cols (AG, AH, AA): left-aligned
-- [ ] C:AJ: center-aligned (with left overrides on note cols)
-- [ ] AD2:AD{last_row + 1000}: formatted as `0%`, center-aligned
-- [ ] AE (Tier) center-aligned
-- [ ] CF rules: all 6 Tier colors applied to **AE2:AE{last_row + 1000}**
-- [ ] ALL data cell backgrounds are WHITE except Tier column (AE) which uses conditional formatting colors
+- [ ] All cells: Wrap; Col B:D only: Clip
+- [ ] Long-text cols (AH, AI, AB): left-aligned
+- [ ] D:AK: center-aligned (with left overrides on note cols)
+- [ ] AE2:AE{last_row + 1000}: formatted as `0%`, center-aligned
+- [ ] AF (Tier) center-aligned
+- [ ] CF rules: all 6 Tier colors applied to **AF2:AF{last_row + 1000}**
+- [ ] ALL data cell backgrounds are WHITE except Tier column (AF) which uses conditional formatting colors
 - [ ] No columns are hidden (all visible unless user explicitly requests hiding)
-- [ ] AI column: all values are `Y` or `N` only
+- [ ] AJ column: all values are `Y` or `N` only
 - [ ] No empty rows/cols
 - [ ] No `HYPERLINK()` formulas used

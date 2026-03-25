@@ -317,9 +317,9 @@ writer.writerow([
 1. Look for the "Public profile" link on the LIR profile page (usually near the candidate's name/photo area, shows the LinkedIn icon + "Public profile" text)
 2. Read the `href` from that link — it will be in the format `https://www.linkedin.com/in/{actual-slug}`
 3. Use that EXACT URL as-is. Do not modify, shorten, or reconstruct it.
-4. **If the "Public profile" link is not visible or not present**, leave Column 2 **empty**. The CSV Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
+4. **If the "Public profile" link is not visible or not present**, leave Column 3 **empty**. The CSV Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
 
-**Validation before writing:** If you did extract a public URL, sanity-check that the slug loosely relates to the candidate's name (e.g., for "Priya Patel" the slug might be `priya-patel-a1b2c3d4` or `priyapatel123`). If the slug has zero resemblance to the candidate's name, it's likely the wrong link — leave Column 2 empty instead.
+**Validation before writing:** If you did extract a public URL, sanity-check that the slug loosely relates to the candidate's name (e.g., for "Priya Patel" the slug might be `priya-patel-a1b2c3d4` or `priyapatel123`). If the slug has zero resemblance to the candidate's name, it's likely the wrong link — leave Column 3 empty instead.
 
 ### Step 7: Anti-Detection Behavior (LinkedIn only)
 

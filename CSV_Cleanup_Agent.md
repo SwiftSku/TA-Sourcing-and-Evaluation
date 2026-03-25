@@ -88,8 +88,8 @@ For each unchecked row, run the **Validation Test Suite** (see below). Every tes
 For each broken row:
 
 1. **Check Z_Search_Cache.json first** — if this candidate's name appears in `top5_summary`, reconstruct the row from the cached data (name, tier, score_pct, verdict, company, raw_score). Fill in what you can from the cached data + the broken row's existing fields (URLs, source, timestamp). Mark as `Cleaned?` = `TRUE`. Skip to step 7.
-2. **Extract the candidate's LIR URL** (or identifier) — scan all columns for a value starting with `http`. Column 3 is the expected location for the LIR URL, Column 2 for the Public LI URL. Check all columns in case of shift.
-3. **Extract the Source** — column 4 in a normal row, but look for known source patterns if shifted.
+2. **Extract the candidate's LIR URL** (or identifier) — scan all columns for a value starting with `http`. Column 4 is the expected location for the LIR URL, Column 3 for the Public LI URL. Check all columns in case of shift.
+3. **Extract the Source** — column 5 in a normal row, but look for known source patterns if shifted.
 4. **Do NOT touch the broken row yet.** Leave it in the CSV while the re-evaluation happens.
 5. **Spawn a Candidate Evaluator sub-agent** with `model: "sonnet"` using the standard spawn template:
 
@@ -202,7 +202,7 @@ CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Dedupe
 | `ENRICHMENT_FAILED` | Row passed all structural/scoring tests but enrichment failed after 2+ attempts across separate cleanup passes — requires manual intervention |
 | (empty) | Row has not been checked yet |
 
-**Four valid states.** A row is `TRUE` only when ALL validation tests pass AND Step 6 enrichment is complete (or not needed). If the row has a LinkedIn Recruiter URL in Column 3 but no Public LI URL in Column 2, it is NOT clean — `Cleaned?` must remain empty until enrichment has been attempted. Rows are NEVER deleted outright.
+**Four valid states.** A row is `TRUE` only when ALL validation tests pass AND Step 6 enrichment is complete (or not needed). If the row has a LinkedIn Recruiter URL in Column 4 but no Public LI URL in Column 3, it is NOT clean — `Cleaned?` must remain empty until enrichment has been attempted. Rows are NEVER deleted outright.
 
 `ENRICHMENT_FAILED` rows count as "clean" for the `Uncleaned: 0` gate (they are excluded from the Uncleaned count, same as `TRUE` and `DUPLICATE`). This prevents the pipeline from hanging on rows where the LIR profile is permanently inaccessible.
 
@@ -236,7 +236,7 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| T1 | Date format | Date Added column matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` (AM: Column 6, RC: Column 6) | Timestamp is garbled or in wrong format |
+| T1 | Date format | Date Added column matches regex `^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$` (AM: Column 6; RC: no Date Added column — skip this test) | Timestamp is garbled or in wrong format |
 | T2 | Date is plausible | Year is 2025 or 2026, month 01-12, day 01-31 | Timestamp has impossible values |
 
 ### Scoring Tests — Dynamic Weight Recalculation
