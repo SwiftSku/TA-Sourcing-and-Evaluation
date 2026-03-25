@@ -67,9 +67,22 @@ This agent evaluates **exactly ONE candidate** per invocation. It is designed to
 
 ## Process
 
+### Step 0: Company-Search Preamble (when source is a company-targeted search)
+
+⛔ **If evaluating candidates from a company-targeted search (e.g., "Adit Company Search"), lock in company-level dimension scores BEFORE reviewing any individual candidates.** These scores apply to ALL candidates from this company and must NOT be re-evaluated per candidate:
+
+- **Dim2 (SaaS):** Look up the company in the validated lists above. If it's on the US HQ SaaS list → all candidates get Dim2 baseline of 4. If on the non-US validated list → baseline 3. This can only go DOWN if a candidate's role at the company has zero SaaS involvement (e.g., janitorial).
+- **Dim3 (US Co):** If the company is US-HQ → all candidates get Dim3 = 3. Not 2 — even if the candidate works from India, the COMPANY is US-HQ.
+
+This prevents inconsistent scoring across candidates from the same company.
+
 ### Step 1: Check for Duplicates
 
-Read the CSV at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
+⛔ **This step is MANDATORY and must NEVER be skipped.** Read the CSV at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
+
+Search is case-insensitive. Also check for common name variants (e.g., "Ritika Kothari" vs "Ritika K."). If in doubt, compare LinkedIn URLs too.
+
+**Greenhouse cross-reference:** If the candidate's LIR profile shows "In 1 project" or a "Recent ATS Profile" link, or if a Greenhouse URL is visible on the profile page, the candidate may already be in the pipeline. Check the CSV `Greenhouse URL` column (col 2) for a matching Greenhouse person ID. This catches duplicates even when names are spelled differently across sources.
 
 ### Step 2: Auto-Disqualifiers
 
@@ -84,6 +97,17 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 | Renewals Manager (primary/only title)                    | Title signals churn-prevention ops, not relationship management; flag unless backed by strong CS/AM titles elsewhere                                        |
 | No clear Gujarat/Gujarati connection                     | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count                                         |
 | Zero SaaS exposure across entire career                  | No tech company, product, or platform anywhere                                                                                                              |
+
+### Step 2b: Full Profile Scroll (MANDATORY for LinkedIn profiles)
+
+⛔ **Before scoring ANY dimension, you MUST have viewed the ENTIRE profile.** Incomplete profile reads are the #1 source of scoring errors. The following sections MUST be visible in at least one screenshot before you proceed to Step 3:
+
+1. **All experience entries** — scroll until you see the LAST role (earliest job). Do NOT stop after seeing the current role. Prior employers often contain the strongest KAM metrics, SaaS evidence, and title signals.
+2. **Education section** — verify degree type (MBA vs Bachelor's), institution name, completion status (in-progress vs completed).
+3. **Languages section** — ⛔ **MUST click "Show more" if present.** LinkedIn often hides Hindi and Gujarati behind this toggle, showing only English by default. Failing to expand this section causes missed Hindi signals and incorrect language data. If "Show more" is not clickable or scrolls away, use JavaScript to extract language data from the DOM: `document.querySelectorAll('[class*="language"]')` or similar.
+4. **Skills section** — scan for SaaS, CRM, retention, upselling keywords.
+
+**Verification checkpoint:** Before writing any scores, confirm: "I have seen [X] total experience entries, education at [school], and [N] languages listed as: [language names]." If you cannot confirm all three, scroll more. If languages shows a count (e.g., "2 Languages") but you only see one name, you MUST expand the section.
 
 ### Step 3: Score Each Dimension
 
@@ -106,21 +130,21 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 | Score | Criteria |
 |---|---|
-| 4 | US HQ SaaS or software company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, etc.) |
+| 4 | US HQ SaaS or software company — if verifiably US-headquartered AND sells software/SaaS, score 4. The named companies below are examples, NOT an exhaustive list. |
 | 3 | Non-US SaaS or software company on the validated list below |
-| 2 | Clear SaaS or software company, not on validated list |
+| 2 | Clear SaaS or software company, not on validated list, AND not verifiably US-HQ |
 | 1 | Mixed — some SaaS/software, some traditional |
 | 0 | Minimal SaaS/software exposure (passes zero-SaaS disqualifier but barely) |
 
 **Validated SaaS/software companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
 
-**US HQ SaaS/software (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics
+**US HQ SaaS/software (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, Adit
 
 #### Dimension 3: US Company Experience (weight: 2×)
 
 | Score | Criteria |
 |---|---|
-| 3 | US HQ company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, etc.) |
+| 3 | US HQ company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Adit, etc.) |
 | 2 | India company with explicit US client base or US-facing role |
 | 1 | Unclear / possible US exposure |
 | 0 | India-only, no US-facing work |
@@ -142,6 +166,8 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 2 | MBA, PMP/CSPO, equivalent professional cert, OR engineering degree (B.E./B.Tech) |
 | 1 | Bachelor's degree, relevant field |
 | 0 | No degree mentioned or unrelated degree only |
+
+> **In-progress degrees:** A degree that is currently being pursued (not yet completed) scores ONE tier lower than if completed. Example: MBA in-progress → score 1 (not 2). Look for date ranges that extend into the future or "Expected graduation" markers. If the profile says "2024–2026" and it's currently 2026, verify whether the degree is complete or still in progress.
 
 ### Bonus Dimensions (additive — no penalty if absent)
 

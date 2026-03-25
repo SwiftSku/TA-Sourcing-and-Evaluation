@@ -61,12 +61,13 @@ This document defines which companies SwiftSku targets when sourcing candidates 
 | 8 | **Gujarat_City** | Text | Specific city in Gujarat (usually Ahmedabad) |
 | 9 | **VC_Backed_Startup** | Yes/No | Is the company VC-backed, PE-backed, or a high-growth startup? |
 | 10 | **Approx_Size** | Text | Approximate employee count range |
-| 11 | **SaaS_Score_If_Candidate (AM Rubric)** | Number | Score a candidate from this company would receive on the SaaS dimension: 4 = US HQ SaaS, 3 = Non-US validated SaaS, 2-3 = context dependent |
-| 12 | **Notes** | Text | Free-form notes about the company and its relevance |
-| 13 | **Outbound_Sales_Degree** | Text | How much the company's sales team relies on outbound prospecting: Very High, High, Medium, Low, or Low (PLG) |
-| 14 | **Outbound_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source |
-| 15 | **100+_Cold_Calls_Per_Day** | Yes/No/Unknown | Whether the company's SDRs/BDRs are expected to make 100+ cold calls or outbound activities per day |
-| 16 | **Cold_Call_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source (primarily from job descriptions) |
+| 11 | **SaaS_Score_AM** | Number (0-4) | Score a candidate from this company would receive on the SaaS/Software dimension in the **AM rubric** (Dim 2, weight 2.5×). 4 = US HQ SaaS, 3 = Non-US validated or Tier 1 non-US SaaS, 2 = clear SaaS not on validated list |
+| 12 | **SaaS_Score_RC** | Number (0-4) | Score for the **RC rubric** SaaS dimension (Dim 4, weight 3×). Same 4/3/2 scale but the RC JD's US HQ SaaS list explicitly includes BrowserStack, Freshworks, and Toast |
+| 13 | **Notes** | Text | Free-form notes about the company and its relevance |
+| 14 | **Outbound_Sales_Degree** | Text | How much the company's sales team relies on outbound prospecting: Very High, High, Medium, Low, or Low (PLG) |
+| 15 | **Outbound_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source |
+| 16 | **100+_Cold_Calls_Per_Day** | Yes/No/Unknown | Whether the company's SDRs/BDRs are expected to make 100+ cold calls or outbound activities per day |
+| 17 | **Cold_Call_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source (primarily from job descriptions) |
 
 ---
 
@@ -90,14 +91,14 @@ Additionally, candidates from **Tier 1 companies** receive implicit priority bec
 3. Determine US HQ status and whether they serve US customers
 4. Research their sales motion — look for SDR/BDR job postings to assess outbound degree and cold call volume
 5. Assign a tier based on pipeline relevance
-6. Add a row to `_OUTPUT-Target_Companies.xlsx` with all 16 columns populated
+6. Add a row to `_OUTPUT-Target_Companies.xlsx` with all 17 columns populated
 7. If the company should be a Tier 1 target, update the `tier1_companies` list in the relevant JD config file(s)
 
 ---
 
 ## Current Stats
 
-- **Total Companies**: 45
+- **Total Companies**: 44
 - **Tier 1 (AM + RC)**: 8 companies
 - **Tier 1 (AM only)**: 6 companies
 - **Tier 2 (Research)**: 9 companies

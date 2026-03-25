@@ -4,8 +4,10 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils import get_column_letter
 
-CSV_PATH = "/sessions/wizardly-dazzling-dirac/mnt/TA-ACM/_OUTPUT--Acct_Mgr.csv"
-XLSX_PATH = "/sessions/wizardly-dazzling-dirac/mnt/TA-ACM/_OUTPUT--Acct_Mgr.xlsx"
+import os
+_dir = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(_dir, "_OUTPUT--Acct_Mgr.csv")
+XLSX_PATH = os.path.join(_dir, "_OUTPUT--Acct_Mgr.xlsx")
 
 wb = Workbook()
 ws = wb.active

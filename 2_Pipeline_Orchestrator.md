@@ -204,7 +204,7 @@ Before processing ANY candidates, spawn a CSV Cleanup Agent pass to ensure the C
 Read `tier1_companies` from the active JD file's Pipeline Config block.
 
 **Tier 2 — Research-discovered (populated by Company Research Agent during the run):**
-Starts empty. The Company Research Agent (see below) runs in parallel during Phase 0 and appends companies here. Check `company_research.json` for updates before each new company search.
+Starts empty. The Company Research Agent (see below) runs in parallel during Phase 0 and appends companies here. Check `Target_Companies/company_research.json` for updates before each new company search.
 
 ### Company-Targeted Search Execution
 
@@ -214,7 +214,7 @@ Starts empty. The Company Research Agent (see below) runs in parallel during Pha
    - When SEARCH_EXHAUSTED for this company → move to next company
    - Track which companies have been searched in `company_search_log` (in-memory list)
 
-2. **Interleave Tier 2 as results arrive.** When the Company Research Agent returns results (written to `company_research.json`), add those companies to the queue. You do NOT need to finish all of Tier 1 first — if Tier 2 results arrive while you're mid-Tier-1, append them to the queue and continue in order.
+2. **Interleave Tier 2 as results arrive.** When the Company Research Agent returns results (written to `Target_Companies/company_research.json`), add those companies to the queue. You do NOT need to finish all of Tier 1 first — if Tier 2 results arrive while you're mid-Tier-1, append them to the queue and continue in order.
 
 3. **Fall back to keyword search ONLY when both tiers are exhausted** and termination targets are not met. Then use the Search Refinement Logic below.
 
@@ -242,7 +242,7 @@ You are a company research agent. Your job is to find US-headquartered B2B SaaS 
 **Already known (DO NOT include these):**
 [Insert the `tier1_companies` list from the active JD file's Pipeline Config here]
 
-**Output:** Write results to [FULL PATH]/company_research.json in this format:
+**Output:** Write results to [FULL PATH]/Target_Companies/company_research.json in this format:
 {
   "discovered_at": "YYYY-MM-DD HH:MM:SS",
   "companies": [
@@ -269,12 +269,12 @@ Return ONLY: RESEARCH | {count} companies found ({high_count} high, {medium_coun
 **Rules:**
 - Runs on `model: "sonnet"` — same as other sub-agents
 - Spawned once during Phase 0, runs in parallel with Tier 1 company searches
-- The orchestrator checks for `company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
+- The orchestrator checks for `Target_Companies/company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
 - If the research agent fails or returns 0 companies, log it and continue — Tier 1 alone is valuable
 - Do NOT wait for this agent before starting Tier 1 searches
 
 **⛔ Orchestrator Validation Before Queuing Tier 2 Companies:**
-When reading `company_research.json`, the orchestrator MUST:
+When reading `Target_Companies/company_research.json`, the orchestrator MUST:
 1. Skip any company missing the `source` field or where `source` is vague (e.g., "found online")
 2. Queue `high` confidence companies before `medium` confidence companies
 3. If a company-targeted search returns 0 results after 2 pages, remove it from the queue — the Gujarat presence claim was likely wrong

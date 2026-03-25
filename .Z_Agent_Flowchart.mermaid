@@ -6,7 +6,7 @@ flowchart TD
         USER["👤 Dan answers 4 startup questions"]
         STARTER["📄 <b>1_Pipeline_Starter.md</b><br/><i>Q1: Which role? (numbered JD list)<br/>Q2: Source name · Q3: Source URL · Q4: Run params<br/>Selects active JD file → loads Pipeline Config<br/>Canary token (4-word, verify every 10 cands)<br/>Hard cap = 60 · A-target = 20 · run counters<br/>All sub-agents = Sonnet · Parent = Opus</i>"]
         ORCH["🟡 <b>2_Pipeline_Orchestrator.md</b> · Opus parent<br/><i>Role-agnostic: reads JD config for all role-specific values<br/>Company-targeted: Tier 1 proven + Tier 2 research<br/>NO Chrome — only spawns sub-agents<br/>Creates per-run log: Z_Old_Chat_Logs/Chat_Log-*.md</i>"]
-        COMPANY_RESEARCH["🟢 <b>Company Research Agent</b> · Sonnet<br/><i>Runs IN PARALLEL with Tier 1 searches<br/>Discovers US-HQ B2B SaaS w/ Gujarat presence<br/>Writes company_research.json → feeds Tier 2</i>"]
+        COMPANY_RESEARCH["🟢 <b>Company Research Agent</b> · Sonnet<br/><i>Runs IN PARALLEL with Tier 1 searches<br/>Discovers US-HQ B2B SaaS w/ Gujarat presence<br/>Writes Target_Companies/company_research.json → feeds Tier 2</i>"]
         PREFLIGHT_CLEAN["🟢 Pre-flight CSV Cleanup · Sonnet"]
         USER --> STARTER --> ORCH
         ORCH --> PREFLIGHT_CLEAN
@@ -76,7 +76,7 @@ flowchart TD
     %% ===== SHARED FILES =====
     subgraph shared["📁 Shared Files (read/write during run)"]
         direction LR
-        FILES["<b>[output file from JD config]</b> (per JD schema) · canonical candidate list<br/><b>Z_Search_Cache.json</b> · scoring variance protection<br/><b>company_research.json</b> · Tier 2 company discoveries<br/><b>Z_Old_Chat_Logs/Chat_Log-*.md</b> · per-run black box<br/><b>Z_Pipeline_Error_Log.md</b> · append-only error log<br/><b>REF--LIR_Interface_Learnings.md</b> · LinkedIn quirks/workarounds"]
+        FILES["<b>[output file from JD config]</b> (per JD schema) · canonical candidate list<br/><b>Z_Search_Cache.json</b> · scoring variance protection<br/><b>Target_Companies/company_research.json</b> · Tier 2 company discoveries<br/><b>Z_Old_Chat_Logs/Chat_Log-*.md</b> · per-run black box<br/><b>Z_Pipeline_Error_Log.md</b> · append-only error log<br/><b>REF--LIR_Interface_Learnings.md</b> · LinkedIn quirks/workarounds"]
     end
 
     %% ===== CONNECTIONS =====
@@ -100,7 +100,7 @@ flowchart TD
     CAP -->|"Yes → done"| GSHEET
     CAP -.-|"Canary fail /<br/>compaction"| SD
 
-    COMPANY_RESEARCH -.->|"company_research.json<br/>feeds Tier 2 queue"| ORCH
+    COMPANY_RESEARCH -.->|"Target_Companies/company_research.json<br/>feeds Tier 2 queue"| ORCH
 
     %% ===== STYLES =====
     classDef user fill:#4285F4,stroke:#3367D6,color:#fff,stroke-width:2px
