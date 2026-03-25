@@ -2,16 +2,16 @@
 
 ## Rendering
 
-- **Engine:** PIL (Pillow) — no external network dependencies (mermaid-py, npm, playwright all fail in sandbox)
+- **Engine:** SVG via Python string generation. PIL (Pillow) is only used to resize the Chrome icon to 44×44 for embedding.
 - **Render script:** `render_flowchart_svg.py` in the session root. Run with `python3 render_flowchart_svg.py` to regenerate.
-- **Output:** `_Agent_Flowchart.svg` in the TA-ACM root (SVG — vector, crisp at any zoom, ~39KB vs ~147KB PNG)
+- **Output:** `_Agent_Flowchart.svg` in the TA-ACM root (SVG — vector, crisp at any zoom, ~39KB). View locally by opening in Chrome (Cmd+R to refresh after re-render).
 - **Source of truth:** This preferences file defines style/layout rules. The SVG script implements them. The `.Z_Agent_Flowchart.mermaid` file is a reference only — it does NOT drive rendering. **NEVER use `render_mermaid.py`** — it produces a completely different layout.
-- **Legacy:** `_Agent_Flowchart.png` may still exist but is no longer the canonical output. The SVG is the source of truth.
+- **Legacy:** `_Agent_Flowchart.png` has been deleted. SVG is the sole output.
 
 ## Icons
 
-- **Chrome icon:** `Z__In_Use_Ref_Files/Chrome_Icon.png` — paste on every agent box that uses Chrome (URL Extractor, Candidate Evaluator, Cleanup Agent enrichment, Save_To_LIR)
-- **Chrome icon size:** 22×22px, positioned top-right corner of the box
+- **Chrome icon:** `Z__In_Use_Ref_Files/Chrome_Icon.png` — embedded as base64 data URI (pre-resized to 44×44 for crisp 22px display) on every agent box that uses Chrome (URL Extractor, Candidate Evaluator, Cleanup Agent enrichment, Save_To_LIR)
+- **Chrome icon size:** 22×22px display, positioned top-right corner of the box
 - **Chrome in legend:** No — the icon is self-explanatory. Do NOT add a Chrome legend entry.
 
 ## Color Scheme
@@ -21,81 +21,90 @@
 | Opus (orchestrator) | `#F5A623` | `#E09000` | `#333` |
 | Sonnet (sub-agents) | `#34A853` | `#2E8B47` | `#333` |
 | Decision nodes | `#FBBC04` | `#E0A800` | `#333` |
-| User / manual | `#4285F4` | `#3367D6` | `#333` |
+| User / manual | `#4285F4` | `#3367D6` | `#fff` |
 | Self-destruct | `#EA4335` | `#C62828` | `#fff` |
 | Refinement | `#E8D5F5` | `#7B4DB5` | `#333` |
 | Coming Soon / placeholder | `#FFFF00` | `#CCB800` | `#333` |
-| Phase backgrounds | `#F8F9FA` | `#BDC3C7` | — |
-| Shared files bg | `#E8EAF6` | `#5C6BC0` | — |
+| Shared files bg | `#E8EAF6` | `#5C6BC0` | `#333` |
 | Canvas | `#FFFFFF` | — | — |
 
 ## Typography
 
-- **Title:** DejaVuSans-Bold 18px
-- **Box titles:** DejaVuSans-Bold 14px
-- **Box body text:** DejaVuSans 11px
-- **Phase labels:** DejaVuSans-Bold 14px, color `#888`
-- **Legend labels:** DejaVuSans 11px
+SVG uses CSS font stacks — no local font files required.
+
+- **Title:** bold 18px 'Segoe UI', system-ui, sans-serif (`#333`)
+- **Subtitle:** 11px 'Segoe UI', system-ui, sans-serif (`#888`)
+- **Box titles:** bold 12px (`class="box-title"`)
+- **Box body text:** 11px (`class="box-body"`)
+- **File hints:** 8px (`class="box-hint"`, `#888`)
+- **Phase labels:** bold 14px (`class="phase"`, `#888`)
+- **Diamond text:** bold 11px (`class="diamond-text"`)
+- **Arrow/loop labels:** 9px (`class="label-gray"` or `class="label-red"`)
+- **Legend labels:** 11px (`class="legend-text"`)
+- **Stats line:** 9px (`class="stats"`, `#888`)
+- **Shared files:** 10px (`class="shared"`)
 
 ## Layout
 
-- **Canvas sizing:** NEVER hardcode width or height. Render all content to a large scratch canvas, compute the actual bounding box of all drawn pixels, then crop to `bbox + 20px` padding on each side. The canvas should be exactly as wide and tall as the content requires — no wasted whitespace.
-- **Layout pattern:** Center spine — main flow runs straight down the vertical center
-- **Side branches:** Parallel/optional agents branch left or right off the center spine
-- **Loop-back arrows:** Curved arrows returning to an earlier node (e.g., "next batch" loops back to URL Extractor, refinement loops back to CE)
+- **ViewBox:** SVG width is 1000px. Height is computed dynamically from content (y cursor at end of rendering). No hardcoded height.
+- **Center spine:** `CENTER_X = 500` — main flow runs straight down the vertical center
+- **Side branches:** `SIDE_LEFT_X = 180`, `SIDE_RIGHT_X = 820` — parallel/optional agents branch left or right
+- **Box width:** `BOX_W = 280` — all agent boxes are this width, centered on their cx
 
 ### Node shapes
-- **Agent boxes:** rounded_rectangle, radius=8, width ~280-320px
-- **Decision nodes:** Diamond (rotated square), ~100×100px, with question text centered inside (e.g., "Source type?", "Quality Gate", "Uncleaned=0?", "Terminate?")
-- **Phase containers:** rounded_rectangle, radius=10
+- **Agent boxes:** `<rect>` with `rx=8`, width 280px
+- **Decision nodes:** `<polygon>` diamond, half-size 48px, with question text centered inside (e.g., "Source type?", "Quality Gate", "Uncleaned = 0?", "60 total? 20 A?")
 - **Self-destruct container:** `fill:#FFEBEE`, `stroke:#EA4335`, width=2
-- **Manual container:** `fill:#E3F2FD`, `stroke:#4285F4`, width=2, dashed
+- **Manual container:** `fill:none`, `stroke:#4285F4`, width=1.5, `stroke-dasharray="8,4"`
 
 ### Arrows
-- **Color:** `#555`, width=2, with filled triangle arrowheads
-- **Decision labels:** "Yes"/"No" or "LIR"/"Public" labels on arrows exiting decision diamonds
-- **Loop-back arrows:** Same style, curved to avoid overlapping other nodes
+- **Style:** SVG `<line>` and `<polyline>` elements with `marker-end="url(#arrow)"` for arrowheads
+- **Color:** `#555`, stroke-width=2
+- **Arrowheads:** Defined in `<defs>` as `<marker>` elements — `#arrow` (gray) and `#arrow-red` (for fail branches)
+- **Decision labels:** "LinkedIn Recruiter"/"Static (PDF/spreadsheet)" on Source type diamond; "Pass"/"Fail" on Quality Gate; "Yes"/"No" on Uncleaned and Terminate
+- **Loop-back arrows:** `<polyline>` with right-angle bends (not curves) routed to avoid overlapping nodes
 
 ## Content Rules
 
 - Show which model runs each agent (Opus vs Sonnet)
 - Note "NO Chrome" on orchestrator explicitly
 - Include shared files section listing all cross-agent files
-- Include key file name(s) as tiny 8px grey text inside each agent box (bottom of box, `#888` color). No separate footer section.
-- Include column counts and max scores per role in footer
-- Highlight `CE_Spawn_Template.md` callout near CE box in purple (`#7B4DB5`)
-- Auto-crop both width AND height to content bounding box + 20px padding per side
+- Include key file name(s) as tiny 8px grey text inside each agent box (bottom of box, `#888` color)
+- Include column counts and max scores per role in stats footer: `AM: 37 cols, max 55.0 | RC: 40 cols, max 52.8`
+- Highlight `CE_Spawn_Template.md` callout near CE box in purple (`#E8D5F5` fill, `#7B4DB5` border)
+- Greenhouse "COMING SOON" box uses highlighter yellow (`#FFFF00`) to stand out as a placeholder
+- Explicit `<rect width="100%" height="100%" fill="#FFFFFF"/>` as first element for white background (some renderers ignore `style="background"`)
 
 ## Flow Structure (top-down)
 
 The pipeline flows top-to-bottom through these stages on the center spine:
 
-1. **Pipeline Starter** (user/manual) → triggers Orchestrator
-2. **Pipeline Orchestrator** (Opus, NO Chrome) — center spine anchor; **Company Research** + **Pre-Flight Cleanup** spawn as parallel branches (no Chrome)
+1. **Pipeline Starter** (user/manual, blue) → triggers Orchestrator
+2. **Pipeline Orchestrator** (Opus, orange, NO Chrome) — center spine anchor; **Company Research** (Sonnet, green, left branch) + **Pre-Flight Cleanup** (Sonnet, green, right branch) spawn in parallel (both no Chrome)
 3. **Decision: Source type?** — diamond: LIR branch left (→ URL Extractor), Static branch right (→ Orchestrator Dedup)
-4. **URL Extractor** (Sonnet, Chrome) — extracts 5 non-dup URLs per invocation
-5. **Candidate Evaluator** (Sonnet, Chrome) — spawned per candidate; CE Spawn Template callout in purple nearby; handoff cache update + 45-200s delay loop
-6. **Decision: Quality Gate** — diamond: pass continues, fail → **Search Refinement** (purple, loops back to URL Extractor)
-7. **Output Cleanup Agent** (Sonnet, Chrome for enrichment) — runs on output file
-8. **Decision: Uncleaned=0?** — diamond: loop back if no, continue if yes
-9. **Decision: Terminate?** (60 total? 20 A?) — "no" loops back to Source type diamond; "yes" → Output Summary; canary/compaction → **Self-Destruct** (red container, right branch)
-10. **Manual — Post Pipeline** (dashed container): **Save_To_LIR** (Chrome) + **COMING SOON: Send to Greenhouse**
+4. **URL Extractor** (Sonnet, Chrome, green, left) — extracts 5 non-dup URLs per invocation; verifies filters READ-ONLY
+5. **Orchestrator Dedup** (Opus, orange, right) — name + normalized LI URL check for static sources
+6. Both branches converge → **Candidate Evaluator** (Sonnet, Chrome, green) — spawned per candidate; CE Spawn Template callout in purple nearby
+7. **Update Z_Search_Cache.json** (orange) → **45-200s delay** (orange) → loop back to CE (×5 per batch)
+8. **Decision: Quality Gate** — diamond: pass continues, fail → **Search Refinement** (purple, loops back to URL Extractor via right-side polyline)
+9. **Cleanup Agent** (Sonnet, Chrome, green) — rubric rescore, dedup, validation, enrichment
+10. **Decision: Uncleaned = 0?** — diamond: "No" loops left back to Cleanup; "Yes" continues
+11. **Decision: 60 total? 20 A?** — "No" loops far-left back to Source type diamond; canary/compaction → **Self-Destruct** (red container, right branch with Context_Legacy_Prompt.md); "Yes → done" → **Output Summary · STOP** (orange)
+12. **Manual — Post Pipeline** (dashed blue container): **Save_To_LIR** (blue, Chrome) + **COMING SOON: Send to Greenhouse** (yellow)
 
-## Text Fitting Rules (Critical)
+## SVG-Specific Rules
 
-- **Measure first, draw second:** Always use `textbbox()` to measure every text string BEFORE sizing the box. Never hardcode box dimensions without measuring the text that goes inside.
-- **Word-wrap all body text:** Use a `wrap_text()` helper that splits on words and checks pixel width against `max_inner_width` (~280px). Never assume text will fit a fixed-width box.
-- **Padding budget:** 14px horizontal, 10px vertical inside each box. Title gets 6px gap before body lines. Body lines get 3px inter-line spacing.
-- **Chrome icon allowance:** When a box has a Chrome icon (22×22, top-right), add 28px to the title width measurement so the icon doesn't overlap title text.
-- **Diamond text:** Keep to 1–2 very short words (≤7 chars/line). Use `DIAMOND_FONT` (Bold 11px). Center each line independently within the diamond. **NEVER hardcode diamond size** — always use `measure_diamond()` which computes the minimum half-size from `(max_text_dimension + padding) / √2`. Pass text as a list of lines, not a `\n`-joined string.
-- **Title area:** Measure both title and subtitle text heights with `textbbox()`, then allocate `title_h + subtitle_h + 14px` gap before the first phase. Never use a hardcoded offset like `+40`.
-- **Footer text:** Use 9px body font, 11px bold for labels. Measure each `label + file` pair to ensure it fits within `canvas_width - 2*margin - 40px`.
-- **Shared files line:** Join with ` | ` separator, then word-wrap to canvas width minus margins. Use 10px font.
+- **No `textbbox()` or pixel measurement** — SVG text sizing is handled by the renderer. Box heights are estimated from line count × line_h constants (title_h=15, line_h=14, hint_h=12).
+- **No word-wrap helper** — body text lines are pre-split in the script. Each line is a separate `<text>` element.
+- **Diamond size** is a fixed half=48px. Keep diamond text to 1-2 short words per line.
+- **Chrome icon** is embedded as a single base64 data URI per `<image>` element (not via `<symbol>`/`<use>` — that breaks cairosvg).
+- **Padding budget:** BOX_PAD_H=14, BOX_PAD_V=10 inside each box. Title gets 6px gap before body lines. Body lines spaced at line_h=14px.
 
 ## When to Regenerate
 
-Regenerate the PNG whenever:
+Regenerate the SVG (`python3 render_flowchart_svg.py`) whenever:
 - A new agent file is added or renamed
 - Shared files change (new REF-- file, new template)
 - Pipeline flow changes (new phase, new decision node)
 - Agent Chrome usage changes
+- Column counts or max scores change in a JD file

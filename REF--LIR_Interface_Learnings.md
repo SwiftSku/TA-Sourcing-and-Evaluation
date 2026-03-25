@@ -39,6 +39,25 @@ If any answer is "no" or "maybe" — do not add it. False learnings are worse th
 
 ## Filters & Controls
 
+### ⛔ MANDATORY FILTERS — Every LIR search MUST have these enabled
+
+**Any agent that creates, modifies, or verifies a LinkedIn Recruiter search MUST ensure these two filters are active. If either is missing or misconfigured, the search is invalid — do NOT proceed with extraction or evaluation until both are confirmed.**
+
+1. **Hide previously viewed = ON, Past 2 years**
+   - The toggle must be ON (green), and the duration must be "Past 2 years" (not 30 days, 90 days, 6 months, or 1 year — those are wrong).
+   - This filter resets between sessions. Verify it every time, even if you think it was set previously.
+   - Why: Without this, the pipeline wastes evaluations on candidates already scored in prior runs and creates duplicate rows.
+
+2. **Recruiting Activity = No Messages AND No Projects**
+   - Both "Messages" and "Projects" must be set to "Doesn't have" (shown as red/negative filter pills).
+   - Why: Candidates already messaged or added to projects have been actioned by the team. Evaluating them again is wasted work.
+
+**If you are adjusting filters for any reason (adding companies, changing titles, refining keywords), you MUST also verify these two mandatory filters are still enabled after your changes.** Filter changes can sometimes reset other filter state.
+
+**If either filter is missing or wrong:** If you have permission to modify filters (e.g., you're a filter adjustment agent), enable them. If you're a URL Extractor (read-only), return `ERROR: FILTER_MISMATCH` to the parent.
+
+---
+
 - **2026-03-23: CRITICAL — Filters are STATEFUL and DESTRUCTIVE on click.** Clicking on a filter pill, dropdown, toggle, or X button to "verify" or "inspect" its value can MODIFY the filter, which immediately re-runs the search with different parameters. This generates a new `searchRequestId`, which invalidates the previous URL permanently. The old search cannot be recovered — it is gone forever. **ALL filter verification must be visual/screenshot-only. NEVER click on any filter element.** This lesson was learned when a URL Extractor agent clicked into the Recruiting Activity filter to verify it, accidentally added a Messages filter, changed the results to 0, and destroyed the original 88-candidate search.
 
 - **2026-03-23: Filter pills with "X" buttons are live controls.** Clicking anywhere near a filter pill (even to "read" it) can trigger removal. The X button has a large click target. Scroll past filters without clicking.
