@@ -14,7 +14,7 @@ The Pipeline Starter specifies which JD file to use. At startup, parse the JD fi
 
 This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents. It replaces the previous Search_Optimizer.md + Bulk_Processor.md two-file design.
 
-⛔ **CORE PRINCIPLE: This agent NEVER touches Chrome.** ALL browser interaction happens in disposable Sonnet sub-agents (URL Extractor, Candidate Evaluator, CSV Cleanup, GSheet Formatter). This keeps the parent's context at ~35KB through candidate 60, vs. ~150KB by candidate 6 in the old architecture.
+⛔ **CORE PRINCIPLE: This agent NEVER touches Chrome.** ALL browser interaction happens in disposable Sonnet sub-agents (URL Extractor, Candidate Evaluator, CSV Cleanup). This keeps the parent's context at ~35KB through candidate 60, vs. ~150KB by candidate 6 in the old architecture.
 
 ---
 
@@ -61,8 +61,7 @@ The pipeline stops when **either** condition is met (whichever comes first):
 When a termination condition is hit:
 - Finish the current candidate (don't abandon mid-evaluation)
 - Run a final CSV Cleanup Agent pass
-- ⛔ **HARD GATE: Parse the cleanup return line. Check the `Uncleaned` field (NOT `Stuck` — `Uncleaned` is the ground truth count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED). If `Uncleaned: 0` is NOT in the return, the CSV is not fully clean. Re-run the cleanup agent until `Uncleaned: 0`. Do NOT proceed to GSheet Formatter or output summary until cleanup returns `Uncleaned: 0`.** If cleanup is stuck in a loop (3+ consecutive passes with identical Uncleaned count), stop and warn the user — manual intervention needed. Note: `ENRICHMENT_FAILED` rows are accepted as clean — they passed all structural/scoring tests but enrichment was permanently blocked (profile inaccessible). Dan can fix these manually.
-- Run GSheet Formatter
+- ⛔ **HARD GATE: Parse the cleanup return line. Check the `Uncleaned` field (NOT `Stuck` — `Uncleaned` is the ground truth count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED). If `Uncleaned: 0` is NOT in the return, the CSV is not fully clean. Re-run the cleanup agent until `Uncleaned: 0`. Do NOT proceed to output summary until cleanup returns `Uncleaned: 0`.** If cleanup is stuck in a loop (3+ consecutive passes with identical Uncleaned count), stop and warn the user — manual intervention needed. Note: `ENRICHMENT_FAILED` rows are accepted as clean — they passed all structural/scoring tests but enrichment was permanently blocked (profile inaccessible). Dan can fix these manually.
 - Output the final summary
 - Append: `🏁 Pipeline complete. [A-rated target hit / Hard cap hit]. This run: [run_total_count] processed, [run_a_rated_count] A-rated.`
 - **STOP.**
@@ -185,7 +184,7 @@ After every CE verdict (starting from candidate 6 in the current search), mainta
 Loop: URL Extractor (5 URLs) → CE × 5 → check termination → next batch.
 
 - Every 10 candidates: spawn CSV Cleanup Agent
-- After last candidate: final CSV Cleanup + GSheet Formatter
+- After last candidate: final CSV Cleanup
 - Track `run_a_rated_count` and `run_total_count` after every verdict
 
 ### Pre-Flight CSV Cleanup
@@ -363,13 +362,15 @@ If you need to re-evaluate broken rows, spawn Candidate Evaluator sub-agents usi
 Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Uncleaned: {N}
 ```
 
-⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the CSV). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary or run GSheet Formatter until the final cleanup returns `Uncleaned: 0`.
+⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the CSV). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`.
 
 ---
 
-## GSheet Formatting Sub-Agent
+## GSheet Formatting — MANUAL ONLY
 
-After the final CSV Cleanup pass, spawn a formatting sub-agent:
+⛔ **GSheet formatting is NO LONGER auto-run by the pipeline.** Dan invokes it manually when needed, just like `Save_To_LIR.md`.
+
+**When Dan requests it**, spawn a formatting sub-agent:
 
 ```
 You are a Google Sheets formatting agent. Read the formatting guide at:
@@ -388,7 +389,6 @@ Return ONLY: GSHEET_FORMAT | Done | {rows_formatted}
 - Sub-agent runs on `model: "sonnet"`
 - The orchestrator NEVER reads `GSheet_Formater.md` — pass the path only
 - If the sub-agent fails, log it and skip — formatting is cosmetic, not blocking
-- Skip this step if termination was due to self-destruct
 
 ---
 
@@ -412,7 +412,7 @@ If a **Candidate Evaluator** sub-agent fails, times out, or returns malformed ou
 
 **This agent (Pipeline Orchestrator) runs on Opus** — it inherits the parent session's model. Do not override.
 
-**ALL sub-agents** (URL Extractor, Candidate Evaluator, CSV Cleanup, GSheet Formatter) spawn with `model: "sonnet"`. Sonnet executes fixed instructions — it's sufficient and ~5x cheaper than Opus.
+**ALL sub-agents** (URL Extractor, Candidate Evaluator, CSV Cleanup) spawn with `model: "sonnet"`. Sonnet executes fixed instructions — it's sufficient and ~5x cheaper than Opus. GSheet Formatter also uses Sonnet but is manual-only — not auto-spawned by the pipeline.
 
 ---
 
@@ -429,7 +429,7 @@ When an extractor returns `PAGE_EXHAUSTED`:
 
 When an extractor returns `SEARCH_EXHAUSTED`:
 - All pages of the CURRENT search are done
-- **Check termination conditions first** — if 20 A-rated or 60 total reached, run final cleanup + GSheet formatter + output summary
+- **Check termination conditions first** — if 20 A-rated or 60 total reached, run final cleanup + output summary
 - **If termination NOT met** — trigger a Quality Check (see Phase 3). If the source is a live search, refine and spawn a fresh URL Extractor with updated filters. The pipeline continues until termination is hit.
 - **Only stop** if the source is static (PDF, spreadsheet) with no way to get more candidates, OR if refinement has been attempted and still yields no new non-duplicate candidates
 
@@ -520,7 +520,7 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - `[output file from JD config]` → sub-agents write here, you pass the path
 - `Z_Chat_Log--Agent_Maker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors
-- `GSheet_Formater.md` → formatting sub-agent reads from disk at end of run
+- `GSheet_Formater.md` → manual-only formatting agent reads from disk when Dan requests it
 
 ## Step 2: Understand Where We Left Off
 

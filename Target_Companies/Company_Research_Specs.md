@@ -103,5 +103,5 @@ Additionally, candidates from **Tier 1 companies** receive implicit priority bec
 - **Tier 1 (AM only)**: 6 companies
 - **Tier 2 (Research)**: 9 companies
 - **Validated SaaS (US)**: 3 companies
-- **Validated SaaS (Non-US)**: 18 companies
+- **Validated SaaS (Non-US)**: 17 companies
 - **New Addition**: 1 company

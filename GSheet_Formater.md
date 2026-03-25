@@ -1,5 +1,9 @@
 # MAIN_LIVE Sheet Formatting Guide
 
+⛔⛔⛔ **MANUAL INVOCATION ONLY — NEVER AUTO-RUN** ⛔⛔⛔
+
+This agent must NEVER be spawned automatically by the Pipeline Orchestrator at the end of a run. It runs ONLY when the user (Dan) explicitly requests GSheet formatting. If you are the Pipeline Orchestrator and you are reading this file, STOP — you should not be here.
+
 ---
 
 ## ⚡ AGENT INSTRUCTIONS — READ THIS FIRST, EVERY TIME
