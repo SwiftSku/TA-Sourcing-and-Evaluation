@@ -7,7 +7,7 @@ flowchart TD
         STARTER["📄 <b>1_Pipeline_Starter.md</b><br/>Role selection → JD config → run params<br/>Canary token · Hard cap 60 · A-target 20"]
         ORCH["🟡 <b>2_Pipeline_Orchestrator.md</b> · Opus<br/>Role-agnostic · NO Chrome · spawns sub-agents<br/>Company-targeted: Tier 1 → Tier 2 → keyword fallback"]
         COMPANY_RESEARCH["🟢 <b>Company Research</b> · Sonnet<br/>Parallel: finds US-HQ B2B SaaS w/ Gujarat office<br/>→ Target_Companies/company_research.json → feeds Tier 2"]
-        PREFLIGHT_CLEAN["🟢 <b>Pre-flight CSV Cleanup</b> · Sonnet"]
+        PREFLIGHT_CLEAN["🟢 <b>Pre-flight Cleanup</b> · Sonnet"]
         USER --> STARTER --> ORCH
         ORCH --> PREFLIGHT_CLEAN
         ORCH -.->|parallel| COMPANY_RESEARCH
@@ -42,7 +42,7 @@ flowchart TD
 
     %% ===== PHASE 4: CLEANUP =====
     subgraph phase4["Phase 4 · Cleanup (every 10 + final)"]
-        CLEANUP["🟢 <b>CSV_Cleanup_Agent.md</b> · Sonnet<br/>Rubric change → rescore ALL · normalize URLs<br/>Dedup · validation suite · re-eval broken rows<br/>Enrich: fill missing URLs + names via Chrome<br/>Cleaned? = TRUE / DUPLICATE / ENRICHMENT_FAILED"]
+        CLEANUP["🟢 <b>Cleanup Agent</b> · Sonnet<br/>Rubric change → rescore ALL · normalize URLs<br/>Dedup · validation suite · re-eval broken rows<br/>Enrich: fill missing URLs + names via Chrome<br/>Cleaned? = TRUE / DUPLICATE / ENRICHMENT_FAILED"]
         CG{"🔶 Uncleaned = 0?<br/>HARD gate on final"}
         CLEANUP --> CG
     end
@@ -63,7 +63,6 @@ flowchart TD
     %% ===== MANUAL — SEPARATE INVOCATION =====
     subgraph manual["🔧 MANUAL — Separate Invocation"]
         SAVE["👤 <b>Save_To_LIR.md</b><br/>Double confirmation · badge check · 30-90s delay"]
-        GSHEET["🟢 <b>GSheet_Formater.md</b> · Sonnet<br/>GSheet roles only · Notion baseline + local overrides<br/>Tier colors · row heights · freeze · format %"]
     end
 
     %% ===== SHARED FILES =====
@@ -107,7 +106,7 @@ flowchart TD
 
     class USER user
     class STARTER,ORCH,HANDOFF,SUMMARY,STATIC_DEDUP opus
-    class PREFLIGHT_CLEAN,URL_EXT,CE,CLEANUP,GSHEET,COMPANY_RESEARCH sonnet
+    class PREFLIGHT_CLEAN,URL_EXT,CE,CLEANUP,COMPANY_RESEARCH sonnet
     class QG,CG,CAP,SRC decision
     class REFINE refine
     class SD destructNode

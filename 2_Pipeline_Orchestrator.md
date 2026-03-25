@@ -8,13 +8,13 @@ Every decision you make — search filters, refinement strategy, keyword changes
 
 ## Active JD File
 
-The Pipeline Starter specifies which JD file to use. At startup, parse the JD file's `Pipeline Config` block to extract all role-specific values: `role_name`, `output_file` (or `output_csv`), `gsheet_url` + `gsheet_tab` (if present), `tier1_companies`, `lir_title_filters`, `negative_keywords`, `passthrough_rule`, `refinement_patterns`, and `a_rate_signals`. Store these in memory and reference them throughout the run. **Never hardcode role-specific values in this file.**
+The Pipeline Starter specifies which JD file to use. At startup, parse the JD file's `Pipeline Config` block to extract all role-specific values: `role_name`, `output_file`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, `passthrough_rule`, `refinement_patterns`, and `a_rate_signals`. Store these in memory and reference them throughout the run. **Never hardcode role-specific values in this file.**
 
 ## Purpose
 
 This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents. It replaces the previous Search_Optimizer.md + Bulk_Processor.md two-file design.
 
-⛔ **CORE PRINCIPLE: This agent NEVER touches Chrome.** ALL browser interaction happens in disposable Sonnet sub-agents (URL Extractor, Candidate Evaluator, CSV Cleanup). This keeps the parent's context at ~35KB through candidate 60, vs. ~150KB by candidate 6 in the old architecture.
+⛔ **CORE PRINCIPLE: This agent NEVER touches Chrome.** ALL browser interaction happens in disposable Sonnet sub-agents (URL Extractor, Candidate Evaluator, Cleanup). This keeps the parent's context at ~35KB through candidate 60, vs. ~150KB by candidate 6 in the old architecture.
 
 ---
 
@@ -36,14 +36,14 @@ Pipeline run parameters (defaults shown — change any?):
   • Hard cap (all tiers): 60 total candidates processed THIS RUN
   • Source: [whatever the user provided]
 
-Counts start at 0 when you invoke this pipeline. Prior CSV rows don't count.
+Counts start at 0 when you invoke this pipeline. Prior rows don't count.
 Pipeline stops when EITHER target is hit first.
 Reply "go" to accept defaults, or specify changes.
 ```
 
 If the user already specified parameters in their initial message, use those — no need to ask. If they say "go" or equivalent, proceed with defaults.
 
-**Counting rule:** These targets count only candidates processed in THIS pipeline run — not prior CSV rows from previous runs. If a run spans multiple sessions (via self-destruct/resume), the counts carry forward via Context_Legacy_Prompt.md.
+**Counting rule:** These targets count only candidates processed in THIS pipeline run — not prior rows from previous runs. If a run spans multiple sessions (via self-destruct/resume), the counts carry forward via Context_Legacy_Prompt.md.
 
 ---
 
@@ -60,8 +60,8 @@ The pipeline stops when **either** condition is met (whichever comes first):
 
 When a termination condition is hit:
 - Finish the current candidate (don't abandon mid-evaluation)
-- Run a final CSV Cleanup Agent pass
-- ⛔ **HARD GATE: Parse the cleanup return line. Check the `Uncleaned` field (NOT `Stuck` — `Uncleaned` is the ground truth count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED). If `Uncleaned: 0` is NOT in the return, the CSV is not fully clean. Re-run the cleanup agent until `Uncleaned: 0`. Do NOT proceed to output summary until cleanup returns `Uncleaned: 0`.** If cleanup is stuck in a loop (3+ consecutive passes with identical Uncleaned count), stop and warn the user — manual intervention needed. Note: `ENRICHMENT_FAILED` rows are accepted as clean — they passed all structural/scoring tests but enrichment was permanently blocked (profile inaccessible). Dan can fix these manually.
+- Run a final Cleanup Agent pass
+- ⛔ **HARD GATE: Parse the cleanup return line. Check the `Uncleaned` field (NOT `Stuck` — `Uncleaned` is the ground truth count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED). If `Uncleaned: 0` is NOT in the return, the output file is not fully clean. Re-run the cleanup agent until `Uncleaned: 0`. Do NOT proceed to output summary until cleanup returns `Uncleaned: 0`.** If cleanup is stuck in a loop (3+ consecutive passes with identical Uncleaned count), stop and warn the user — manual intervention needed. Note: `ENRICHMENT_FAILED` rows are accepted as clean — they passed all structural/scoring tests but enrichment was permanently blocked (profile inaccessible). Dan can fix these manually.
 - Output the final summary
 - Append: `🏁 Pipeline complete. [A-rated target hit / Hard cap hit]. This run: [run_total_count] processed, [run_a_rated_count] A-rated.`
 - **STOP.**
@@ -84,7 +84,7 @@ There is **no separate validation phase**. The pipeline goes straight to process
 
 ### Phase 1: URL Extraction (batch of 5)
 
-⛔ **Static source dedup rule:** If the source is a static list (PDF, spreadsheet, Manus batch, external URL list), the URL Extractor is NOT used — candidates come directly from the list. Before spawning a CE sub-agent for any static-source candidate, the orchestrator MUST check the CSV for duplicates by **name** (case-insensitive) AND by **normalized public LinkedIn URL** (strip subdomain variants: `in.linkedin.com` → `www.linkedin.com`). Skip any candidate that already exists in the CSV. This prevents the same person being scored twice from different sources (e.g., Manus batch + LIR search).
+⛔ **Static source dedup rule:** If the source is a static list (PDF, spreadsheet, Manus batch, external URL list), the URL Extractor is NOT used — candidates come directly from the list. Before spawning a CE sub-agent for any static-source candidate, the orchestrator MUST check the output file for duplicates by **name** (case-insensitive) AND by **normalized public LinkedIn URL** (strip subdomain variants: `in.linkedin.com` → `www.linkedin.com`). Skip any candidate that already exists in the output file. This prevents the same person being scored twice from different sources (e.g., Manus batch + LIR search).
 
 For LinkedIn Recruiter sources, spawn a **URL Extractor** sub-agent (`model: "sonnet"`) to get the first 5 non-duplicate candidate URLs. The extractor handles ALL Chrome work: opens LIR, verifies filters, scrolls results, extracts URLs. It dies after returning.
 
@@ -133,7 +133,7 @@ Return ONLY this summary line:
 {Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
 ```
 
-⛔ **The output file MUST be updated immediately after every single CE verdict — one candidate, one write, no batching.** This applies to ALL output formats (CSV or xlsx). Dan must be able to open the file at any point during the run and see every candidate evaluated so far.
+⛔ **The output file MUST be updated immediately after every single CE verdict — one candidate, one write, no batching.** Dan must be able to open the xlsx file at any point during the run and see every candidate evaluated so far.
 
 ALL candidates get rows regardless of tier. There is no D/F exclusion.
 
@@ -177,19 +177,19 @@ After every CE verdict (starting from candidate 6 in the current search), mainta
 
 ⛔ **SEARCH_EXHAUSTED does NOT mean the pipeline is done.** It means the CURRENT search's results are exhausted. If neither termination target (20 A-rated or 60 total) has been met, you MUST move to the next company or refine the search. The pipeline only stops when a termination condition is hit OR all companies and refinements are exhausted.
 
-**D/F candidates from bad searches still have CSV rows** (already written by CE). This is acceptable — bulk mode writes everything.
+**D/F candidates from bad searches still have rows in the output file** (already written by CE). This is acceptable — bulk mode writes everything.
 
 ### Phase 4: Repeat
 
 Loop: URL Extractor (5 URLs) → CE × 5 → check termination → next batch.
 
-- Every 10 candidates: spawn CSV Cleanup Agent
-- After last candidate: final CSV Cleanup
+- Every 10 candidates: spawn Cleanup Agent
+- After last candidate: final Cleanup
 - Track `run_a_rated_count` and `run_total_count` after every verdict
 
-### Pre-Flight CSV Cleanup
+### Pre-Flight Cleanup
 
-Before processing ANY candidates, spawn a CSV Cleanup Agent pass to ensure the CSV is structurally sound before new rows are added.
+Before processing ANY candidates, spawn a Cleanup Agent pass to ensure the output file is structurally sound before new rows are added.
 
 ---
 
@@ -299,7 +299,7 @@ Apply refinements and spawn a **fresh URL Extractor** with the updated search. K
 
 After the first 5 CEs (regardless of quality check result), write `Z_Search_Cache.json`:
 
-**Path:** Same directory as the CSV
+**Path:** Same directory as the output xlsx
 
 ```json
 {
@@ -307,7 +307,7 @@ After the first 5 CEs (regardless of quality check result), write `Z_Search_Cach
   "source": "<search URL, file path, or source description>",
   "started_at": "YYYY-MM-DD HH:MM:SS",
   "top5_summary": [
-    {"name": "...", "tier": "...", "score_pct": "...", "verdict": "...", "company": "...", "raw_score": "...", "wrote_to_csv": true},
+    {"name": "...", "tier": "...", "score_pct": "...", "verdict": "...", "company": "...", "raw_score": "...", "wrote_to_file": true},
     ...
   ],
   "a_rated_count": "<A-rated in first 5>",
@@ -326,7 +326,7 @@ After the first 5 CEs (regardless of quality check result), write `Z_Search_Cach
 
 ⛔ **MANDATORY: Overwrite `Z_Search_Cache.json` at the START of every new pipeline run.** The file must reflect the CURRENT run's data, not a previous run's. After the first 5 CEs, write the file with the current run's top5_summary. Then update `run_counters` after every cleanup pass.
 
-**Why this matters:** The CSV Cleanup Agent uses `top5_summary` to protect against scoring variance (re-eval can drift scores ~7%, enough to flip A→B). If the handoff file is stale from a previous run, candidates from the CURRENT run get no variance protection. A corrupted A-rated row would be re-evaluated by a fresh CE sub-agent, risking tier drift.
+**Why this matters:** The Cleanup Agent uses `top5_summary` to protect against scoring variance (re-eval can drift scores ~7%, enough to flip A→B). If the handoff file is stale from a previous run, candidates from the CURRENT run get no variance protection. A corrupted A-rated row would be re-evaluated by a fresh CE sub-agent, risking tier drift.
 
 **Additional rule:** After every CE verdict that produces an A-rated candidate, append that candidate to a `a_rated_cache` array in the handoff file:
 
@@ -341,15 +341,15 @@ This extends scoring variance protection beyond just the first 5 candidates to A
 
 ---
 
-## CSV Cleanup Agent Spawn Template
+## Cleanup Agent Spawn Template
 
 For pre-flight, periodic (every 10 candidates), and final cleanup passes:
 
 ```
-You are a CSV cleanup agent. Read your instructions at:
-[FULL PATH to CSV_Cleanup_Agent.md]
+You are a cleanup agent. Read your instructions at:
+[FULL PATH to Output_Cleanup.md]
 
-Validate and clean the CSV at:
+Validate and clean the output file at:
 [FULL PATH to [output file from JD config]]
 
 For scoring variance protection, check the handoff file at:
@@ -362,33 +362,13 @@ If you need to re-evaluate broken rows, spawn Candidate Evaluator sub-agents usi
 Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Uncleaned: {N}
 ```
 
-⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the CSV). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`.
+⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the output file). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`.
 
 ---
 
-## GSheet Formatting — MANUAL ONLY
+## Output Format
 
-⛔ **GSheet formatting is NO LONGER auto-run by the pipeline.** Dan invokes it manually when needed, just like `Save_To_LIR.md`.
-
-**When Dan requests it**, spawn a formatting sub-agent:
-
-```
-You are a Google Sheets formatting agent. Read the formatting guide at:
-[FULL PATH to GSheet_Formater.md]
-
-Open this EXACT Google Sheet (do NOT create a new one):
-[gsheet_url from active JD file's Pipeline Config]
-
-Execute every step in the guide on the [gsheet_tab from JD config] tab.
-Use Chrome — never Brave. The sheet uses Apps Script CSV_Live_Refresh to auto-import data, so the new rows should already be present when you open it.
-
-Return ONLY: GSHEET_FORMAT | Done | {rows_formatted}
-```
-
-**Rules:**
-- Sub-agent runs on `model: "sonnet"`
-- The orchestrator NEVER reads `GSheet_Formater.md` — pass the path only
-- If the sub-agent fails, log it and skip — formatting is cosmetic, not blocking
+⛔ **All output is exclusively `.xlsx` format.** There is no CSV or Google Sheets step. Each JD file's `Pipeline Config` specifies an `output_file` pointing to an `.xlsx` file. CE sub-agents write rows directly to this xlsx file using openpyxl.
 
 ---
 
@@ -400,7 +380,7 @@ If a **URL Extractor** sub-agent fails:
 
 If a **Candidate Evaluator** sub-agent fails, times out, or returns malformed output:
 1. **Retry ONCE**: Spawn a fresh sub-agent for that same candidate.
-2. **If retry also fails**: Skip the candidate. Add to tally as `{Name or URL} | ERROR | 0% | Skipped — sub-agent failed twice | Unknown`. Do NOT write a row to the CSV.
+2. **If retry also fails**: Skip the candidate. Add to tally as `{Name or URL} | ERROR | 0% | Skipped — sub-agent failed twice | Unknown`. Do NOT write a row to the output file.
 3. **Continue to next candidate.**
 4. **If 3+ candidates fail in a row**, stop and output a warning — something systemic is wrong.
 
@@ -412,7 +392,7 @@ If a **Candidate Evaluator** sub-agent fails, times out, or returns malformed ou
 
 **This agent (Pipeline Orchestrator) runs on Opus** — it inherits the parent session's model. Do not override.
 
-**ALL sub-agents** (URL Extractor, Candidate Evaluator, CSV Cleanup) spawn with `model: "sonnet"`. Sonnet executes fixed instructions — it's sufficient and ~5x cheaper than Opus. GSheet Formatter also uses Sonnet but is manual-only — not auto-spawned by the pipeline.
+**ALL sub-agents** (URL Extractor, Candidate Evaluator, Cleanup) spawn with `model: "sonnet"`. Sonnet executes fixed instructions — it's sufficient and ~5x cheaper than Opus.
 
 ---
 
@@ -439,7 +419,7 @@ When an extractor returns `SEARCH_EXHAUSTED`:
 
 ⛔ **MANDATORY DELAY BETWEEN CANDIDATES (LinkedIn sources):** After each CE sub-agent returns its verdict, **wait a random delay of 45-200 seconds** before spawning the next sub-agent. Use `sleep $((RANDOM % 156 + 45))` or equivalent. Randomize each time — never the same gap twice in a row.
 
-⛔ **Only ONE Chrome sub-agent active at a time.** Non-Chrome agents (CSV Cleanup, Company Research, handoff updates) can run in parallel during anti-detection delays. Wait for each Chrome sub-agent to finish before spawning the next Chrome sub-agent.
+⛔ **Only ONE Chrome sub-agent active at a time.** Non-Chrome agents (Cleanup, Company Research, handoff updates) can run in parallel during anti-detection delays. Wait for each Chrome sub-agent to finish before spawning the next Chrome sub-agent.
 
 No delay is needed between the URL Extractor returning and the first CE spawn (different activity type).
 
@@ -495,7 +475,7 @@ At startup (immediately after confirming run parameters), generate a random 4-wo
 
 ### Shutdown Procedure
 
-**Step 1: Write `Context_Legacy_Prompt.md`** to the same directory as the CSV. This file must contain a COMPLETE prompt that a brand new session with ZERO context can use to continue exactly where this session left off:
+**Step 1: Write `Context_Legacy_Prompt.md`** to the same directory as the output file. This file must contain a COMPLETE prompt that a brand new session with ZERO context can use to continue exactly where this session left off:
 
 ```markdown
 # Resume Prompt — SwiftSku Candidate Pipeline
@@ -516,11 +496,10 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 **PATHS ONLY — do NOT read into your context:**
 - `URL_Extractor.md` → URL extractor sub-agents read from disk, you pass the path
 - `[active JD file]` → CE sub-agents read from disk, you pass the path
-- `CSV_Cleanup_Agent.md` → cleanup sub-agents read from disk, you pass the path
+- `Output_Cleanup.md` → cleanup sub-agents read from disk, you pass the path
 - `[output file from JD config]` → sub-agents write here, you pass the path
 - `Z_Chat_Log--Agent_Maker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors
-- `GSheet_Formater.md` → manual-only formatting agent reads from disk when Dan requests it
 
 ## Step 2: Understand Where We Left Off
 
@@ -529,16 +508,16 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - **Source type:** [LinkedIn Recruiter / LinkedIn Sales Navigator / Job Board / PDF / Spreadsheet / Other]
 - **Total candidates in source:** [number if known, "unknown" if not]
 - **Candidates processed this session:** [N]
-- **Last candidate written to CSV:** [Full Name]
+- **Last candidate written to output file:** [Full Name]
 - **Current page in source:** [page number]
 - **Current position on page:** [position number]
 - **Per-run chat log file:** [exact filename]
 - **Reason for shutdown:** [hard cap 60 reached / compaction detected / canary token failed / quality drift detected]
 - **Run parameters:** A-rated target = [N], Hard cap = [N]
-- **Run counters (THIS RUN ONLY, not total CSV):**
+- **Run counters (THIS RUN ONLY, not total output file):**
   - `run_a_rated_count` = [N]
   - `run_total_count` = [N]
-- ⚠️ These counters are PER-RUN. Resume counting from these numbers, do NOT recount from the CSV.
+- ⚠️ These counters are PER-RUN. Resume counting from these numbers, do NOT recount from the xlsx.
 
 ## Step 3: What To Do
 
@@ -546,7 +525,7 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 2. ⚠️ **[IF LINKEDIN]: The source URL above is likely STALE** — LinkedIn Recruiter search URLs are session-bound and expire. Navigate to LinkedIn Recruiter home → project → re-run the search with the same filters.
 3. [IF LINKEDIN]: The URL Extractor will re-verify mandatory filters (hide previously viewed = 2 years, recruiting activity = no messages + no projects).
 4. Spawn a URL Extractor for page [N], position [POS].
-5. The CSV already has candidates. URL Extractor checks for duplicates. Continue processing from where the previous session stopped.
+5. The output file already has candidates. URL Extractor checks for duplicates. Continue processing from where the previous session stopped.
 6. **Continue the per-run chat log** — find the file named above and append to it.
 7. This file (Context_Legacy_Prompt.md) can be deleted after you've read it.
 
@@ -627,9 +606,8 @@ The orchestrator's context should contain ONLY:
 **NEVER load these into your own context:**
 - `URL_Extractor.md` — sub-agents read from disk
 - `[active JD file]` — sub-agents read from disk
-- `CSV_Cleanup_Agent.md` — cleanup sub-agents read from disk
-- `[output file from JD config]` — sub-agents handle all CSV operations
-- `GSheet_Formater.md` — formatting sub-agent reads from disk
+- `Output_Cleanup.md` — cleanup sub-agents read from disk
+- `[output file from JD config]` — sub-agents handle all xlsx operations
 - `Z_Chat_Log--Agent_Maker.md` — append at end of run only
 - `Z_Pipeline_Error_Log.md` — append errors, don't read past ones
 
@@ -640,5 +618,5 @@ The orchestrator's context should contain ONLY:
 - Does NOT touch Chrome — ALL browser interaction is in sub-agents
 - Does NOT evaluate candidates itself — CE sub-agents handle scoring
 - Does NOT read candidate profiles — only sees one-line verdict summaries
-- Does NOT create a new CSV — always appends via CE sub-agents
+- Does NOT create a new xlsx — always appends via CE sub-agents
 - Does NOT retain candidate data between sub-agent invocations

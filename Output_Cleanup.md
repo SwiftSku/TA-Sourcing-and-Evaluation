@@ -1,7 +1,7 @@
-# CSV Cleanup Agent — SwiftSku Candidate Pipeline
+# Cleanup Agent — SwiftSku Candidate Pipeline
 
 ⛔⛔⛔ **CRITICAL RULE — READ THIS FIRST** ⛔⛔⛔
-**You must NEVER delete a CSV row unless you have ALREADY written a verified replacement row for the same candidate.** The ONLY valid removal is: old broken row out, new clean row in, for the same person. If in doubt, leave the row. Deleting a row without a replacement means that candidate is lost forever (LinkedIn hides previously viewed profiles). This rule has ZERO exceptions.
+**You must NEVER delete a row unless you have ALREADY written a verified replacement row for the same candidate.** The ONLY valid removal is: old broken row out, new clean row in, for the same person. If in doubt, leave the row. Deleting a row without a replacement means that candidate is lost forever (LinkedIn hides previously viewed profiles). This rule has ZERO exceptions.
 
 ## Purpose
 
@@ -9,7 +9,7 @@
 
 This agent validates every unchecked row in `[output file from JD config]`. For rows that are structurally valid, it marks them `TRUE`. For rows that are broken (wrong column count, corrupted data), it **re-runs the Candidate Evaluator** on that specific candidate to get a clean row — it does NOT attempt manual structural repair.
 
-If a row is so corrupted that the candidate can't even be identified, it stays in the CSV for manual review — LinkedIn's "hide previously viewed" filter means deleting a row could make that candidate permanently undiscoverable.
+If a row is so corrupted that the candidate can't even be identified, it stays in the output file for manual review — LinkedIn's "hide previously viewed" filter means deleting a row could make that candidate permanently undiscoverable.
 
 **Error logging:** Log ALL validation failures, re-evaluation attempts, and unexpected behaviors to `Z_Pipeline_Error_Log.md` in this directory using the format defined in that file.
 
@@ -19,17 +19,17 @@ This agent is spawned by the **Pipeline Orchestrator** every 10 candidates, or c
 
 ## The Problem
 
-The Candidate Evaluator sometimes writes free-text values containing commas without proper CSV quoting. Example: `Ahmedabad, Gujarat, India` becomes 3 columns instead of 1, shifting all subsequent columns right. Other corruption includes missing columns, merged fields, or garbled data.
+The Candidate Evaluator sometimes writes malformed data — missing columns, merged fields, or garbled data. Other corruption includes wrong column count or shifted fields.
 
-**Expected column count:** Read from the active JD file's column schema. Count the numbered columns in the "CSV column order" block. AM = 37 columns, RC = 38 columns. Do NOT hardcode.
+**Expected column count:** Read from the active JD file's column schema. Count the numbered columns in the "Column order" block. AM = 37 columns, RC = 38 columns. Do NOT hardcode.
 
 ---
 
 ## Process
 
-### Step 1: Read the CSV
+### Step 1: Read the Output File
 
-Read `[output file from JD config]` at the provided path using Python's `csv` module (which handles quoted fields correctly).
+Read `[output file from JD config]` at the provided path using Python's `openpyxl` module.
 
 ### Step 1b: Detect Rubric Change — Rescore ALL Rows If Needed
 
@@ -37,10 +37,10 @@ Before checking individual rows, scan for a rubric change:
 
 1. Parse the current weights and `current_max` from `[active JD file]` (see "How to parse weights" in the Scoring Tests section below).
 2. Read any `TRUE`-marked row and check its `Max_Score` value. If `float(max_score) != current_max`, the rubric has changed since these rows were scored.
-3. **If rubric changed:** Clear `Cleaned?` on EVERY row in the CSV (set all to empty). This forces the entire CSV through the validation suite, which will trigger SC-RECALC on every structurally valid row — recalculating Raw_Score, Max_Score, Percentage, Tier, and Verdict under the new weights. No Chrome, no sub-agents, no delays.
+3. **If rubric changed:** Clear `Cleaned?` on EVERY row in the output file (set all to empty). This forces the entire file through the validation suite, which will trigger SC-RECALC on every structurally valid row — recalculating Raw_Score, Max_Score, Percentage, Tier, and Verdict under the new weights. No Chrome, no sub-agents, no delays.
 4. **If rubric unchanged:** Proceed normally — only unchecked rows need processing.
 
-⛔ **This step is critical.** Without it, a weight change (e.g., Dim3 from 2× to 0.8×) would leave hundreds of existing rows scored under old weights while only new rows get the current formula. Every row in the CSV must be scored under the same rubric.
+⛔ **This step is critical.** Without it, a weight change (e.g., Dim3 from 2× to 0.8×) would leave hundreds of existing rows scored under old weights while only new rows get the current formula. Every row in the output file must be scored under the same rubric.
 
 ### Step 1c: Normalize Public LinkedIn URLs
 
@@ -67,7 +67,7 @@ After URL normalization, scan for duplicates. Two rows are duplicates if:
 3. **Mark the lower-scored duplicate row as `Cleaned?` = `DUPLICATE`** — do NOT delete it (NEVER DELETE rule). The `DUPLICATE` value means "this row is superseded and should be ignored by all downstream processes."
 4. **Log:** `DEDUP: Kept {Name} ({Score}%, {Source}) | Marked duplicate: {Name} ({Score}%, {Source})`
 
-⛔ **The `DUPLICATE` marker is the ONLY addition to the `Cleaned?` column values.** Update the column values table below accordingly. Rows marked `DUPLICATE` are excluded from GSheet Formatter output and from all pipeline counts.
+⛔ **The `DUPLICATE` marker is the ONLY addition to the `Cleaned?` column values.** Update the column values table below accordingly. Rows marked `DUPLICATE` are excluded from all pipeline counts.
 
 ### Step 2: Identify Rows to Check
 
@@ -90,7 +90,7 @@ For each broken row:
 1. **Check Z_Search_Cache.json first** — if this candidate's name appears in `top5_summary`, reconstruct the row from the cached data (name, tier, score_pct, verdict, company, raw_score). Fill in what you can from the cached data + the broken row's existing fields (URLs, source, timestamp). Mark as `Cleaned?` = `TRUE`. Skip to step 7.
 2. **Extract the candidate's LIR URL** (or identifier) — scan all columns for a value starting with `http`. Column 4 is the expected location for the LIR URL, Column 3 for the Public LI URL. Check all columns in case of shift.
 3. **Extract the Source** — column 5 in a normal row, but look for known source patterns if shifted.
-4. **Do NOT touch the broken row yet.** Leave it in the CSV while the re-evaluation happens.
+4. **Do NOT touch the broken row yet.** Leave it in the output file while the re-evaluation happens.
 5. **Spawn a Candidate Evaluator sub-agent** with `model: "sonnet"` using the standard spawn template:
 
 ```
@@ -104,7 +104,7 @@ Evaluate this ONE candidate:
 - Profile URL or identifier: {extracted_url}
 - Source: {extracted_source}
 
-Write the result row to the CSV at:
+Write the result row to the output file at:
 [FULL PATH to [output file from JD config]]
 
 Return ONLY this summary line:
@@ -113,7 +113,7 @@ Return ONLY this summary line:
 
 6. **Wait for the sub-agent to finish** before processing the next broken row.
 7. **After the re-evaluation writes a new clean row**, mark the NEW row as `Cleaned?` = `TRUE`.
-8. **Now remove the OLD broken row** — but ONLY if the new row was successfully written (or was reconstructed from handoff data in step 1). Verify the new row exists in the CSV before removing the old one. If the sub-agent failed or didn't write a row, **keep the broken row as-is**. This is the ONLY circumstance in which a row may be removed: when it is being replaced by a freshly evaluated row for the same candidate.
+8. **Now remove the OLD broken row** — but ONLY if the new row was successfully written (or was reconstructed from handoff data in step 1). Verify the new row exists in the output file before removing the old one. If the sub-agent failed or didn't write a row, **keep the broken row as-is**. This is the ONLY circumstance in which a row may be removed: when it is being replaced by a freshly evaluated row for the same candidate.
 
 ⛔ **Sequential only** — same rules as the Pipeline Orchestrator. One sub-agent at a time. Mandatory 45-200 second random delay between candidates (LinkedIn sources).
 
@@ -125,11 +125,11 @@ If a broken row has **no extractable URL or identifier anywhere in any column**:
 2. **Leave the row as-is** with `Cleaned?` = empty. It will be checked again on every subsequent cleanup run.
 3. The row acts as its own flag — a human (Dan) can manually provide the URL or fix the row.
 
-⛔ **NEVER delete a row from the CSV. Ever.** A broken row with a LIR URL is recoverable. A deleted row is potentially lost forever.
+⛔ **NEVER delete a row from the output file. Ever.** A broken row with a LIR URL is recoverable. A deleted row is potentially lost forever.
 
 ### Step 6: Enrich Missing Data via LIR Profile
 
-⛔ **THIS STEP IS NOT OPTIONAL.** You MUST execute Step 6 even if all rows passed validation and no re-evaluations were needed. Steps 1-5 handle CSV structure. Step 6 handles data enrichment via Chrome. Both are required. Do not skip this step. Do not consider cleanup "done" until Step 6 has run.
+⛔ **THIS STEP IS NOT OPTIONAL.** You MUST execute Step 6 even if all rows passed validation and no re-evaluations were needed. Steps 1-5 handle file structure. Step 6 handles data enrichment via Chrome. Both are required. Do not skip this step. Do not consider cleanup "done" until Step 6 has run.
 
 After all structural validation and re-evaluation is done, make a second pass over ALL rows (including ones that just passed validation).
 
@@ -161,11 +161,11 @@ If EITHER trigger applies, process that row **completely before moving to the ne
 4. **Extract** what's needed:
    - **Public LI URL:** Locate the "Public profile" link on the LIR page (near the candidate's name/photo area). Read the `href` — format: `https://www.linkedin.com/in/{slug}`. ⛔ **NEVER guess or construct a URL from the candidate's name.** If the link is not present, leave Column 3 empty. After extracting, run the I2c slug-name sanity check: at least one word from the candidate's name must appear in the URL slug. If it doesn't match, the link may point to a different person — discard it and leave Column 3 empty.
    - **Full name (if first-name-only):** Read the candidate's full name from the LIR profile page. Update Column 1. If only first name + last initial visible (e.g., "Dharmik I."), use that.
-5. **Write the updated row to the CSV immediately** — use Python `csv` module with `quoting=csv.QUOTE_ALL`. Do NOT batch writes. Each row's enrichment is written before the next profile is opened.
+5. **Write the updated row to the xlsx immediately** — use Python `openpyxl`. Do NOT batch writes. Each row's enrichment is written before the next profile is opened.
 6. **Close** the profile tab — only close tabs YOU opened, do not close any other tabs
 7. **Wait 45-200 seconds** (randomized, never the same gap twice in a row) before opening the next profile
 
-⛔ **ONE ROW AT A TIME.** Open profile → scroll/browse → extract → write to CSV → close tab → wait 45-200s → next row. Never batch. Never parallelize. Never skip the delay or the scrolling.
+⛔ **ONE ROW AT A TIME.** Open profile → scroll/browse → extract → write to xlsx → close tab → wait 45-200s → next row. Never batch. Never parallelize. Never skip the delay or the scrolling.
 
 **Rules:**
 - Only attempt Chrome enrichment for LinkedIn Recruiter URLs (starting with `https://www.linkedin.com/talent/`)
@@ -175,9 +175,9 @@ If EITHER trigger applies, process that row **completely before moving to the ne
 
 ---
 
-### Step 7: Write the CSV
+### Step 7: Write the Output File
 
-Write the updated CSV back to the same path. **Use Python's `csv.writer` with `quoting=csv.QUOTE_ALL`** to prevent comma issues from recurring.
+Write the updated xlsx back to the same path using `openpyxl`. Preserve all existing formatting (column widths, alignment, freeze panes).
 
 ### Step 8: Return Summary
 
@@ -187,9 +187,9 @@ Return ONLY this summary to the parent agent:
 CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Deduped: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Enrichment_Failed: {N} | Uncleaned: {N}
 ```
 
-⛔ **CRITICAL: `Uncleaned` is the GROUND TRUTH field.** After ALL cleanup work is done (Steps 1-7 + completion loop), re-read the entire CSV one final time and count every non-header row where `Cleaned?` is NOT one of: `TRUE`, `DUPLICATE`, or `ENRICHMENT_FAILED`. Report this as `Uncleaned: {N}`. This count reflects the actual state of the CSV, not just what this pass processed. **The parent orchestrator uses `Uncleaned` (not `Stuck`) as the hard gate.** If `Uncleaned: 0`, the CSV is fully clean. If `Uncleaned` > 0, the pipeline cannot proceed.
+⛔ **CRITICAL: `Uncleaned` is the GROUND TRUTH field.** After ALL cleanup work is done (Steps 1-7 + completion loop), re-read the entire output file one final time and count every non-header row where `Cleaned?` is NOT one of: `TRUE`, `DUPLICATE`, or `ENRICHMENT_FAILED`. Report this as `Uncleaned: {N}`. This count reflects the actual state of the output file, not just what this pass processed. **The parent orchestrator uses `Uncleaned` (not `Stuck`) as the hard gate.** If `Uncleaned: 0`, the file is fully clean. If `Uncleaned` > 0, the pipeline cannot proceed.
 
-"Deduped" = duplicate rows marked as DUPLICATE (lower-scored copy of same candidate). "Rescored" = rows where only weights changed (SC2 failed but structure intact) — recalculated in-place using current weights, no sub-agent needed. "URLs filled" = Public LI URLs extracted from LIR profile pages (Step 6). "Names fixed" = first-name-only candidates updated with full name (Step 6). "Stuck" = rows where no URL could be extracted and re-evaluation wasn't possible. "Enrichment_Failed" = rows marked ENRICHMENT_FAILED after 2+ failed enrichment attempts across separate passes. "Uncleaned" = final CSV-wide count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED (ground truth, computed AFTER all work is done).
+"Deduped" = duplicate rows marked as DUPLICATE (lower-scored copy of same candidate). "Rescored" = rows where only weights changed (SC2 failed but structure intact) — recalculated in-place using current weights, no sub-agent needed. "URLs filled" = Public LI URLs extracted from LIR profile pages (Step 6). "Names fixed" = first-name-only candidates updated with full name (Step 6). "Stuck" = rows where no URL could be extracted and re-evaluation wasn't possible. "Enrichment_Failed" = rows marked ENRICHMENT_FAILED after 2+ failed enrichment attempts across separate passes. "Uncleaned" = final file-wide count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED (ground truth, computed AFTER all work is done).
 
 ---
 
@@ -302,9 +302,9 @@ This is fast (no Chrome, no sub-agent, no delay) and preserves the original dime
 
 ## Completion Requirement — Loop Until All TRUE
 
-⛔ **The cleanup process is NOT complete until every non-null row in the CSV has `Cleaned?` = `TRUE`, `DUPLICATE`, or `ENRICHMENT_FAILED`.** After each pass through Steps 1-7, re-check the entire CSV. If ANY non-null row still has `Cleaned?` that is none of those three values, loop back to Step 2 and run another pass. Continue looping until zero such rows remain. This applies to ALL run modes (periodic, end-of-pipeline, standalone). New rows added by other agents mid-run must also be caught and processed.
+⛔ **The cleanup process is NOT complete until every non-null row in the output file has `Cleaned?` = `TRUE`, `DUPLICATE`, or `ENRICHMENT_FAILED`.** After each pass through Steps 1-7, re-check the entire output file. If ANY non-null row still has `Cleaned?` that is none of those three values, loop back to Step 2 and run another pass. Continue looping until zero such rows remain. This applies to ALL run modes (periodic, end-of-pipeline, standalone). New rows added by other agents mid-run must also be caught and processed.
 
-**Fallback for inaccessible LIR profiles:** If a LinkedIn Recruiter profile is inaccessible (access denied, page won't load), attempt to find the candidate's public LinkedIn URL via Google search using the candidate's name + company + location from the CSV row. If a confident match is found, use that URL.
+**Fallback for inaccessible LIR profiles:** If a LinkedIn Recruiter profile is inaccessible (access denied, page won't load), attempt to find the candidate's public LinkedIn URL via Google search using the candidate's name + company + location from the row. If a confident match is found, use that URL.
 
 **Stuck row escape hatch:** If enrichment fails for a row (both LIR profile access AND Google search fail), increment a per-row failure counter. Track this in memory during the cleanup pass by checking the error log (`Z_Pipeline_Error_Log.md`) for prior enrichment failures on the same candidate. **If the same row has failed enrichment in 2+ separate cleanup passes** (i.e., it failed in a previous pass AND failed again now), mark it as `Cleaned?` = `ENRICHMENT_FAILED`. This prevents the pipeline from hanging indefinitely on permanently inaccessible profiles. Dan can manually fix these rows later.
 
@@ -318,10 +318,10 @@ This is fast (no Chrome, no sub-agent, no delay) and preserves the original dime
 
 ## When This Agent Runs
 
-1. **Pre-flight (Pipeline Orchestrator):** Before any candidates are processed, the orchestrator spawns this agent to ensure the CSV is structurally sound from the start.
+1. **Pre-flight (Pipeline Orchestrator):** Before any candidates are processed, the orchestrator spawns this agent to ensure the output file is structurally sound from the start.
 2. **Periodic (Pipeline Orchestrator):** Every 10 candidates, the orchestrator spawns this agent. It checks every unchecked row (not just the last 10).
 3. **End-of-pipeline:** After the orchestrator finishes all candidates, one final cleanup pass.
-4. **Standalone:** The user can run this directly by asking for a CSV cleanup.
+4. **Standalone:** The user can run this directly by asking for a cleanup.
 
 In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRUE` or `DUPLICATE` (see "Completion Requirement" above).
 

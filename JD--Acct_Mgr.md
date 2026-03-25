@@ -5,9 +5,7 @@
 ```yaml
 role_name: "Senior Account Manager"
 pipeline_label: "Senior AM Pipeline"
-output_csv: "_OUTPUT--Acct_Mgr.csv"
-gsheet_url: "https://docs.google.com/spreadsheets/d/10C1m1YZU7VEfgg_3K2y2SrCAkkQtDDGBEn6s55lnCDo/edit?gid=317798724#gid=317798724"
-gsheet_tab: "MAIN_LIVE"
+output_file: "_OUTPUT--Acct_Mgr.xlsx"
 lir_project_name: "Account Manager / AE / Support"
 
 # Search filters (read by URL_Extractor)
@@ -61,7 +59,7 @@ This agent evaluates **exactly ONE candidate** per invocation. It is designed to
 
 1. **Candidate profile URL or identifier** (LinkedIn, job board, PDF reference, etc.)
 2. **Source identifier** (e.g., "ACM Search v3", "Manus Batch 2")
-3. **CSV path** — where to append the result row
+3. **Output file path** — where to append the result row (xlsx)
 
 ---
 
@@ -78,15 +76,15 @@ This prevents inconsistent scoring across candidates from the same company.
 
 ### Step 1: Check for Duplicates
 
-⛔ **This step is MANDATORY and must NEVER be skipped.** Read the CSV at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
+⛔ **This step is MANDATORY and must NEVER be skipped.** Read the output file at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
 
 Search is case-insensitive. Also check for common name variants (e.g., "Ritika Kothari" vs "Ritika K."). If in doubt, compare LinkedIn URLs too.
 
-**Greenhouse cross-reference:** If the candidate's LIR profile shows "In 1 project" or a "Recent ATS Profile" link, or if a Greenhouse URL is visible on the profile page, the candidate may already be in the pipeline. Check the CSV `Greenhouse URL` column (col 2) for a matching Greenhouse person ID. This catches duplicates even when names are spelled differently across sources.
+**Greenhouse cross-reference:** If the candidate's LIR profile shows "In 1 project" or a "Recent ATS Profile" link, or if a Greenhouse URL is visible on the profile page, the candidate may already be in the pipeline. Check the output file's `Greenhouse URL` column (col 2) for a matching Greenhouse person ID. This catches duplicates even when names are spelled differently across sources.
 
 ### Step 2: Auto-Disqualifiers
 
-Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, **leave Whys empty** (only fill DQ_Reason), still write the row to CSV.
+Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, **leave Whys empty** (only fill DQ_Reason), still write the row to the output file.
 
 | Disqualifier                                             | Red Flag Signs                                                                                                                                              |
 | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -213,7 +211,7 @@ Base Score  = (Dim1 × 5) + (Dim2 × 2.5) + (Dim3 × 2) + (Dim4 × 1.3) + (Dim5 
 Bonus Score = (Dim6 × 2.5) + (Dim7 × 2) + (Dim8 × 1)
 Raw Score   = Base Score + Bonus Score
 Max possible = Base 35.5 + Bonus 19.5 = 55.0
-Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing to CSV, e.g., `85.8%` not `85.8`)
+Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing, e.g., `85.8%` not `85.8`)
 ```
 
 > **Mental model — Base vs Bonus:**
@@ -235,20 +233,24 @@ Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing to CSV
 
 ⛔ **Write IMMEDIATELY after scoring — one row, one candidate, no batching.** The output file must be updated the instant a candidate is evaluated so Dan can check progress at any time.
 
-Append one row to the output file specified in the JD config (`output_file` or `output_csv`). Do NOT batch. Do NOT create a new file.
+Append one row to the output xlsx file specified in the JD config (`output_file`). Do NOT batch. Do NOT create a new file.
 
-⛔ **MANDATORY: Use Python's `csv` module with `quoting=csv.QUOTE_ALL` for ALL writes (CSV or xlsx).** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Fields like Location and Company often contain commas (e.g., "Ahmedabad, Gujarat") which will corrupt the row if not properly quoted. Example:
+⛔ **MANDATORY: Use Python's `openpyxl` module for ALL writes to the output xlsx file.** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Example:
 
 ```python
-import csv
-with open(csv_path, 'a', newline='') as f:
-    writer = csv.writer(f, quoting=csv.QUOTE_ALL)
-    writer.writerow([candidate, greenhouse_url, public_li_url, lir_url, source, date_added, ..., ''])  # last column is Cleaned? — always write as empty string
+from openpyxl import load_workbook
+wb = load_workbook(output_path)
+ws = wb.active
+next_row = ws.max_row + 1
+values = [candidate, greenhouse_url, public_li_url, lir_url, source, date_added, ..., '']  # last column is Cleaned? — always write as empty string
+for col_idx, val in enumerate(values, 1):
+    ws.cell(row=next_row, column=col_idx, value=val)
+wb.save(output_path)
 ```
 
 **Timestamp rule:** The `Date Added` column must be the **exact current time at the moment the row is written**, in **US Eastern time (America/New_York)**. Do not estimate, backdate, or space timestamps apart. Run `TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S'` (or equivalent) to get the real time right before writing the row. Format: `YYYY-MM-DD HH:MM:SS` Eastern.
 
-**CSV column order (exactly 37 columns — Cleaned? is #37):**
+**Column order (exactly 37 columns — Cleaned? is #37):**
 
 ⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. That's 16 dimension columns total (8 scores + 8 notes), NOT 8 combined columns.**
 
@@ -343,7 +345,7 @@ writer.writerow([
 1. Look for the "Public profile" link on the LIR profile page (usually near the candidate's name/photo area, shows the LinkedIn icon + "Public profile" text)
 2. Read the `href` from that link — it will be in the format `https://www.linkedin.com/in/{actual-slug}`
 3. Use that EXACT URL as-is. Do not modify, shorten, or reconstruct it.
-4. **If the "Public profile" link is not visible or not present**, leave Column 3 **empty**. The CSV Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
+4. **If the "Public profile" link is not visible or not present**, leave Column 3 **empty**. The Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
 
 **Validation before writing:** If you did extract a public URL, sanity-check that the slug loosely relates to the candidate's name (e.g., for "Priya Patel" the slug might be `priya-patel-a1b2c3d4` or `priyapatel123`). If the slug has zero resemblance to the candidate's name, it's likely the wrong link — leave Column 3 empty instead.
 

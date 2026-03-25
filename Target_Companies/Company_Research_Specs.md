@@ -38,7 +38,7 @@ This document defines which companies SwiftSku targets when sourcing candidates 
 
 | Tier | Meaning | Source |
 |------|---------|--------|
-| **Tier 1 (AM + RC)** | Proven top-producing companies for both Account Manager and Recruiting Coordinator pipelines. Hardcoded in both JD configs. | `JD--Acct_Mgr.md` and `JD--AMD_Recruiting_Coord.md` `tier1_companies` lists |
+| **Tier 1 (AM + RC)** | Proven top-producing companies for both Account Manager and Recruiting Coordinator pipelines. Hardcoded in both JD configs. | `JD--Acct_Mgr.md` and `JD--Recruiting_Coord.md` `tier1_companies` lists |
 | **Tier 1 (AM only)** | Proven for Account Manager pipeline only. Hardcoded in AM JD config but not RC. | `JD--Acct_Mgr.md` `tier1_companies` list |
 | **Tier 2 (Research)** | Discovered through company research. High confidence Gujarat presence verified via LinkedIn. | `company_research.json` |
 | **Validated SaaS (US)** | Appears on the validated US HQ SaaS company list in the AM scoring rubric. Gujarat presence not yet confirmed for all. | `JD--Acct_Mgr.md` scoring rubric |

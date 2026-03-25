@@ -24,7 +24,7 @@ The parent passes ALL of these in the spawn template:
 | `PAGE` | Page number to navigate to (1-indexed) |
 | `START_POS` | Position on page to start from (1-indexed, e.g., 6 means skip first 5 on this page) |
 | `LIR_LEARNINGS_PATH` | Full path to `REF--LIR_Interface_Learnings.md` |
-| `CSV_PATH` | Full path to the output file from JD config (`output_file` or `output_csv`) |
+| `CSV_PATH` | Full path to the output xlsx file from JD config (`output_file`) |
 | `SKIP_NAMES` | Comma-separated list of candidate names already processed this run (for dedup) |
 
 ---
@@ -69,9 +69,9 @@ The parent orchestrator will decide what to do. You NEVER modify filters yoursel
 1. Navigate to page `PAGE` of the search results.
 2. If `START_POS` > 1, scroll past the first `START_POS - 1` candidates on this page.
 
-### Step 5: Check CSV for Duplicates
+### Step 5: Check Output File for Duplicates
 
-Read the CSV at `CSV_PATH`. Build a list of all candidate names already in the CSV (Column 1 — "Candidate Name"). Combine this with the `SKIP_NAMES` list from the parent.
+Read the output file at `CSV_PATH`. Build a list of all candidate names already in the file (Column 1 — "Candidate Name"). Combine this with the `SKIP_NAMES` list from the parent.
 
 ### Step 5.5: Pre-Filter on Search Card Signals
 
@@ -86,7 +86,7 @@ Before adding a candidate to your extraction list (Step 6), read their **title**
 ⛔ **Check `passthrough_rule` from the JD config.** Some roles have title categories that should NOT be filtered even if they seem off-target (e.g., sales titles for AM roles). The parent passes this rule in the spawn template.
 
 **Log every skipped candidate as:** `PREFILT_SKIP: {Name} | {Title} | {Company}`
-These do NOT get CSV rows and do NOT count toward the 5.
+These do NOT get rows in the output file and do NOT count toward the 5.
 
 ### Step 6: Extract 5 Non-Duplicate Candidates
 
@@ -95,7 +95,7 @@ Starting from `START_POS` on page `PAGE`:
 1. For each visible candidate in the search results:
    - Read the candidate's **name** and **LIR profile URL** from the search result card
    - Apply Step 5.5 pre-filter — if title/company signals a clear non-fit, skip
-   - Check if the name matches any name in the CSV or `SKIP_NAMES` list (case-insensitive fuzzy match — "Rahul Sharma" matches "RAHUL SHARMA" or "Sharma, Rahul")
+   - Check if the name matches any name in the output file or `SKIP_NAMES` list (case-insensitive fuzzy match — "Rahul Sharma" matches "RAHUL SHARMA" or "Sharma, Rahul")
    - If duplicate → skip, move to next result
    - If not duplicate → add to extraction list
 2. Continue until you have **exactly 5 non-duplicate candidates** OR the page is exhausted
@@ -153,7 +153,7 @@ Close any LinkedIn tabs you opened. Your job is done. Return the result to the p
 ## What This Agent Does NOT Do
 
 - Does NOT score or evaluate candidates — that's the Candidate Evaluator's job
-- Does NOT write to the CSV — that's the CE's job
+- Does NOT write to the output file — that's the CE's job
 - Does NOT hold context between invocations — each call is fresh
 - Does NOT refine search filters — that's the parent orchestrator's job (it reads the Search Refinement Logic table and composes new keywords before spawning a fresh URL Extractor)
 - Does NOT retain any candidate profile data — it only reads names and URLs from search result cards

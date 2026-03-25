@@ -58,7 +58,7 @@ This agent evaluates **exactly ONE candidate** per invocation. It is designed to
 
 1. **Candidate profile URL or identifier** (LinkedIn, job board, PDF reference, etc.)
 2. **Source identifier** (e.g., "RC Search v1", "Manus Batch 1")
-3. **CSV path** — where to append the result row
+3. **Output file path** — where to append the result row (xlsx)
 
 ---
 
@@ -66,11 +66,11 @@ This agent evaluates **exactly ONE candidate** per invocation. It is designed to
 
 ### Step 1: Check for Duplicates
 
-Read the CSV at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
+Read the output file at the provided path. If the candidate's name already appears in the `Candidate` column → **stop immediately**. Return: `{Name} | DUPLICATE | Skipped`
 
 ### Step 2: Auto-Disqualifiers
 
-Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, **leave Whys empty** (only fill DQ_Reason), still write the row to CSV.
+Check these first. If ANY apply → score all dimensions as 0, tier as F, verdict as Hard No, **leave Whys empty** (only fill DQ_Reason), still write the row to the output file.
 
 | Disqualifier | Red Flag Signs |
 |---|---|
@@ -235,22 +235,26 @@ Percentage = Raw Score / 52.8 × 100 (include the `%` suffix — can exceed 100%
 
 ⛔ **Write IMMEDIATELY after scoring — one row, one candidate, no batching.** The output file must be updated the instant a candidate is evaluated so Dan can check progress at any time.
 
-Append one row to the output file specified in the JD config (`output_file` or `output_csv`). Do NOT batch. Do NOT create a new file.
+Append one row to the output xlsx file specified in the JD config (`output_file`). Do NOT batch. Do NOT create a new file.
 
 ⛔ **All cells in the xlsx output must have text wrapping enabled.** When writing with openpyxl, set `alignment = Alignment(wrap_text=True)` on every cell.
 
 ⛔ **Header row formatting:** Row 1 height must be exactly **30**. Column widths must be auto-fit so all header text is visible without truncation. Use bold, centered, wrapped text for all header cells. When creating or modifying the xlsx, calculate width as `len(header) * 1.15 + 2` (minimum 10).
 
-⛔ **MANDATORY: Use Python's `csv` module with `quoting=csv.QUOTE_ALL` for ALL writes (CSV or xlsx).** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Fields like Location and Company often contain commas (e.g., "Ahmedabad, Gujarat") which will corrupt the row if not properly quoted. Example:
+⛔ **MANDATORY: Use Python's `openpyxl` module for ALL writes to the output xlsx file.** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Example:
 
 ```python
-import csv
-with open(csv_path, 'a', newline='') as f:
-    writer = csv.writer(f, quoting=csv.QUOTE_ALL)
-    writer.writerow([candidate, greenhouse_url, public_li_url, title, company, ..., ''])  # last column is Cleaned? — always write as empty string
+from openpyxl import load_workbook
+wb = load_workbook(output_path)
+ws = wb.active
+next_row = ws.max_row + 1
+values = [candidate, greenhouse_url, public_li_url, title, company, ..., '']  # last column is Cleaned? — always write as empty string
+for col_idx, val in enumerate(values, 1):
+    ws.cell(row=next_row, column=col_idx, value=val)
+wb.save(output_path)
 ```
 
-**CSV column order (exactly 38 columns — Cleaned? is #38):**
+**Column order (exactly 38 columns — Cleaned? is #38):**
 
 ⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 7 scored dims (14 cols) + 2 bonus dims (4 cols) = 18 dimension columns total.**
 
@@ -347,7 +351,7 @@ writer.writerow([
 1. Look for the "Public profile" link on the LIR profile page (usually near the candidate's name/photo area, shows the LinkedIn icon + "Public profile" text)
 2. Read the `href` from that link — it will be in the format `https://www.linkedin.com/in/{actual-slug}`
 3. Use that EXACT URL as-is. Do not modify, shorten, or reconstruct it.
-4. **If the "Public profile" link is not visible or not present**, leave Column 3 **empty**. The CSV Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
+4. **If the "Public profile" link is not visible or not present**, leave Column 3 **empty**. The Cleanup Agent will attempt enrichment later. An empty URL is infinitely better than a wrong URL.
 
 **Validation before writing:** If you did extract a public URL, sanity-check that the slug loosely relates to the candidate's name (e.g., for "Priya Patel" the slug might be `priya-patel-a1b2c3d4` or `priyapatel123`). If the slug has zero resemblance to the candidate's name, it's likely the wrong link — leave Column 3 empty instead.
 

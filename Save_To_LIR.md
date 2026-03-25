@@ -8,7 +8,7 @@ This agent must NEVER be spawned automatically by the Pipeline Orchestrator or a
 
 ## Purpose
 
-Opens the LinkedIn Recruiter (LIR) profiles of qualifying candidates and saves them to the active LIR project pipeline. This is the bridge between our CSV scoring pipeline and LinkedIn Recruiter's native project/candidate management.
+Opens the LinkedIn Recruiter (LIR) profiles of qualifying candidates and saves them to the active LIR project pipeline. This is the bridge between our scoring pipeline and LinkedIn Recruiter's native project/candidate management.
 
 ---
 
@@ -18,7 +18,7 @@ Opens the LinkedIn Recruiter (LIR) profiles of qualifying candidates and saves t
 
 ### Confirmation 1: Present the candidate list
 
-Before opening any browser tabs, read the CSV and present the full list of candidates that match the threshold:
+Before opening any browser tabs, read the output file and present the full list of candidates that match the threshold:
 
 ```
 I'm ready to save candidates to the LIR project. Here's who qualifies:
@@ -58,18 +58,18 @@ Only after BOTH confirmations proceed to execution.
 |-------|---------|-------------|
 | `THRESHOLD` | `A` (Tier = A, i.e., ≥80%) | Minimum tier or percentage to include. User can override: "save B and above", "save ≥85%", etc. |
 | `LIR_PROJECT` | None — must be provided by user | The LinkedIn Recruiter project name or URL to save candidates into |
-| `CSV_PATH` | `[output file from JD config]` in this directory | Path to the scored output file |
+| `CSV_PATH` | `[output file from JD config]` in this directory | Path to the scored output xlsx file |
 | `EXCLUDE_ALREADY_SAVED` | `true` | Skip candidates already marked as saved (see Tracking below) |
 
 ---
 
 ## Execution
 
-### Step 1: Read CSV & Build Save List
+### Step 1: Read Output File & Build Save List
 
 ```python
 # Pseudocode
-for row in csv:
+for row in output_file:
     if row.Tier meets THRESHOLD:
         if row.LIR_URL is not empty:
             if row not already marked as saved (or EXCLUDE_ALREADY_SAVED is false):
@@ -135,7 +135,7 @@ For each candidate, BEFORE attempting to save, check the LIR profile for the **"
 
 For each candidate in the save list:
 
-1. Open the candidate's LIR profile URL (Column 4 from CSV) in a new tab
+1. Open the candidate's LIR profile URL (Column 4 from output file) in a new tab
 2. Wait for the profile to fully load (watch for the name to appear)
 3. **Run Step 3.5 check** — if already in target project, skip to next candidate
 4. Look for the **"Save to project"** button — this is a bordered button in the action row directly below the "Public profile" link, to the LEFT of the mail icon (✉️) and three-dot menu (•••). It is NOT in a dropdown — it's a visible button on the profile.
@@ -146,11 +146,11 @@ For each candidate in the save list:
 8. Close the profile tab
 9. **Wait 30-90 seconds** (random) before opening the next candidate — anti-detection
 
-### Step 5: Update CSV Tracking
+### Step 5: Update Output File Tracking
 
-After all candidates are processed, update the CSV. Add a note to the candidate's `Dim8_Note` column (or whichever appropriate text field) appending: `[Saved to LIR project: {project_name} on {date}]`
+After all candidates are processed, update the output xlsx. Add a note to the candidate's `Dim8_Note` column (or whichever appropriate text field) appending: `[Saved to LIR project: {project_name} on {date}]`
 
-⚠️ Do NOT add new columns to the CSV — the column structure is locked (AM=37, RC=38).
+⚠️ Do NOT add new columns to the output file — the column structure is locked (AM=37, RC=38).
 
 ---
 
@@ -195,6 +195,6 @@ Log all errors to `Z_Pipeline_Error_Log.md` using the standard ERR-NNN format.
 - Does NOT run automatically — manual invocation only
 - Does NOT decide which candidates to save — user confirms the list
 - Does NOT create or modify LIR projects — only saves candidates to an existing one
-- Does NOT evaluate or re-score candidates — reads existing CSV scores
-- Does NOT modify candidate scores or tiers in the CSV
-- Does NOT add columns to the CSV
+- Does NOT evaluate or re-score candidates — reads existing scores from the output xlsx
+- Does NOT modify candidate scores or tiers in the output file
+- Does NOT add columns to the output file
