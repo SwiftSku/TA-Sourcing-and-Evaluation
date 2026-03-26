@@ -53,9 +53,14 @@ The parent orchestrator (or the user) has already configured the search filters.
 3. READ the visible filter values from the screenshot
 4. Report what you see in your return output
 
-**What to check (visually only — DO NOT CLICK):**
-1. **"Hide previously viewed"** — look for the toggle state and duration text. Should show ON / Past 2 years.
-2. **"Recruiting Activity"** — look for existing filter pills (e.g., "Not: Projects"). Do NOT click the "+" or any filter pill.
+**⛔ HARD GATE — Mandatory filter check (blocks ALL extraction until passed):**
+
+These two filters MUST be visually confirmed as correct. If EITHER is missing or wrong, return `ERROR: FILTER_MISMATCH` immediately — do NOT proceed to Step 4.
+
+1. **"Hide previously viewed"** — toggle must be ON (green) AND duration must say "Past 2 years". If the toggle is OFF, or duration is anything other than "Past 2 years" (30 days, 90 days, 6 months, 1 year are all WRONG), return error. This filter resets between sessions.
+2. **"Recruiting Activity"** — must show TWO "Doesn't have" pills: Messages AND Projects. If you see "+ Add recruiting activity" with no pills, or only one pill, return error.
+
+**Also check (visual only — DO NOT CLICK):**
 3. **Job titles** — look for the title pills already applied. Do NOT add, remove, or modify any.
 
 **⛔ IF ANY FILTER LOOKS WRONG: DO NOT FIX IT. STOP and return an error to the parent:**

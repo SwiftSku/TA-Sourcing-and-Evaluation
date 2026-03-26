@@ -73,6 +73,6 @@ Sub-agent spawning rules:
 • You never read a candidate's profile yourself — only sub-agents do
 • All sub-agents spawn with model: "sonnet"
 
-Quality check: After the first 5 CE verdicts, assess search quality. ≥1 A-rated → continue. All D/F → refine search, spawn fresh URL Extractor. Mixed → continue, reassess at 15. ALL candidates get rows regardless of tier. ⛔ SEARCH_EXHAUSTED does NOT mean the pipeline is done — if termination targets aren't met and the source is a live search, REFINE and keep going.
+Quality gate: 3 consecutive non-A candidates → immediately refine search filters (read `refinement_patterns` from JD file, apply fix, spawn fresh URL Extractor). ALL candidates get rows regardless of tier. ⛔ SEARCH_EXHAUSTED does NOT mean the pipeline is done — if termination targets aren't met and the source is a live search, REFINE and keep going.
 
 Canary token: At startup, generate a random 4-word phrase and store it in memory. Write it to the per-run chat log. Every 10 candidates, recall the phrase BEFORE checking the log — if recall fails, trigger self-destruct. See 2_Pipeline_Orchestrator.md for full details.

@@ -72,7 +72,7 @@ Check counters **after every candidate verdict**. If the target is hit mid-batch
 
 ## How It Works — The Main Loop
 
-There is **no separate validation phase**. The pipeline goes straight to processing. The first 5 CE verdicts serve as an implicit quality check.
+There is **no separate validation phase**. The pipeline goes straight to processing. The quality gate is simple: 3 consecutive non-A candidates → immediately refine search filters.
 
 ### Phase 0: Pre-Flight
 
@@ -128,45 +128,27 @@ For each URL returned by the extractor, spawn a **Candidate Evaluator** sub-agen
 
 ALL candidates get rows regardless of tier. There is no D/F exclusion.
 
-### Phase 3: Quality Check — Initial Gate
+### Phase 3: Quality Gate — 3 Consecutive Non-A Rule
 
-The first quality check triggers after the **first 5 CE verdicts** for a new search:
-
-| Result | Action |
-|--------|--------|
-| **≥1 A-rated** | Search quality is good. Continue processing. Move to Rolling Quality Gate. |
-| **All D/F** | Search is bad. STOP this search immediately. Move to next company (if company-targeted) or apply Search Refinement Logic (if keyword fallback). |
-| **Mixed (some B/C, no A)** | Give it one more batch. If 0 A after 10 candidates, STOP this search and move on. |
-
-### Phase 3b: Rolling Quality Gate (after initial gate passes)
-
-⛔ **This is a HIGH BAR.** After the initial 5-candidate gate, the search must sustain a **rolling 20% A-rate (1 A per 5 candidates)** to keep running.
+⛔ **3 consecutive non-A candidates = immediately refine search filters.**
 
 **How it works:**
 
-After every CE verdict (starting from candidate 6 in the current search), maintain a **rolling window of the last 5 candidates** evaluated in THIS search. Check:
+After every CE verdict, track the `consecutive_non_a` streak (reset to 0 whenever an A-rated candidate appears). When the streak hits 3:
 
-| Rolling window (last 5) | Action |
-|---|---|
-| **≥1 A in last 5** | Search is productive. Continue. |
-| **0 A in last 5, but ≥1 A in last 10** | ⚠️ Search is cooling off. Continue for ONE more batch of 5. If still 0 A in last 5 after that batch, STOP. |
-| **0 A in last 10** | 🛑 Search is dead. STOP this search immediately. Move to next company or refine. |
+1. **Immediately trigger Search Refinement** — read `refinement_patterns` from the active JD file, match the failure pattern, apply the fix. If no pattern matches, improvise under the Filter Freedom Rule.
+2. Spawn a **fresh URL Extractor** with the updated filters.
+3. Reset `consecutive_non_a` to 0.
+4. Log to per-run chat log: `REFINE_TRIGGERED: {search_description} | {search_candidates} processed | {search_a_count}A | last 3: {last_3_tiers} | fix applied: {description}`
 
 **Per-search tracking:** Maintain these counters for the CURRENT search only (reset when switching companies or refining):
 - `search_candidates` — total candidates evaluated in this search
 - `search_a_count` — total A-rated in this search
-- `last_5_tiers` — list of the last 5 verdict tiers (e.g., ["B", "A", "C", "B", "D"])
-- `last_10_tiers` — list of the last 10 verdict tiers
+- `consecutive_non_a` — current streak of non-A verdicts (reset to 0 on any A)
 
-**When a search is killed by the rolling gate:**
-1. Log to per-run chat log: `SEARCH_KILLED: {search_description} | {search_candidates} processed | {search_a_count}A | reason: rolling gate`
-2. If company-targeted mode: move to next company in queue
-3. If keyword fallback mode: apply Search Refinement Logic
-4. Do NOT stop the pipeline — only this search is dead
+**Example:** Company "XYZ Corp" search. Candidates 1-3: [B, A, C] → streak resets at candidate 2 (A), then C starts streak=1. Candidates 4-5: [D, C] → streak=3 → 🔄 REFINE. Orchestrator reads `refinement_patterns`, applies fix (e.g., add negative keywords), spawns fresh URL Extractor. Only 5 candidates burned before pivoting.
 
-**Example:** Company "XYZ Corp" search. Candidates 1-5: [B, A, C, B, C] → ≥1 A, passes initial gate. Candidates 6-10: [C, D, C, D, C] → last 5 = 0 A, but last 10 has 1 A → warning, one more batch. Candidates 11-15: [D, C, D, B, C] → last 5 still 0 A, last 10 = 0 A → 🛑 STOP. Move to next company. Only 15 candidates burned instead of 60.
-
-⛔ **SEARCH_EXHAUSTED does NOT mean the pipeline is done.** It means the CURRENT search's results are exhausted. If neither termination target (20 A-rated or 60 total) has been met, you MUST move to the next company or refine the search. The pipeline only stops when a termination condition is hit OR all companies and refinements are exhausted.
+⛔ **SEARCH_EXHAUSTED does NOT mean the pipeline is done.** It means the CURRENT search's results are exhausted (e.g., no more pages, all duplicates). If neither termination target (20 A-rated or 60 total) has been met, you MUST move to the next company or refine the search. The pipeline only stops when a termination condition is hit OR all companies and refinements are exhausted. Note: the 3-consecutive-non-A refinement trigger fires BEFORE a search is fully exhausted — it proactively pivots filters mid-search.
 
 **D/F candidates from bad searches still have rows in the output file** (already written by CE). This is acceptable — bulk mode writes everything.
 
@@ -248,11 +230,11 @@ When reading `Target_Companies/company_research.json`, the orchestrator MUST:
 
 ---
 
-## Search Refinement Logic (FALLBACK — after company-targeted searches are exhausted)
+## Search Refinement Logic
 
-> **This section applies ONLY as a fallback** when all Tier 1 and Tier 2 company-targeted searches are exhausted AND termination targets are not met. Also applies when the source is a non-LinkedIn live search.
+> **This fires inline whenever 3 consecutive non-A candidates are detected** — during any search (company-targeted or keyword fallback). It is NOT a fallback-only mechanism.
 
-When a quality check fails (0/5 A-rated, or 0/15 A-rated), analyze the verdicts to identify patterns. Read `refinement_patterns` from the active JD file's Pipeline Config for role-specific pattern→fix mappings.
+When the `consecutive_non_a` streak hits 3, analyze the last 3 verdicts to identify patterns. Read `refinement_patterns` from the active JD file's Pipeline Config for role-specific pattern→fix mappings. If no pattern matches, improvise.
 
 Apply refinements and spawn a **fresh URL Extractor** with the updated search. Keep iterating autonomously — do not stop to ask the user.
 
@@ -264,7 +246,7 @@ Apply refinements and spawn a **fresh URL Extractor** with the updated search. K
 
 ## Handoff File
 
-After the first 5 CEs (regardless of quality check result), write `Z_Search_Cache.json`:
+After the first 3 CEs, write `Z_Search_Cache.json`:
 
 **Path:** Same directory as the output xlsx
 
@@ -291,7 +273,7 @@ After the first 5 CEs (regardless of quality check result), write `Z_Search_Cach
 }
 ```
 
-⛔ **MANDATORY: Overwrite `Z_Search_Cache.json` at the START of every new pipeline run.** The file must reflect the CURRENT run's data, not a previous run's. After the first 5 CEs, write the file with the current run's top5_summary. Then update `run_counters` after every cleanup pass.
+⛔ **MANDATORY: Overwrite `Z_Search_Cache.json` at the START of every new pipeline run.** The file must reflect the CURRENT run's data, not a previous run's. After the first 3 CEs, write the file with the current run's initial summary. Then update `run_counters` after every cleanup pass.
 
 **Why this matters:** The Cleanup Agent uses `top5_summary` to protect against scoring variance (re-eval can drift scores ~7%, enough to flip A→B). If the handoff file is stale from a previous run, candidates from the CURRENT run get no variance protection. A corrupted A-rated row would be re-evaluated by a fresh CE sub-agent, risking tier drift.
 
@@ -549,7 +531,7 @@ Read Context_Legacy_Prompt.md in [FULL ABSOLUTE PATH TO DIRECTORY] and follow it
 - `STARTUP` — parameters confirmed
 - `URL_EXTRACT` — extractor returned N URLs from page X
 - `CANDIDATE` — each CE verdict (name, tier, score%, company)
-- `QUALITY CHECK` — after first 5, result + action
+- `REFINE_TRIGGERED` — 3 consecutive non-A detected, what fix was applied
 - `SEARCH REFINED` — what changed and why
 - `CLEANUP` — cleanup agent triggered, results summary
 - `ERROR` — any error (also log to Z_Pipeline_Error_Log.md)
