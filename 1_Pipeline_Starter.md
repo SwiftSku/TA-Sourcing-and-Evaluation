@@ -29,6 +29,7 @@ You are running the Pipeline Orchestrator for SwiftSku's candidate hiring pipeli
 2. `REF--LIR_Interface_Learnings.md` — if the source is LinkedIn, read BEFORE any navigation.
 3. `REF--Anti_Detection.md` — single source of truth for all anti-detection behavior. Every Chrome-using agent reads this.
 4. The active JD file's `Pipeline Config` block — parse `output_file`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, and `refinement_patterns`. These drive all role-specific behavior.
+5. The active JD file's `Run Learnings` section (bottom of file) — accumulated knowledge from previous runs about which filters/companies produce A-rated candidates. Use to inform search strategy.
 
 ## PATHS ONLY — do NOT read these into your context:
 

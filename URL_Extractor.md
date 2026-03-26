@@ -69,6 +69,16 @@ The parent orchestrator will decide what to do. You NEVER modify filters yoursel
 
 **Why this rule exists:** On 2026-03-23, a URL Extractor agent clicked into filters to "verify" them, accidentally modified filter values, which changed the search results, caused the search URL to expire, and destroyed the original 88-result search. Filter verification must be visual/read-only. One wrong click = destroyed search that cannot be recovered.
 
+### Step 3.5: Check Result Count
+
+After filter verification passes, read the **total result count** displayed at the top of the search results (e.g., "1,234 results").
+
+- **Under 100 results:** Ideal. Proceed to extraction.
+- **100–1,000 results:** Acceptable but noisy. Proceed, but flag to the parent that filters could be tighter.
+- **Over 1,000 results:** ⛔ **DO NOT extract.** The search is too broad — you'll waste cycles on low-relevance profiles. Return immediately:
+  `ERROR: SEARCH_TOO_BROAD — {count} results. Narrow filters before extracting.`
+  The parent orchestrator will tighten filters and re-spawn you.
+
 ### Step 4: Navigate to Page & Position
 
 1. Navigate to page `PAGE` of the search results.

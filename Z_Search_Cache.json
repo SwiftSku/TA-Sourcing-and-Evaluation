@@ -1,13 +1,13 @@
 {
   "status": "processing",
   "source": "https://www.linkedin.com/talent/hire/1894950466/discover/recruiterSearch?searchContextId=312cab47-3c39-4273-839d-0cf94cae521c&searchHistoryId=20947970570&searchRequestId=749d83a2-b005-4d82-a255-6d122443d4a2&start=0",
-  "started_at": "2026-03-25 18:04:00",
+  "started_at": "2026-03-25 20:24:13",
   "top5_summary": [
-    {"name": "Paras Shah", "tier": "C", "score_pct": "57.4%", "verdict": "Maybe", "company": "Accenture", "raw_score": "30.3/52.8", "wrote_to_file": true},
-    {"name": "Anamika Pandit", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "SUDERO ADVISORS AND CONSULTING", "raw_score": "0/52.8", "wrote_to_file": true},
-    {"name": "Iramben Saumil Virani", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "HGS / IMS People Possible", "raw_score": "0/52.8", "wrote_to_file": true},
-    {"name": "Yash Raj", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Hirextra", "raw_score": "0/52.8", "wrote_to_file": true},
-    {"name": "Vipul P.", "tier": "F", "score_pct": "0%", "verdict": "Unable to Evaluate", "company": "N/A", "raw_score": "0/52.8", "wrote_to_file": true}
+    {"name": "Dhara Bharadiya", "tier": "B", "score_pct": "75.0%", "verdict": "Yes", "company": "eClinicalWorks", "wrote_to_file": true},
+    {"name": "Aman Jobanputra", "tier": "B", "score_pct": "76.3%", "verdict": "Yes", "company": "Adani Group", "wrote_to_file": true},
+    {"name": "Shephali Srivastava", "tier": "B", "score_pct": "74.4%", "verdict": "Yes", "company": "Nividous Software Solutions", "wrote_to_file": true},
+    {"name": "Krupal Panchal", "tier": "C", "score_pct": "57.2%", "verdict": "Maybe", "company": "eClinicalWorks", "wrote_to_file": true},
+    {"name": "Jennifer M.", "tier": "C", "score_pct": "59.3%", "verdict": "Maybe", "company": "SI2 Technologies Pvt Ltd", "wrote_to_file": true}
   ],
   "a_rated_count": 0,
   "total_candidates_in_search": "unknown",
@@ -20,5 +20,5 @@
     "run_total_count": 5
   },
   "a_rated_cache": [],
-  "notes": "top5_summary is the canonical record of initial scores — if a row is corrupted, use these scores instead of re-evaluating (re-eval introduces scoring variance). Quality check at 5: Mixed (1C, 4F) — continuing for 1 more batch."
+  "notes": "top5_summary is the canonical record of initial scores — if a row is corrupted, use these scores instead of re-evaluating (re-eval introduces scoring variance)."
 }

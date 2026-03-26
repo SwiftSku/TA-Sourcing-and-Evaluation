@@ -10,6 +10,8 @@ Every decision you make — search filters, refinement strategy, keyword changes
 
 The Pipeline Starter specifies which JD file to use. At startup, parse the JD file's `Pipeline Config` block to extract all role-specific values: `role_name`, `output_file`, `tier1_companies`, `lir_title_filters`, `negative_keywords`, `passthrough_rule`, `refinement_patterns`, and `a_rate_signals`. Store these in memory and reference them throughout the run. **Never hardcode role-specific values in this file.**
 
+**Also read the `Run Learnings` section at the bottom of the active JD file.** This contains accumulated knowledge from previous runs about which filters, companies, and refinements produced A-rated candidates (and which didn't). Use these learnings to inform your search strategy — e.g., prioritize companies that historically produced A-rates, avoid filter combos that failed, and apply refinements that worked before.
+
 ## Purpose
 
 This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents. It replaces the previous Search_Optimizer.md + Bulk_Processor.md two-file design.
@@ -64,6 +66,7 @@ When a termination condition is hit:
 - ⛔ **HARD GATE: Parse the cleanup return line. Check the `Uncleaned` field (NOT `Stuck` — `Uncleaned` is the ground truth count of rows where Cleaned? is NOT one of TRUE/DUPLICATE/ENRICHMENT_FAILED). If `Uncleaned: 0` is NOT in the return, the output file is not fully clean. Re-run the cleanup agent until `Uncleaned: 0`. Do NOT proceed to output summary until cleanup returns `Uncleaned: 0`.** If cleanup is stuck in a loop (3+ consecutive passes with identical Uncleaned count), stop and warn the user — manual intervention needed. Note: `ENRICHMENT_FAILED` rows are accepted as clean — they passed all structural/scoring tests but enrichment was permanently blocked (profile inaccessible). Dan can fix these manually.
 - Output the final summary
 - Append: `🏁 Pipeline complete. [A-rated target hit / Hard cap hit]. This run: [run_total_count] processed, [run_a_rated_count] A-rated.`
+- **Write run learnings** to the `Run Learnings` section at the bottom of the active JD file (see below)
 - **STOP.**
 
 Check counters **after every candidate verdict**. If the target is hit mid-batch, stop there.
@@ -405,6 +408,32 @@ B-rated candidates (this run):
 - {Name} | {Score%} | {Company}
 - ...
 ```
+
+---
+
+## Run Learnings — Write-Back
+
+⛔ **MANDATORY at end of every run.** After the final summary, append a new entry to the `Run Learnings` section at the bottom of the active JD file. This is the ONLY section of the JD file you are allowed to modify.
+
+**Entry format:**
+
+```markdown
+### YYYY-MM-DD — {Source Name}
+- **Results:** {run_total_count} processed, {run_a_rated_count} A-rated ({a_rate_pct}%)
+- **What worked:** {companies or filter combos that produced A-rates, with names and counts}
+- **What didn't work:** {companies or filters that produced 0 A-rates, wasted candidates}
+- **Refinements applied:** {what you changed mid-run and whether it helped}
+- **Next run suggestion:** {what to try differently next time based on this run's data}
+```
+
+**Rules:**
+- Append only — never delete or edit previous entries
+- Be specific: company names, filter values, A-rate counts
+- If a company search was killed by the quality gate, note why (e.g., "eClinicalWorks: 0/5 A, all D/F — titles were all support engineers, not AM")
+- If a refinement helped, note the before/after A-rate
+- Keep it to 3-5 bullets — concise, actionable
+
+**Why this matters:** Over multiple runs, this section builds a role-specific knowledge base of what search strategies actually produce A-rated candidates. The orchestrator reads it at startup and uses it to make smarter decisions about company order, filter selection, and refinement strategy. Each run compounds on the last.
 
 ---
 

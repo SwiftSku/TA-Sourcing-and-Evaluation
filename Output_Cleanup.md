@@ -163,6 +163,8 @@ If EITHER trigger applies, process that row **completely before moving to the ne
 
 Write the updated xlsx back to the same path using `openpyxl`. Preserve all existing formatting (column widths, alignment, freeze panes).
 
+⛔ **NEVER apply formatting to empty rows.** Only modify cells in rows that contain data. Styling empty rows inflates `max_row` and causes the CE sub-agent to write new candidates hundreds of rows below the actual data. If you need to find the last data row, walk column A backwards — do NOT trust `ws.max_row`.
+
 ### Step 8: Return Summary
 
 Return ONLY this summary to the parent agent:

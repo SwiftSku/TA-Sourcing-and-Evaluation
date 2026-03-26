@@ -235,16 +235,25 @@ Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing, e.g.,
 
 Append one row to the output xlsx file specified in the JD config (`output_file`). Do NOT batch. Do NOT create a new file.
 
-⛔ **MANDATORY: Use Python's `openpyxl` module for ALL writes to the output xlsx file.** Do NOT write rows manually with string concatenation, f-strings, or echo commands. Example:
+⛔ **MANDATORY: Use Python's `openpyxl` module for ALL writes to the output xlsx file.** Do NOT write rows manually with string concatenation, f-strings, or echo commands.
+
+⛔ **NEVER use `ws.max_row + 1` to find the next row.** `max_row` counts styled-but-empty rows and causes hundreds of blank rows to appear in the spreadsheet. You MUST use the backward-walk method below. **Copy this code block exactly — do not improvise an alternative:**
 
 ```python
 from openpyxl import load_workbook
+from openpyxl.styles import Alignment
 wb = load_workbook(output_path)
 ws = wb.active
-next_row = ws.max_row + 1
+# Find actual last row with data (NOT max_row):
+next_row = 1
+for row in range(ws.max_row, 0, -1):
+    if ws.cell(row, 1).value is not None:
+        next_row = row + 1
+        break
 values = [candidate, greenhouse_url, public_li_url, lir_url, source, date_added, ..., '']  # last column is Cleaned? — always write as empty string
 for col_idx, val in enumerate(values, 1):
-    ws.cell(row=next_row, column=col_idx, value=val)
+    cell = ws.cell(row=next_row, column=col_idx, value=val)
+    cell.alignment = Alignment(wrap_text=True)
 wb.save(output_path)
 ```
 
@@ -381,3 +390,18 @@ SwiftSku is a VC-backed startup (YC) building a POS and mobile app for US conven
 - Does NOT evaluate more than one candidate per invocation
 - Does NOT refine search queries — that's the Pipeline Orchestrator's job
 - Does NOT hold context from previous candidates — each invocation is stateless
+
+---
+
+## Run Learnings — Senior Account Manager
+
+> **Mission:** Each pipeline run should be smarter than the last. The Pipeline Orchestrator MUST read this section before starting a run and MUST append new learnings at the end of each run. This is the ONLY section of this file that changes between runs.
+>
+> **Rules for adding entries:**
+> - Add one entry per run, dated, with the source name
+> - Record: what filters/companies produced A-rated candidates, what didn't work, what refinements helped
+> - Be specific — include company names, filter combos, and A-rate percentages
+> - Do NOT delete previous entries — this is an append-only log
+> - Keep each entry concise (3-5 bullet points max)
+
+*(No entries yet — first run will populate this section)*

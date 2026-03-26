@@ -114,12 +114,12 @@
 <text x="694" y="939" class="box-body" fill="#333333">Next company or adjust filters</text>
 <polyline points="548,916 680,916" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="556" y="910" class="label-red">Fail</text>
-<text x="556" y="924" class="label-gray">(0 A in 10)</text>
+<text x="556" y="924" class="label-gray">(3 consec non-A)</text>
 <polyline points="960,923 985,923 985,509 460,509" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="989" y="712" class="label-gray">Fresh</text>
 <text x="989" y="726" class="label-gray">extractor</text>
 <line x1="500" y1="964" x2="500" y2="979" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="508" y="976" class="label-gray">Pass (every 10)</text>
+<text x="508" y="976" class="label-gray">Pass (streak reset)</text>
 <text x="500" y="979" text-anchor="middle" class="phase">Phase 4 · Cleanup (every 10 + final)</text>
 <rect x="360" y="997" width="280" height="95" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
 <text x="374" y="1020" class="box-title" fill="#333333">Cleanup Agent · Sonnet</text>

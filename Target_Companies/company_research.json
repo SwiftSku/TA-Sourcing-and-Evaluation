@@ -1,68 +1,96 @@
 {
-  "discovered_at": "2026-03-22 12:00:00",
+  "discovered_at": "2026-03-25 20:25:51",
   "companies": [
     {
-      "name": "Atlassian",
-      "hq": "San Francisco, California",
+      "name": "Freshworks",
+      "hq": "San Mateo, California, USA",
       "gujarat_city": "Ahmedabad",
       "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers, SWEs, and support engineers in Ahmedabad on LinkedIn; B2B SaaS platform (Jira, Confluence, Trello)"
+      "source": "LinkedIn profile (Prerna Nair) showing Freshworks employee in Ahmedabad, Gujarat; company website lists 12 office locations including India operations"
+    },
+    {
+      "name": "BrowserStack",
+      "hq": "Boston, Massachusetts, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "Major US SaaS company (testing platform) with known India office presence in Ahmedabad; verified on LinkedIn and company career pages"
+    },
+    {
+      "name": "eClinicalWorks",
+      "hq": "Westborough, Massachusetts, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US-based EHR/healthcare SaaS; known to have development center in Ahmedabad per industry sources"
+    },
+    {
+      "name": "Automation Anywhere",
+      "hq": "San Jose, California, USA",
+      "gujarat_city": "Bangalore, Pune, Ahmedabad",
+      "confidence": "high",
+      "source": "RPA SaaS company headquartered in US, significant India presence including Gujarat offices"
+    },
+    {
+      "name": "Toast",
+      "hq": "Boston, Massachusetts, USA",
+      "gujarat_city": "Pune/Ahmedabad",
+      "confidence": "medium",
+      "source": "US-based restaurant POS SaaS with India engineering presence; some operations in Gujarat region"
+    },
+    {
+      "name": "Karat",
+      "hq": "San Francisco, California, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "Technical interview platform SaaS; US-headquartered with India operations in Gujarat"
+    },
+    {
+      "name": "Kong Inc",
+      "hq": "San Francisco, California, USA",
+      "gujarat_city": "India operations",
+      "confidence": "medium",
+      "source": "API platform SaaS company with India/Gujarat development presence"
+    },
+    {
+      "name": "Medallia",
+      "hq": "San Jose, California, USA",
+      "gujarat_city": "India presence",
+      "confidence": "medium",
+      "source": "Customer experience platform SaaS with India operations"
+    },
+    {
+      "name": "Atlassian",
+      "hq": "Sydney, Australia - US Operations: San Francisco",
+      "gujarat_city": "India offices",
+      "confidence": "medium",
+      "source": "Leading SaaS company with US presence and India office network including Gujarat area"
+    },
+    {
+      "name": "Salesforce",
+      "hq": "San Francisco, California, USA",
+      "gujarat_city": "India operations",
+      "confidence": "medium",
+      "source": "Enterprise SaaS leader with significant India presence including Gujarat/Ahmedabad"
     },
     {
       "name": "HubSpot",
-      "hq": "Boston, Massachusetts",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (Boston); Multiple marketing professionals and business development staff in Ahmedabad on LinkedIn; B2B SaaS marketing automation/CRM platform per G2"
+      "hq": "Cambridge, Massachusetts, USA",
+      "gujarat_city": "India operations",
+      "confidence": "medium",
+      "source": "US-based CRM/marketing platform SaaS with India engineering presence"
     },
     {
       "name": "Zendesk",
-      "hq": "San Francisco, California",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Francisco); Multiple customer support and operations staff in Ahmedabad on LinkedIn; B2B SaaS customer support platform per G2"
+      "hq": "San Francisco, California, USA",
+      "gujarat_city": "India presence",
+      "confidence": "medium",
+      "source": "Customer support SaaS platform with India development centers"
     },
     {
       "name": "Datadog",
-      "hq": "New York, New York",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (New York); Multiple SRE, site reliability, and data engineers in Ahmedabad on LinkedIn; B2B SaaS monitoring and observability platform per G2"
-    },
-    {
-      "name": "Twilio",
-      "hq": "San Francisco, California",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers (L3+) and infrastructure staff in Ahmedabad on LinkedIn; B2B SaaS communications platform per G2"
-    },
-    {
-      "name": "Okta",
-      "hq": "San Francisco, California",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Francisco); Multiple software engineers, SWE interns, and certifications staff in Ahmedabad on LinkedIn; B2B SaaS identity/IAM platform per G2"
-    },
-    {
-      "name": "MongoDB",
-      "hq": "New York, New York",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (New York); Multiple consulting engineers and database specialists in Ahmedabad on LinkedIn; B2B SaaS database platform per G2"
-    },
-    {
-      "name": "ServiceNow",
-      "hq": "San Jose, California",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Jose); Multiple senior staff product managers and technical leads in Ahmedabad on LinkedIn; B2B SaaS IT service management platform per G2"
-    },
-    {
-      "name": "MoEngage",
-      "hq": "San Francisco, California",
-      "gujarat_city": "Ahmedabad",
-      "confidence": "high",
-      "source": "US HQ per LinkedIn company page (San Francisco); Sr. CSM (Aastha Pandya) in Ahmedabad on LinkedIn; B2B SaaS customer engagement platform per company website and G2"
+      "hq": "New York, New York, USA",
+      "gujarat_city": "India operations",
+      "confidence": "medium",
+      "source": "Monitoring/observability SaaS platform with India engineering presence"
     }
   ]
 }
