@@ -151,12 +151,13 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 | Score | Criteria |
 |---|---|
-| 3 | Explicit ATS experience (Greenhouse, Lever, Ashby, Workday Recruiting) + evidence of process ownership: built interview workflows, managed candidate pipelines, tracked hiring metrics, owned offer letter process |
+| 4 | "Greenhouse" mentioned anywhere in their profile — by name alone, regardless of depth. SwiftSku uses Greenhouse; any familiarity = zero ramp-up on tooling. |
+| 3 | Explicit ATS experience (Lever, Ashby, Workday Recruiting, or other named ATS — NOT Greenhouse) + evidence of process ownership: built interview workflows, managed candidate pipelines, tracked hiring metrics, owned offer letter process |
 | 2 | ATS experience mentioned + basic coordination: scheduling interviews, managing calendars, sending candidate communications |
 | 1 | Some coordination responsibilities implied but no ATS mentioned, or only basic HRIS (not recruiting-specific) |
 | 0 | No evidence of ATS usage or recruiting operations work |
 
-> **Greenhouse is a strong positive signal** — SwiftSku uses Greenhouse. A candidate who already knows the system has zero ramp-up time on tooling.
+> **Greenhouse = automatic 4.** If the word "Greenhouse" appears anywhere on the candidate's profile, score this dimension as 4. No other criteria needed. This is the highest possible score for this dimension.
 
 #### Dimension 7: Tenure & Stability (weight: 0.3×)
 
@@ -209,8 +210,8 @@ Base Score = (Dim1 × 5) + (Dim2 × 4) + (Dim3 × 3) + (Dim4 × 3) + (Dim5 × 0.
 US_Co_Bonus = Bonus1_Score × 0.8
 Startup_Bonus = Bonus2_Score × 2
 Raw Score = Base Score + US_Co_Bonus + Startup_Bonus
-Max possible (base) = 15 + 12 + 9 + 12 + 2.1 + 1.8 + 0.9 = 52.8
-Percentage = Raw Score / 52.8 × 100 (include the `%` suffix — can exceed 100% with bonuses)
+Max possible (base) = 15 + 12 + 9 + 12 + 2.1 + 2.4 + 0.9 = 53.4
+Percentage = Raw Score / 53.4 × 100 (include the `%` suffix — can exceed 100% with bonuses)
 ```
 
 > **Mental model — 3 tiers of weight:**
@@ -290,7 +291,7 @@ wb.save(output_path)
 19. Dim4_Note                           ← TEXT ONLY
 20. Dim5_Education_Score (0-3)          ← NUMBER ONLY  [STANDARD — 0.7×]
 21. Dim5_Note                           ← TEXT ONLY
-22. Dim6_RecruitingOps_Score (0-3)      ← NUMBER ONLY  [STANDARD — 0.6×]
+22. Dim6_RecruitingOps_Score (0-4)      ← NUMBER ONLY  [STANDARD — 0.6×]  (4 = Greenhouse mentioned)
 23. Dim6_Note                           ← TEXT ONLY
 24. Dim7_Tenure_Score (0-3)             ← NUMBER ONLY  [MINOR — 0.3×]
 25. Dim7_Note                           ← TEXT ONLY
@@ -302,7 +303,7 @@ wb.save(output_path)
 31. US_Co_Bonus (Bonus1 × 0.8)
 32. Startup_Bonus (Bonus2 × 2)
 33. Raw_Score (Base + Bonuses)
-34. Max_Score (always 52.8)
+34. Max_Score (always 53.4)
 35. Percentage (with % suffix — can exceed 100%)
 36. Tier (A/B/C/D/F)
 37. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
@@ -335,20 +336,20 @@ writer.writerow([
     "BrowserStack — non-US SaaS validated", # 19. Dim4 NOTE
     "1",                                    # 20. Dim5 Edu [STD 0.7×]
     "Bachelor's in HR",                     # 21. Dim5 NOTE
-    "3",                                    # 22. Dim6 RecruitingOps [STD 0.6×]
-    "Greenhouse + built interview workflows",# 23. Dim6 NOTE
+    "4",                                    # 22. Dim6 RecruitingOps [STD 0.6×]
+    "Greenhouse mentioned — auto 4",        # 23. Dim6 NOTE
     "2",                                    # 24. Dim7 Tenure [MINOR 0.3×]
     "2.5 yrs at BrowserStack",             # 25. Dim7 NOTE
     "2",                                    # 26. Bonus1 US_Co BONUS [×0.8]
     "India co, US client base",             # 27. Bonus1 NOTE
     "3",                                    # 28. Bonus2 Startup BONUS [×2]
     "BrowserStack was VC-backed pre-IPO",   # 29. Bonus2 NOTE
-    "38.1",                                 # 30. Base_Score
+    "38.7",                                 # 30. Base_Score
     "1.6",                                  # 31. US_Co_Bonus (Bonus1 × 0.8)
     "6.0",                                  # 32. Startup_Bonus (Bonus2 × 2)
-    "45.7",                                 # 33. Raw_Score
-    "52.8",                                 # 34. Max_Score
-    "86.6%",                                # 35. Percentage
+    "46.3",                                 # 33. Raw_Score
+    "53.4",                                 # 34. Max_Score
+    "86.7%",                                # 35. Percentage
     "A",                                    # 36. Tier
     "Strong Yes",                           # 37. Verdict
     "• SaaS recruiting coord at BrowserStack\n• Ahmedabad-based, Gujarati speaker\n• Greenhouse experience — zero ramp-up",  # 38. Whys
@@ -410,7 +411,7 @@ These signals should be noted in the Whys column when present, and their absence
 
 ## Rubric Summary — Recruiting Coordinator
 
-Base max score: **52.8** (before bonuses).
+Base max score: **53.4** (before bonuses).
 
 ### All scored dimensions (ordered by weight):
 
@@ -421,9 +422,9 @@ Base max score: **52.8** (before bonuses).
 | 3 | Sales Hiring Experience | 3× | 3 | 9.0 | Recruited for SDRs, AEs, AMs, BDRs |
 | 4 | SaaS Experience | 3× | 4 | 12.0 | Scores 0 if no SaaS — no longer auto-DQ |
 | 5 | Education | 0.7× | 3 | 2.1 | |
-| 6 | Recruiting Ops & ATS | 0.6× | 3 | 1.8 | Greenhouse, pipeline mgmt, process ownership |
+| 6 | Recruiting Ops & ATS | 0.6× | 4 | 2.4 | Greenhouse = auto 4; other ATS + process ownership = 3 |
 | 7 | Tenure Stability | 0.3× | 3 | 0.9 | |
-| | **BASE TOTAL** | | | **52.8** | |
+| | **BASE TOTAL** | | | **53.4** | |
 
 ### Bonus dimensions (cherry on top — not in denominator):
 
@@ -434,13 +435,14 @@ Base max score: **52.8** (before bonuses).
 
 > **Note:** Each role has its own dimensions and weights. There are no "universal" dimensions — weights vary per role. See each JD file for that role's specific rubric.
 
-### Auto-DQ triggers (apply to ALL roles):
+### Auto-DQ triggers (Recruiting Coordinator):
 
 - BPO / call center career
 - Non-tech traditional industry (banking, real estate, pharma field)
 - Auto sales / heavy industries (automotive, steel, manufacturing, mining, construction)
 - Accounting / bookkeeping / finance career
 - No Gujarat/Gujarati connection
+- Pure agency staffing recruiter with no in-house experience
 
 ---
 

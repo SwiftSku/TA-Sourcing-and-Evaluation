@@ -65,7 +65,7 @@ After URL normalization, scan for duplicates. Two rows are duplicates if:
    - If the kept row has no LIR URL but the duplicate does → copy it over
    - If the kept row has no Public LI URL but the duplicate does → copy it over
 3. **Mark the lower-scored duplicate row as `Cleaned?` = `DUPLICATE`** — do NOT delete it (NEVER DELETE rule). The `DUPLICATE` value means "this row is superseded and should be ignored by all downstream processes."
-4. **Log:** `DEDUP: Kept {Name} ({Score}%, {Source}) | Marked duplicate: {Name} ({Score}%, {Source})`
+4. **Log:** `DEDUP: Kept {Name} ({Score}%) | Marked duplicate: {Name} ({Score}%)` — include Source if the role has a Source column, omit if not
 
 ⛔ **The `DUPLICATE` marker is the ONLY addition to the `Cleaned?` column values.** Update the column values table below accordingly. Rows marked `DUPLICATE` are excluded from all pipeline counts.
 
@@ -213,7 +213,7 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 | I1 | Candidate name exists | Column 1 is non-empty, contains at least 2 characters | Name field is blank or corrupted |
 | I1b | Greenhouse URL format | Column 2 is empty OR is a valid Greenhouse URL (matches `https://app*.greenhouse.io/`) | Greenhouse URL is garbled (empty is OK — filled manually) |
 | I2 | Public LI URL format | Column 3 is empty OR is a valid LinkedIn public profile URL (matches `https://(www\|in\|ca\|uk\|fr\|de\|br\|au\|sg).linkedin.com/in/` or `https://linkedin.com/in/`) | Public URL is garbled (empty is OK — not always available). Note: LinkedIn uses country subdomains like `in.linkedin.com` for India, `ca.linkedin.com` for Canada, etc. All are valid. |
-| I2b | Public LI URL completeness | If Column 4 is a LinkedIn Recruiter URL (`/talent/`), then Column 3 MUST be non-empty | Row has an LIR URL that could yield a public URL but enrichment hasn't been done yet — do NOT mark as `TRUE` until Step 6 enrichment has been attempted for this row |
+| I2b | Public LI URL completeness | If Column 4 is a LinkedIn Recruiter URL (`/talent/`), then Column 3 MUST be non-empty. **⚠️ I2b failure does NOT make a row "broken" for Step 4 purposes.** If I2b is the ONLY failing test, skip Step 4 — leave `Cleaned?` empty and let Step 6 enrichment fill the Public LI URL. Only send to Step 4 if other tests also fail. | Row has an LIR URL that could yield a public URL but enrichment hasn't been done yet — do NOT mark as `TRUE` until Step 6 enrichment has been attempted for this row |
 | I2c | Public LI URL slug-name match | If Column 3 is non-empty, extract the slug (the part after `/in/`), split it on `-`, remove any trailing alphanumeric hash segments (segments that are all digits or >6 chars of mixed alphanumeric), then check if at least ONE word from the candidate's name (Column 1, case-insensitive) appears in the slug parts. E.g., "Priya Patel" + slug `priya-patel-a1b2c3` → match ("priya" found). "Faizan Shaikh" + slug `faizan-shaikh` → match. But "Faizan Shaikh" + slug `john-doe-developer` → FAIL. | **The public URL likely belongs to a different person with the same name.** This is a critical data integrity issue — the CE may have guessed/constructed the URL instead of extracting it from the LIR profile's "Public profile" link. Clear Column 3 (set to empty) and leave `Cleaned?` empty so enrichment is re-attempted in Step 6. Log: `URL_SLUG_MISMATCH: {Name} | {URL} — slug does not match candidate name, cleared.` |
 | I3 | LIR URL format | Column 4 starts with `https://www.linkedin.com/` OR is a valid non-LinkedIn URL starting with `http` | Internal URL is garbled or shifted |
 | I4 | Source exists | Column 5 is non-empty (AM only; RC has no Source column — skip this test) | Source field is blank |
@@ -244,7 +244,7 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 | SC3 | Percentage format | Value ends with `%`, and `float(value.strip('%'))` is ≥ 0 (can exceed 100% if role has additive bonus dimensions) | Percentage missing `%` suffix or negative |
 | SC4 | Tier is valid | Value is exactly one of: `A`, `B`, `C`, `D`, `F` | Tier field is shifted or garbled |
 | SC5 | Verdict is valid | Value is exactly one of: `Strong Yes`, `Yes`, `Maybe`, `No`, `Hard No` | Verdict field is shifted or garbled |
-| SC6 | Score-Tier consistency | Tier matches Percentage: A=80-100, B=65-79, C=50-64, D=35-49, F=<35 | Scoring logic error or field shift |
+| SC6 | Score-Tier consistency | Tier matches Percentage: A=≥80, B=65-79.99, C=50-64.99, D=35-49.99, F=<35 (note: percentage can exceed 100% for roles with additive bonuses — still tier A) | Scoring logic error or field shift |
 | SC7 | Score-Verdict consistency | Tier-Verdict pairs match: A→Strong Yes, B→Yes, C→Maybe, D→No, F→Hard No | Scoring logic error or field shift |
 
 #### SC-RECALC: Score Recalculation (when SC2 fails but structure is intact)
@@ -253,10 +253,10 @@ If SC2 fails but ALL structural tests (S1-S3), identity tests (I1-I4), and dimen
 
 1. Read the raw dimension scores from the row (they don't change — only weights change)
 2. Compute `base_score` by applying current weights to each base dimension: `base = Σ(dim_score × weight)` for all base dims parsed from the JD's Step 4 formula
-3. Compute bonus scores by applying bonus multipliers from the JD's Step 4 formula: `bonus = Σ(bonus_score × multiplier)`
+3. Compute EACH bonus dimension separately: `bonus_i = bonus_score_i × multiplier_i` (e.g., for RC: `us_co_bonus = b1 × 0.8`, `startup_bonus = b2 × 2`). Then `bonus_total = Σ(bonus_i)`. Keep the individual values — roles with separate bonus columns (e.g., RC) need them written out.
 4. `raw_score = base_score + bonus_total`
 5. Compute `new_pct = raw_score / current_max × 100` using the `current_max` read directly from the JD's Step 4 `Max possible` line (NOT computed — see "How to parse weights" above). Note: for roles where bonuses are excluded from the denominator (e.g., RC), pct can exceed 100%.
-6. Derive new Tier from new_pct (A=80-100, B=65-79, C=50-64, D=35-49, F=<35)
+6. Derive new Tier from new_pct (A=≥80, B=65-79.99, C=50-64.99, D=35-49.99, F=<35)
 7. Derive new Verdict from Tier (A→Strong Yes, B→Yes, C→Maybe, D→No, F→Hard No)
 8. Update the row's score columns as defined by the JD file's Column order block. For roles with separate Base_Score and bonus columns (e.g., RC), update all of them. For roles with only Raw_Score (e.g., AM), update Raw_Score directly. Always update: Raw_Score, Max_Score, Percentage (with `%` suffix), Tier, Verdict
 9. Mark `Cleaned?` = `TRUE`
@@ -269,7 +269,7 @@ This is fast (no Chrome, no sub-agent, no delay) and preserves the original dime
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| D-range | Each base dimension score | Integer 0 to that dimension's Max (from rubric table). If Auto_DQ=Yes, all must be 0. | Dimension score is out of range or non-numeric |
+| D-range | Each base dimension score | Integer 0 to that dimension's Max (from rubric table). If the rubric specifies discrete valid values (e.g., 0/2/4 only), check against those exact values, not the full 0-to-max range. If Auto_DQ=Yes, all must be 0. | Dimension score is out of range or non-numeric |
 | D-bonus | Each bonus dimension score | Integer 0 to that bonus's Max Raw (from rubric table) | Bonus score is out of range or non-numeric |
 | D-math | Weighted score math | Apply current weights (base dims + bonus dims parsed from JD rubric) → computed Raw_Score matches row's Raw_Score (±0.2 tolerance for float rounding) | Math error or field shift |
 
