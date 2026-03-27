@@ -79,7 +79,6 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 | Majority of career in auto sales or heavy industries | Car dealerships, automotive OEM, steel, manufacturing, mining, construction, agriculture; red flag keywords: Pharmaceuticals, Purchasing, export, Professor |
 | Majority of career in accounting / bookkeeping / finance | CPA, CMA, QuickBooks, Sage, Tally, GST, TDS, bookkeeping, payroll; red flag keywords: Receivable, Taxation, Audit, Reconciliation |
 | No clear Gujarat/Gujarati connection | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count |
-| Zero SaaS or Software Product exposure or worked at a venture backed technology company across entire career | No tech company, product, or platform anywhere |
 | Pure agency staffing recruiter with no in-house experience | Only worked at staffing/recruiting agencies (Randstad, ManpowerGroup, TeamLease, etc.) with zero in-house recruiting coordinator or ops experience at a product company |
 
 ### Step 3: Score Each Dimension
@@ -131,7 +130,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 3 | Non-US SaaS company on the validated list below |
 | 2 | Clear SaaS/tech company, not on either validated list |
 | 1 | Mixed — some SaaS, some traditional |
-| 0 | Minimal SaaS exposure (passes zero-SaaS disqualifier but barely) |
+| 0 | No meaningful SaaS exposure — entirely non-tech or traditional industry employers |
 
 **Validated SaaS companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
 
@@ -420,7 +419,7 @@ Base max score: **52.8** (before bonuses).
 | 1 | Title Match | 5× | 3 | 15.0 | Recruiting Coord / TA Coord |
 | 2 | High-Volume Hiring | 4× | 3 | 12.0 | Quantified sourcing volume / cold calling |
 | 3 | Sales Hiring Experience | 3× | 3 | 9.0 | Recruited for SDRs, AEs, AMs, BDRs |
-| 4 | SaaS Experience | 3× | 4 | 12.0 | Auto-DQ if zero |
+| 4 | SaaS Experience | 3× | 4 | 12.0 | Scores 0 if no SaaS — no longer auto-DQ |
 | 5 | Education | 0.7× | 3 | 2.1 | |
 | 6 | Recruiting Ops & ATS | 0.6× | 3 | 1.8 | Greenhouse, pipeline mgmt, process ownership |
 | 7 | Tenure Stability | 0.3× | 3 | 0.9 | |
@@ -442,7 +441,6 @@ Base max score: **52.8** (before bonuses).
 - Auto sales / heavy industries (automotive, steel, manufacturing, mining, construction)
 - Accounting / bookkeeping / finance career
 - No Gujarat/Gujarati connection
-- Zero SaaS or Software Product exposure or worked at a venture backed technology company
 
 ---
 
@@ -465,4 +463,23 @@ Base max score: **52.8** (before bonuses).
 > - Do NOT delete previous entries — this is an append-only log
 > - Keep each entry concise (3-5 bullet points max)
 
-*(No entries yet — first run will populate this section)*
+### 2026-03-25 — LIR-Coord-Test2-03-25-26 (in progress, @35 candidates)
+- **Results so far:** 35 processed, 0 A-rated (0%), 3 B-rated (8.6%), 5 C-rated, 3 D-rated, 24 F-rated
+- **What worked:** User's original LIR project search (batch 1-2) produced the best results — 3 B-rated at 74-76% (Dhara Bharadiya/eClinicalWorks 75%, Aman Jobanputra/Adani 76.3%, Shephali Srivastava/Nividous 74.4%). These candidates had Gujarat connections + SaaS exposure + recruiting titles. The B→A gap is Sales hiring (Dim3, 3×) and High-volume metrics (Dim2, 4×).
+- **What didn't work:** (1) Company-targeted with India location = 100% Gujarat auto-DQ (Freshworks 5/5 F, Automation Anywhere 4/5 F — all Bangalore/Chennai). (2) BrowserStack and eClinicalWorks = 0 results (all previously viewed). (3) Gujarat + "SaaS" keyword = weak matches, mostly zero-SaaS F's (keyword in profile ≠ actual SaaS experience). (4) Gujarat + "Sales" keyword = recruiters at non-tech companies, zero SaaS auto-DQ. (5) Broad Gujarat + recruiting titles = 273 results but mostly non-tech HR (salons, consulting, manufacturing).
+- **Key insight:** The Gujarat + SaaS intersection for recruiting coordinators is extremely small in LIR after "hide previously viewed 2 years" filters out prior runs. A-rated requires ALL of: Gujarat, SaaS (3×), Title match (5×), High-volume (4×), Sales hiring (3×). The B candidates had 3 of 5 but consistently missed Sales hiring and quantified volume metrics.
+- **Next run suggestion:** (1) Try removing "hide previously viewed" temporarily to see total pool size — if tiny, this role may need a different source (referrals, job boards, direct outreach). (2) Try broader title search in Gujarat (just "Recruiter") combined with MULTIPLE SaaS company names as keywords (e.g., "BrowserStack OR Freshworks OR eClinicalWorks OR Zycus OR Vymo"). (3) Consider Vadodara/Surat in addition to Ahmedabad — Gujarat is more than one city. (4) The scoring gap for B→A is specifically Dim2 (high-volume) and Dim3 (Sales hiring) — a candidate who cold-calls for Sales roles at a SaaS company in Gujarat would score A, but that profile is rare.
+
+### 2026-03-26 — LIR-Coord-Test2-03-25-26 (continued, final @ 47 candidates)
+- **Final results:** 47 processed, 0 A-rated (0%), 3 B-rated (6.4%), 5 C-rated, 4 D-rated, 35 F-rated. Hard cap 60, 13 slots remaining at pause.
+- **Strategies attempted this session (12-17 new):** (1) India + Gujarati language keyword = 3F + 1D + 1 dupe. (2) Toast company-targeted India = 0 results. (3) Karat company-targeted India = 0 with recruiting titles (465 broad). (4) "Sales Recruiter" + Gujarat + SaaS = 270k results (filters didn't apply properly), evaluated 1 = F (was a salesperson, not recruiter). (5) Medallia company-targeted = LIR server error/session expired. (6) Original user URL with preserved filters (76 results) + Industries filter "Software Development" + "IT Services and IT Consulting" = 29 results — evaluated Susmita Singh (F, IMS People Possible staffing), Prashant Rana (D, 47%), Payal Jadav (F, zero SaaS despite good title match). (7) Changed keywords to "(Greenhouse OR Lever OR sales hiring OR high volume OR cold calling)" = 13 results — evaluated Nitish Musini (F, zero SaaS).
+- **Key learnings:** (1) Adding Industries filter "Software Development" collapsed 76→5 results; adding "IT Services and IT Consulting" brought it to 29 — but IT Services companies in Ahmedabad are NOT SaaS product companies. The filter creates false precision. (2) "Recruitment Coordinator" title holders in Ahmedabad universally lack SaaS product company experience — they work at IT services firms, digital agencies, staffing companies. (3) Two candidates already in SwiftSku's Greenhouse (Prashant Rana, Payal Jadav) — both scored poorly (D and F). (4) The LIR filter UI is extremely fragile: tabs get destroyed between CE agent spawns, searchRequestIds expire on any click, advanced search doesn't preserve filters across navigations. Rebuilding filters from scratch costs ~5 min each time. (5) Pivoting filters after every non-A candidate (per user instruction) is tactically correct but operationally expensive when the UI forces full rebuilds.
+- **The 3 B-rated candidates remain the best finds across all runs:** Dhara Bharadiya/eClinicalWorks (75%), Aman Jobanputra/Adani (76.3%), Shephali Srivastava/Nividous (74.4%).
+- **Recommendation for future runs:** (1) Expand location to ALL of Gujarat (Vadodara, Surat, Rajkot) — not just Greater Ahmedabad. (2) Consider relaxing the SaaS auto-DQ to a scored dimension instead — it's eliminating 70%+ of candidates. (3) The "Hide Previously Viewed 2 years" filter may be hiding viable candidates from earlier runs who were passed over. (4) Alternative sources (Indeed, Naukri, direct referrals from the 3 B-rated candidates) may yield better results than further LIR mining. (5) If staying on LIR, use the top search bar with boolean queries instead of filter panel — filter panel state is too fragile for automated pipelines.
+
+### 2026-03-26 — LIR-Coord-Test2-03-25-26 (continued, FINAL @ 60 hard cap)
+- **Final results:** 60 evaluated (hard cap reached), 0 A-rated (0%), 3 B-rated (5%), 5 C-rated, 5 D-rated, 46 F-rated, 1 duplicate skipped. A-rated target of 1 NOT met.
+- **This session (candidates 48-60):** Expanded location from Greater Ahmedabad to all of Gujarat. Got 666 results (too many), added Industries filter (Software Development + IT Services) → 166 results (under 200 threshold). Also tried keyword pivot "(Software OR SaaS)" — same ~166 results. Evaluated 13 candidates: 12 F-rated (all auto-DQ for zero SaaS exposure), 1 D-rated (Ayushi Shukla, 37.1%, Prakash Software Solutions — had recruiting coordinator title but zero SaaS/Sales hiring), 1 duplicate (Nitish Musini, already evaluated in prior batch).
+- **Key learning:** Expanding from Ahmedabad → all Gujarat did NOT improve quality. The Gujarat talent pool for recruiting coordinators is dominated by IT services/staffing firms (Simform, Stridely, Mindiance, Ecosmob, JoulestoWatts, Horizontal Talent, Ancile Digital, LanceSoft). These companies hire recruiters but are NOT SaaS product companies, triggering auto-DQ every time. The "(Software OR SaaS)" keyword filter matches profiles that mention SaaS tangentially but have never worked at a SaaS product company.
+- **The 3 B-rated candidates remain the ONLY viable finds across all 60 evaluations:** Dhara Bharadiya/eClinicalWorks (75%), Aman Jobanputra/Adani (76.3%), Shephali Srivastava/Nividous (74.4%). All found in the first 20 candidates from the original user project search.
+- **Conclusion:** The Recruiting Coordinator role in Gujarat on LIR is effectively exhausted. The SaaS + Gujarat + recruiting coordinator intersection is near-zero after filtering previously viewed profiles. Recommend: (1) pivot to non-LIR sources (Naukri, Indeed, referrals), (2) consider remote/relocation candidates from Bangalore/Pune/Mumbai SaaS hubs, (3) relax SaaS auto-DQ to a scored penalty instead of hard disqualification, or (4) redefine the role to accept IT services recruiting experience with SaaS training on the job.

@@ -35,9 +35,9 @@ Read `[output file from JD config]` at the provided path using Python's `openpyx
 
 Before checking individual rows, scan for a rubric change:
 
-1. Parse the current weights and `current_max` from `[active JD file]` (see "How to parse weights" in the Scoring Tests section below).
+1. Parse the current weights and `current_max` from `[active JD file]` (see "How to parse weights and current_max" in the Scoring Tests section below). Read `current_max` directly from the JD's Step 4 `Max possible` line — do NOT compute it.
 2. Read any `TRUE`-marked row and check its `Max_Score` value. If `float(max_score) != current_max`, the rubric has changed since these rows were scored.
-3. **If rubric changed:** Clear `Cleaned?` on EVERY row in the output file (set all to empty). This forces the entire file through the validation suite, which will trigger SC-RECALC on every structurally valid row — recalculating Raw_Score, Max_Score, Percentage, Tier, and Verdict under the new weights. No Chrome, no sub-agents, no delays.
+3. **If rubric changed:** Clear `Cleaned?` on EVERY row in the output file (set all to empty). This forces the entire file through the validation suite, which will trigger SC-RECALC on every structurally valid row — recalculating all score columns (Base_Score and bonus columns if the role has them, plus Raw_Score, Max_Score, Percentage, Tier, and Verdict) under the new weights. No Chrome, no sub-agents, no delays.
 4. **If rubric unchanged:** Proceed normally — only unchecked rows need processing.
 
 ⛔ **This step is critical.** Without it, a weight change (e.g., Dim3 from 2× to 0.8×) would leave hundreds of existing rows scored under old weights while only new rows get the current formula. Every row in the output file must be scored under the same rubric.
@@ -89,11 +89,11 @@ For each broken row:
 
 1. **Check Z_Search_Cache.json first** — if this candidate's name appears in `top5_summary`, reconstruct the row from the cached data (name, tier, score_pct, verdict, company, raw_score). Fill in what you can from the cached data + the broken row's existing fields (URLs, source, timestamp). Mark as `Cleaned?` = `TRUE`. Skip to step 7.
 2. **Extract the candidate's LIR URL** (or identifier) — scan all columns for a value starting with `http`. Column 4 is the expected location for the LIR URL, Column 3 for the Public LI URL. Check all columns in case of shift.
-3. **Extract the Source** — column 5 in a normal row, but look for known source patterns if shifted.
+3. **Extract the Source** (AM only — RC has no Source column). For AM, column 5 is Source. Look for known source patterns (`LinkedIn Recruiter`, `Greenhouse`, etc.) — if shifted, scan other columns. For RC, skip this step (Source is not used).
 4. **Do NOT touch the broken row yet.** Leave it in the output file while the re-evaluation happens.
 5. **Spawn a Candidate Evaluator sub-agent** with `model: "sonnet"` using the template in `CE_Spawn_Template.md`. Fill in all parameters per that file's "Cleanup Agent (Step 4)" section. Key inputs:
    - `PROFILE_URL` = extracted from the broken row
-   - `SOURCE_NAME` = extracted from the broken row
+   - `SOURCE_NAME` = extracted from the broken row (empty string if the role has no Source column)
    - `DELAY_SECONDS` = random 45-200 (generate here, never same twice in a row)
    - `NEXT_URL` = empty (cleanup processes one at a time)
 
@@ -202,8 +202,8 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| S1 | Column count | `len(row) == expected_col_count` (AM=37, RC=40 — read from JD file) | Unquoted commas split a field, or columns are missing |
-| S2 | No completely empty row | At least columns 1-4 are non-empty | Row was written as blank/partial |
+| S1 | Column count | `len(row) == expected_col_count` (read from JD file's Column order block) | Unquoted commas split a field, or columns are missing |
+| S2 | No completely empty row | Column 1 (Candidate name) is non-empty AND at least one URL column (Column 3 or Column 4) is non-empty | Row was written as blank/partial |
 | S3 | No header duplication | Row[0] ≠ `"Candidate"` | Header was accidentally re-written as data |
 
 ### Identity Tests
@@ -227,15 +227,21 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 ### Scoring Tests — Dynamic Weight Recalculation
 
-⚠️ **IMPORTANT: Read weights from [active JD file] at runtime.** Do NOT hardcode weights or max scores. The scoring formula changes frequently. At the start of every cleanup run, parse the `Step 4: Calculate Score` section of `[active JD file]` to extract the current weights and max score. Use those values for ALL scoring tests below.
+⚠️ **IMPORTANT: Read weights from [active JD file] at runtime.** Do NOT hardcode weights or max scores. The scoring formula changes frequently. At the start of every cleanup run, parse the active JD file to extract the current weights, max scores, and bonus multipliers. Use those values for ALL scoring tests below.
 
-**How to parse weights:** Read [active JD file], find the line starting with `Raw Score =`, extract each `Dim{N} × {weight}` pair. Compute `current_max` by applying each weight to the max dimension score (Dim1:4, Dim2:3, Dim3:3, Dim4:3, Dim5:3, Dim6:4, Dim7:4, Dim8:3). Note: the number of dimensions may change — parse dynamically from the formula, don't hardcode 8 or 9.
+**How to parse weights and current_max:**
+
+1. Read the active JD file's **Step 4: Calculate Score** formula block. This contains the exact formula, weights, and the `Max possible` value.
+2. **Read `current_max` directly from the `Max possible` line** — do NOT compute it yourself. Each role defines its own denominator differently (AM includes bonuses in the denominator: max=55.0; RC excludes bonuses: max=52.8). The JD file is the single source of truth for this value.
+3. Also read the **Rubric Summary** table (near the bottom) to get each dimension's name, weight, and max raw score. Use this for dimension range validation.
+4. Extract the **Percentage formula** from Step 4 — specifically what the denominator is (e.g., `/55.0` for AM, `/52.8` for RC). Use this same denominator in SC-RECALC.
+5. The number of dimensions, their names, weights, max scores, and whether bonuses are in the denominator all vary by role — parse everything dynamically, never hardcode.
 
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
 | SC1 | Raw_Score is numeric | `float(raw_score)` succeeds and result ≥ 0 | Score field contains text or is shifted |
-| SC2 | Max_Score matches current formula | `float(max_score) == current_max` (computed from weights parsed above) | Weight change — row needs score recalculation (see SC-RECALC below) |
-| SC3 | Percentage format | Value ends with `%`, and `float(value.strip('%'))` is 0-100 | Percentage missing `%` suffix or out of range |
+| SC2 | Max_Score matches current formula | `float(max_score) == current_max` (read from JD's Step 4 `Max possible` line — see parsing instructions above) | Weight change — row needs score recalculation (see SC-RECALC below) |
+| SC3 | Percentage format | Value ends with `%`, and `float(value.strip('%'))` is ≥ 0 (can exceed 100% if role has additive bonus dimensions) | Percentage missing `%` suffix or negative |
 | SC4 | Tier is valid | Value is exactly one of: `A`, `B`, `C`, `D`, `F` | Tier field is shifted or garbled |
 | SC5 | Verdict is valid | Value is exactly one of: `Strong Yes`, `Yes`, `Maybe`, `No`, `Hard No` | Verdict field is shifted or garbled |
 | SC6 | Score-Tier consistency | Tier matches Percentage: A=80-100, B=65-79, C=50-64, D=35-49, F=<35 | Scoring logic error or field shift |
@@ -243,31 +249,29 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 
 #### SC-RECALC: Score Recalculation (when SC2 fails but structure is intact)
 
-If SC2 fails but ALL structural tests (S1-S3), identity tests (I1-I4), and dimension range tests (D1-D8) PASS, the row is **not broken** — it was scored under old weights. **Do NOT re-evaluate via sub-agent.** Instead, recalculate in-place:
+If SC2 fails but ALL structural tests (S1-S3), identity tests (I1-I4), and dimension range tests PASS, the row is **not broken** — it was scored under old weights. **Do NOT re-evaluate via sub-agent.** Instead, recalculate in-place:
 
 1. Read the raw dimension scores from the row (they don't change — only weights change)
-2. Apply current weights: `new_raw = (D1×w1)+(D2×w2)+...+(D8×w8)` using weights parsed from [active JD file]
-3. Compute `new_pct = new_raw / current_max × 100`
-4. Derive new Tier from new_pct (A=80-100, B=65-79, C=50-64, D=35-49, F=<35)
-5. Derive new Verdict from Tier (A→Strong Yes, B→Yes, C→Maybe, D→No, F→Hard No)
-6. Update the row: Raw_Score, Max_Score, Percentage (with `%` suffix), Tier, Verdict
-7. Mark `Cleaned?` = `TRUE`
+2. Compute `base_score` by applying current weights to each base dimension: `base = Σ(dim_score × weight)` for all base dims parsed from the JD's Step 4 formula
+3. Compute bonus scores by applying bonus multipliers from the JD's Step 4 formula: `bonus = Σ(bonus_score × multiplier)`
+4. `raw_score = base_score + bonus_total`
+5. Compute `new_pct = raw_score / current_max × 100` using the `current_max` read directly from the JD's Step 4 `Max possible` line (NOT computed — see "How to parse weights" above). Note: for roles where bonuses are excluded from the denominator (e.g., RC), pct can exceed 100%.
+6. Derive new Tier from new_pct (A=80-100, B=65-79, C=50-64, D=35-49, F=<35)
+7. Derive new Verdict from Tier (A→Strong Yes, B→Yes, C→Maybe, D→No, F→Hard No)
+8. Update the row's score columns as defined by the JD file's Column order block. For roles with separate Base_Score and bonus columns (e.g., RC), update all of them. For roles with only Raw_Score (e.g., AM), update Raw_Score directly. Always update: Raw_Score, Max_Score, Percentage (with `%` suffix), Tier, Verdict
+9. Mark `Cleaned?` = `TRUE`
 
 This is fast (no Chrome, no sub-agent, no delay) and preserves the original dimension scores while applying current weights. Count these in the return summary as `Rescored: {N}`.
 
 ### Dimension Score Tests
 
+⚠️ **Parse dimension names, ranges, and count from the active JD file's Rubric Summary table and Column order block.** Do NOT hardcode dimension names or ranges — they differ by role (AM has 5 base dims + 3 bonus dims, RC has 7 base dims + 2 bonus dims, etc.).
+
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| D1 | Dim1 (SaaS) score | Integer 0-4 | Dimension score is out of range or non-numeric |
-| D2 | Dim2 (Title) score | Integer 0-3 | Dimension score is out of range or non-numeric |
-| D3 | Dim3 (US Company) score | Integer 0-3 | Dimension score is out of range or non-numeric |
-| D4 | Dim4 (Tenure) score | Integer 0-3 | Dimension score is out of range or non-numeric |
-| D5 | Dim5 (Education) score | Integer 0-3 | Dimension score is out of range or non-numeric |
-| D6 | Dim6 (Location) score | Value is 0 (only if Auto_DQ=Yes), 1, 2, or 4 (no 3 in rubric) | Dimension score is invalid |
-| D7 | Dim7 (Startup/VC) score | Integer 0-4 | Dimension score is out of range or non-numeric |
-| D8 | Dim8 (KAM Performance) score | Integer 0-3 | Dimension score is out of range or non-numeric |
-| D9 | Weighted score math | Apply current weights (parsed from [active JD file]) to dimension scores = Raw_Score (±0.1 tolerance for float rounding) | Math error or field shift |
+| D-range | Each base dimension score | Integer 0 to that dimension's Max (from rubric table). If Auto_DQ=Yes, all must be 0. | Dimension score is out of range or non-numeric |
+| D-bonus | Each bonus dimension score | Integer 0 to that bonus's Max Raw (from rubric table) | Bonus score is out of range or non-numeric |
+| D-math | Weighted score math | Apply current weights (base dims + bonus dims parsed from JD rubric) → computed Raw_Score matches row's Raw_Score (±0.2 tolerance for float rounding) | Math error or field shift |
 
 ### Auto-DQ Consistency Tests
 
@@ -279,9 +283,11 @@ This is fast (no Chrome, no sub-agent, no delay) and preserves the original dime
 
 ### Signal Tests
 
+⚠️ **Parse signal columns from the active JD file's Column order block.** Not all roles have the same signal columns (e.g., AM has Hindi_Signal, RC does not).
+
 | # | Test | Pass Criteria | What Failure Means |
 |---|---|---|---|
-| SG1 | Hindi_Signal valid | Value is `Y` or `N` | Signal field is corrupted |
+| SG1 | Hindi_Signal valid (AM only) | If the column exists in this role's schema: value is `Y` or `N` | Signal field is corrupted |
 | SG2 | Gujarat/Gujarati valid | Value is non-empty | Gujarat field is missing |
 
 ---
@@ -309,7 +315,7 @@ This is fast (no Chrome, no sub-agent, no delay) and preserves the original dime
 3. **End-of-pipeline:** After the orchestrator finishes all candidates, one final cleanup pass.
 4. **Standalone:** The user can run this directly by asking for a cleanup.
 
-In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRUE` or `DUPLICATE` (see "Completion Requirement" above).
+In ALL cases, the agent must loop until every non-null row has `Cleaned?` = `TRUE`, `DUPLICATE`, or `ENRICHMENT_FAILED` (see "Completion Requirement" above).
 
 ---
 

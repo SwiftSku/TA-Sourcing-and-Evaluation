@@ -94,7 +94,6 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 | Majority of career in non-tech traditional industry      | Banking (ICICI, HDFC, SBI, IndusInd, Paytm Bank), real estate CRM, pharma KAM (GSK, Cipla, AstraZeneca)                                                     |
 | Renewals Manager (primary/only title)                    | Title signals churn-prevention ops, not relationship management; flag unless backed by strong CS/AM titles elsewhere                                        |
 | No clear Gujarat/Gujarati connection                     | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count                                         |
-| Zero SaaS exposure across entire career                  | No tech company, product, or platform anywhere                                                                                                              |
 
 ### Step 2b: Full Profile Scroll (MANDATORY for LinkedIn profiles)
 
@@ -115,24 +114,24 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 #### Dimension 1: Title Match — CS / AM (weight: 5×)
 
-| Score | Criteria |
-|---|---|
-| 3 | Account Manager, Customer Success Manager, Client Success, CSM, Sr. CSM, Sr. AM — primary title |
-| 2 | Business Development with account management flavor; or Customer Experience, Solutions Consultant |
-| 1 | Sales with some account management flavor |
-| 0 | Pure sales, engineering, operations, or support only |
+| Score | Criteria                                                                                          |
+| ----- | ------------------------------------------------------------------------------------------------- |
+| 3     | Account Manager, Customer Success Manager, Client Success, CSM, Sr. CSM, Sr. AM — primary title   |
+| 2     | Business Development with account management flavor; or Customer Experience, Solutions Consultant |
+| 1     | Sales with some account management flavor                                                         |
+| 0     | Pure sales, engineering, operations, or support only                                              |
 
 > **Note:** Business Development titles can score a 2 if the role clearly involved retention/expansion of existing accounts, but never a 3. Renewals Manager as the sole title is an auto-disqualifier (see Step 2).
 
 #### Dimension 2: SaaS / Software Experience (weight: 2.5×)
 
-| Score | Criteria |
-|---|---|
-| 4 | US HQ SaaS or software company — if verifiably US-headquartered AND sells software/SaaS, score 4. The named companies below are examples, NOT an exhaustive list. |
-| 3 | Non-US SaaS or software company on the validated list below |
-| 2 | Clear SaaS or software company, not on validated list, AND not verifiably US-HQ |
-| 1 | Mixed — some SaaS/software, some traditional |
-| 0 | Minimal SaaS/software exposure (passes zero-SaaS disqualifier but barely) |
+| Score | Criteria                                                                                                                                                          |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4     | US HQ SaaS or software company — if verifiably US-headquartered AND sells software/SaaS, score 4. The named companies below are examples, NOT an exhaustive list. |
+| 3     | Non-US SaaS or software company on the validated list below                                                                                                       |
+| 2     | Clear SaaS or software company, not on validated list, AND not verifiably US-HQ                                                                                   |
+| 1     | Mixed — some SaaS/software, some traditional                                                                                                                      |
+| 0     | No meaningful SaaS/software exposure — entirely non-tech or traditional industry employers                                                                         |
 
 **Validated SaaS/software companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
 
@@ -149,12 +148,12 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 #### Dimension 4: Tenure & Stability (weight: 1.3×)
 
-| Score | Criteria |
-|---|---|
-| 3 | 4+ consecutive years in a single CS/AM role |
-| 2 | 2–4 years in CS/AM, or multiple CS/AM roles totaling 5+ years |
-| 1 | 1–2 years in CS/AM roles |
-| 0 | Under 1 year of CS/AM experience |
+| Score | Criteria                                                      |
+| ----- | ------------------------------------------------------------- |
+| 3     | 4+ consecutive years in a single CS/AM role                   |
+| 2     | 2–4 years in CS/AM, or multiple CS/AM roles totaling 5+ years |
+| 1     | 1–2 years in CS/AM roles                                      |
+| 0     | Under 1 year of CS/AM experience                              |
 
 #### Dimension 5: Education & Credentials (weight: 0.2×)
 
@@ -173,22 +172,22 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 #### Dimension 6: KAM Performance Evidence (BONUS, weight: 2.5×)
 
-| Score | Criteria |
-|---|---|
-| 3 | Explicit quantified metrics: upsell %, cross-sell revenue, retention rate, expansion ARR, feature adoption %, NPS, or similar |
-| 2 | Mentions upselling, cross-selling, account expansion, or retention work — but no hard numbers |
-| 1 | Implied account management responsibilities, no growth/retention evidence |
-| 0 | No evidence of account growth or retention work |
+| Score | Criteria                                                                                                                      |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 3     | Explicit quantified metrics: upsell %, cross-sell revenue, retention rate, expansion ARR, feature adoption %, NPS, or similar |
+| 2     | Mentions upselling, cross-selling, account expansion, or retention work — but no hard numbers                                 |
+| 1     | Implied account management responsibilities, no growth/retention evidence                                                     |
+| 0     | No evidence of account growth or retention work                                                                               |
 
 #### Dimension 7: Startup / VC-Backed Experience (BONUS, weight: 2×)
 
-| Score | Criteria |
-|---|---|
-| 4 | Current or recent role at a VC-backed, YC, or Series-funded startup |
-| 3 | Previous VC-backed/YC/Series-funded startup experience, but not current role |
-| 2 | Mixed — some startup/high-growth + some enterprise |
-| 1 | Primarily large enterprise, minor startup exposure |
-| 0 | Entire career at large enterprise / no startup exposure |
+| Score | Criteria                                                                     |
+| ----- | ---------------------------------------------------------------------------- |
+| 4     | Current or recent role at a VC-backed, YC, or Series-funded startup          |
+| 3     | Previous VC-backed/YC/Series-funded startup experience, but not current role |
+| 2     | Mixed — some startup/high-growth + some enterprise                           |
+| 1     | Primarily large enterprise, minor startup exposure                           |
+| 0     | Entire career at large enterprise / no startup exposure                      |
 
 #### Dimension 8: Location Fit — Gujarat (BONUS, weight: 1×)
 
