@@ -78,7 +78,7 @@ _(Add verified profile page behaviors here — e.g., sections that lazy-load, el
 
 ## Rate Limits & Throttling
 
-_(Add verified rate limit behaviors here — e.g., how many profiles can be viewed per session, what throttling looks like, cool-down periods)_
+- **2026-03-27: HTTP 529 "Site is Overloaded" — LinkedIn's rate-limiting response.** This means LinkedIn has detected too many requests from the session and is temporarily blocking access. When you encounter a 529 error, wait 15 minutes and retry the same request. Retry up to 5 times (with a 15-minute wait before each attempt). If the request still fails after 5 retries, abort the current candidate and report the error to the parent orchestrator.
 
 ---
 

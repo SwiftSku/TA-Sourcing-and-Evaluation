@@ -20,37 +20,31 @@ Read this entire file first. Then execute every phase below, in order. Do NOT sk
 
 ---
 
-## Phase 0: Load the Full Architecture
+## Phase 0: Discover and Load the Full Architecture
 
-Read ALL of the following files in their entirety before beginning any analysis. You need the complete picture before you can spot inconsistencies.
+**Do NOT rely on a hardcoded file list.** Files get added, renamed, and removed. Discover what's active dynamically.
 
-**Active agent instruction files (read fully):**
-1. `1_Pipeline_Starter.md` — entry point, JD selection
-2. `2_Pipeline_Orchestrator.md` — parent orchestrator, sub-agent spawning, quality gates
-3. `URL_Extractor.md` — Chrome sub-agent for LIR URL extraction
-4. `Output_Cleanup.md` — validation suite, scoring tests, enrichment, dedup
-5. `CE_Spawn_Template.md` — canonical CE spawn template
-6. `Save_To_LIR.md` — manual LIR save agent
+### 0a: Scan the directory
 
-**JD files (read fully — these are the source of truth for all role-specific values):**
-7. `JD--Acct_Mgr.md` — AM role: rubric, weights, column schema, Pipeline Config
-8. `JD--Recruiting_Coord.md` — RC role: rubric, weights, column schema, Pipeline Config
+List all files in the TA-ACM root directory and `Target_Companies/` subdirectory. Classify each file into one of these categories:
 
-**Reference files (read fully):**
-9. `REF--Anti_Detection.md` — anti-detection rules
-10. `REF--LIR_Interface_Learnings.md` — LIR interface quirks
-11. `Z_Pipeline_Error_Log.md` — error log format and history
+| Category | How to identify | Action |
+|----------|----------------|--------|
+| **Agent instruction files** | Root-level `.md` files that define agent behavior (look for headers like "Purpose", "Process", "Step 1", agent spawn instructions) | Read fully |
+| **JD files** | Files matching `JD--*.md` — these are the source of truth for role-specific rubrics, weights, column schemas, and Pipeline Config | Read fully |
+| **Reference files** | Files matching `REF--*.md` — shared reference docs read by multiple agents | Read fully |
+| **Output xlsx files** | Files matching `_OUTPUT--*.xlsx` — candidate scoring data | Read headers + 5 sample data rows only (do NOT load all rows) |
+| **Support files** | `.json` files, `Target_Companies/*.md`, spawn templates, error logs | Read fully |
+| **Meta/tooling files** | `_Doctor.md` (this file), `_Agent_Flowchart.svg`, `render_flowchart_svg.py` | Note existence, read as needed for Phase 6 |
+| **Ignore** | `Z_Old_Chat_Logs/`, `ZZ_Archived_Not_Needed/`, `.obsidian/`, `.git/`, `.DS_Store`, `.gitignore`, `.gitattributes`, `.gsheet`/`.gdoc` shortcut files, `Z_Chat_Log--*.md` (chat transcripts) | Skip entirely |
 
-**Output files (read headers + sample rows only — do NOT read all 600+ rows):**
-12. `_OUTPUT--Acct_Mgr.xlsx` — AM output, read header row + 5 sample data rows
-13. `_OUTPUT--Recruiting_Coord.xlsx` — RC output, read header row + 5 sample data rows
+### 0b: Read everything in the active set
 
-**Support files:**
-14. `Target_Companies/Company_Research_Agent.md`
-15. `Target_Companies/Company_Research_Specs.md`
-16. `Z_Search_Cache.json`
+Read every file classified as active above, in any order. You need the complete picture before you can spot inconsistencies. Note the total number of active files you loaded — report this in the final summary.
 
-**DO NOT read:** `Z_Old_Chat_Logs/`, `ZZ_Archived_Not_Needed/`, `.obsidian/`, `Z_Chat_Log--Agent_Maker.md`, `.DS_Store`, `.git/`. These are not active pipeline files.
+### 0c: Identify all JD files and their roles
+
+From the JD files, extract each role's name, output file, column schema, and scoring formula. These are the anchors everything else gets validated against. The number of roles is not fixed — new JD files can be added at any time.
 
 ---
 
@@ -60,7 +54,7 @@ This is the most critical phase. Schema mismatches between JD files and the agen
 
 ### 1a: Column Schema Cross-Reference
 
-For EACH JD file (AM and RC), extract:
+For EACH JD file discovered in Phase 0, extract:
 - Total column count
 - Column number → name mapping
 - Which columns are dimension scores (and their max values)
@@ -69,26 +63,23 @@ For EACH JD file (AM and RC), extract:
 - Which columns are computed scores (Raw_Score, Max_Score, Percentage, Tier, Verdict)
 - The Cleaned? column position
 
-Then verify that EVERY file that references column positions is consistent:
+Then verify that EVERY agent file that references column positions is consistent with EVERY JD file. For each agent file, check:
 
-| Check | What to compare |
-|-------|----------------|
-| Output_Cleanup.md S1 | Does it read col count from JD, or hardcode it? |
-| Output_Cleanup.md S2 | Do the referenced columns exist in both schemas? |
-| Output_Cleanup.md I4 | Does Source column reference match AM (col 5) and correctly skip for RC (no Source col)? |
-| Output_Cleanup.md T1 | Does Date Added column reference match AM (col 6) and RC (col 5)? |
-| Output_Cleanup.md SC tests | Do Raw_Score, Max_Score, Percentage, Tier, Verdict column refs resolve correctly for both roles? |
-| Output_Cleanup.md SC-RECALC | Does it know which roles have Base_Score + bonus columns vs. just Raw_Score? |
-| Output_Cleanup.md dedup | Can it find the Percentage column for both roles? |
-| Output_Cleanup.md SG tests | Hindi_Signal exists for AM only. Gujarat exists for both. Column positions correct? |
-| CE_Spawn_Template.md | Does SOURCE_NAME handling account for RC having no Source column? |
-| Output xlsx headers | Do actual xlsx column headers match the JD's Column order block exactly? |
+- **Column count references** — does the agent read col count from the JD, or hardcode it?
+- **Named column references** (e.g., "column 5 is Source") — do they resolve correctly for every JD schema? Pay special attention to columns that exist in some roles but not others (e.g., Source, Hindi_Signal, Base_Score, bonus columns).
+- **Date Added column** — does the agent reference the correct column number for each role?
+- **Score columns** (Raw_Score, Max_Score, Percentage, Tier, Verdict) — do they resolve correctly? Some roles have extra columns before these (e.g., Base_Score, bonus columns).
+- **SC-RECALC column writes** — does the agent know which roles have separate Base_Score + bonus columns vs. just Raw_Score?
+- **Dedup** — can the agent find the Percentage column dynamically for each role?
+- **Signal columns** — which signal columns exist per role? Are the tests correctly conditional?
+- **CE_Spawn_Template.md** — does SOURCE_NAME handling work for roles without a Source column?
+- **Output xlsx headers** — do actual xlsx column headers match each JD's Column order block exactly?
 
 **How to check xlsx headers:** Use openpyxl to read row 1 of each output file. Compare each header cell against the JD's column order block. Flag any mismatch in name, order, or count.
 
 ### 1b: Weight & Formula Cross-Reference
 
-For EACH JD file, extract from Step 4:
+For EACH JD file discovered in Phase 0, extract from Step 4:
 - The exact formula (which dims × which weights)
 - The `Max possible` line and its value
 - Whether bonuses are in the denominator or additive
@@ -102,7 +93,7 @@ Then verify:
 
 ### 1c: Auto_DQ & Signal Column Cross-Reference
 
-For EACH JD file:
+For EACH JD file discovered in Phase 0:
 - What column is Auto_DQ?
 - What column is DQ_Reason?
 - What column is Gujarat/Gujarati?
@@ -158,18 +149,19 @@ Think like an adversarial QA engineer. For each agent file, ask: "What input wou
 
 ### 3a: Simulate Execution Against Both Roles
 
-For Output_Cleanup.md specifically (since it's the most complex), mentally execute EVERY test and EVERY step against both AM and RC schemas. For each line, write out:
+For Output_Cleanup.md specifically (since it's the most complex), mentally execute EVERY test and EVERY step against EACH JD file's schema. For each line, write out:
 - What the Sonnet agent would parse
 - What it would compute
 - Whether it would break
 
 Pay special attention to:
-- Column number arithmetic (AM and RC have different offsets for everything after col 4/5)
-- Score computation with bonuses in/out of denominator
-- Tier derivation for percentages >100%
+- Column number arithmetic — each role may have different offsets for everything after the shared identity columns
+- Score computation with bonuses in vs. out of denominator (varies by role)
+- Tier derivation for percentages >100% (possible when bonuses are additive/excluded from denominator)
 - I2b enrichment flow vs re-eval flow
-- Dedup when one role has Source column and the other doesn't
+- Dedup when some roles have a Source column and others don't
 - Auto_DQ row handling through the full validation suite
+- Any instruction that names a specific column number — does it hold for EVERY role?
 
 ### 3b: Data Integrity Edge Cases
 
@@ -193,12 +185,12 @@ Pay special attention to:
 
 ## Phase 4: Output File Health Check
 
-Use Python (openpyxl) to programmatically verify both output xlsx files.
+Use Python (openpyxl) to programmatically verify EVERY output xlsx file found in Phase 0. For each output file, identify its corresponding JD file (via the `output_file` field in the JD's Pipeline Config block) and use that JD's schema as ground truth.
 
 ### 4a: Structural Health
 
 ```python
-# For each output file:
+# For each output file + its JD:
 # 1. Read header row — compare to JD column order
 # 2. Count total rows, count by Cleaned? value (TRUE/DUPLICATE/ENRICHMENT_FAILED/empty)
 # 3. Check for blank rows in the middle of data
@@ -210,14 +202,15 @@ Use Python (openpyxl) to programmatically verify both output xlsx files.
 
 ```python
 # For each scored (non-DQ) row:
-# 1. Re-derive Raw_Score from dimension scores × current weights
-# 2. Compare to stored Raw_Score (±0.2 tolerance)
-# 3. Re-derive Percentage from Raw_Score / Max_Score
-# 4. Compare to stored Percentage
-# 5. Re-derive Tier from Percentage
-# 6. Compare to stored Tier
-# 7. Check Tier-Verdict consistency
-# 8. Verify Max_Score matches current JD formula
+# 1. Parse the JD's weights and Max possible value
+# 2. Re-derive Raw_Score from dimension scores × current weights
+# 3. Compare to stored Raw_Score (±0.2 tolerance)
+# 4. Re-derive Percentage from Raw_Score / Max_Score
+# 5. Compare to stored Percentage
+# 6. Re-derive Tier from Percentage (using A=≥80, B=65-79.99, C=50-64.99, D=35-49.99, F=<35)
+# 7. Compare to stored Tier
+# 8. Check Tier-Verdict consistency
+# 9. Verify Max_Score matches current JD formula
 ```
 
 ### 4c: Identity Health
@@ -236,27 +229,29 @@ Use Python (openpyxl) to programmatically verify both output xlsx files.
 
 ## Phase 5: Consistency Across Roles
 
-Some rules must be the same across all JD files. Others must be different. Verify:
+Compare ALL JD files discovered in Phase 0. Some rules must be the same across every role. Others must be different. Verify both.
 
-### Must Be Identical Across Roles:
+### Must Be Identical Across All Roles:
 - Column 1-4 meaning (Candidate, Greenhouse URL, Public LI URL, LIR URL)
 - Auto_DQ = Yes → all scores 0, Tier F, Verdict Hard No
 - Tier thresholds (A=≥80, B=65-79.99, C=50-64.99, D=35-49.99, F=<35)
 - Verdict mapping (A→Strong Yes, B→Yes, C→Maybe, D→No, F→Hard No)
 - Cleaned? column is always the LAST column
-- Gujarat/Gujarati column exists in both (since SwiftSku requires Gujarat connection)
+- Gujarat/Gujarati column exists (since SwiftSku requires Gujarat connection)
 - openpyxl write pattern (backward-walk to find last row)
-- Anti-detection rules (same REF file)
+- Anti-detection rules (same REF file referenced)
+- Timestamp format and timezone (US Eastern)
 
-### Must Be Different Per Role (verify they actually differ correctly):
-- Column count (AM=37, RC=40)
-- Dimension names, weights, max scores
-- Whether Source column exists (AM yes, RC no)
-- Whether Base_Score + bonus columns exist (RC yes, AM no)
-- Max possible value (AM=55.0, RC=52.8)
-- Whether Percentage can exceed 100% (RC yes due to additive bonuses, AM no)
-- Hindi_Signal column (AM only)
+### Expected to Vary Per Role (verify each role defines these and they're internally consistent):
+- Total column count
+- Dimension names, weights, max raw scores
+- Which optional columns exist (Source, Hindi_Signal, Base_Score, individual bonus columns, etc.)
+- Max possible value and whether bonuses are included in the denominator
+- Whether Percentage can exceed 100%
 - DQ criteria (role-specific industries/patterns)
+- Pipeline Config values (title filters, negative keywords, tier 1 companies, refinement patterns)
+
+For each difference found, verify that every agent file that touches that field handles the variation correctly (either dynamically parsing from the JD, or explicitly branching with "if role has X").
 
 ---
 
@@ -287,9 +282,10 @@ After completing ALL phases, produce a single structured report:
 # Doctor Report — {date}
 
 ## Summary
-- Files audited: {N}
+- Files audited: {N} (list them)
+- JD files / roles found: {N} (list them)
 - Issues found: {N} (Critical: {N}, High: {N}, Medium: {N}, Low: {N})
-- Output file health: AM {status}, RC {status}
+- Output file health: {role_name} {status} for each role
 
 ## Critical Issues (would corrupt data or break pipeline)
 {numbered list with file, line, description, and fix}
@@ -304,15 +300,16 @@ After completing ALL phases, produce a single structured report:
 {numbered list}
 
 ## Output File Audit
-### AM: _OUTPUT--Acct_Mgr.xlsx
+(one section per output file found — dynamically generated, not hardcoded)
+
+### {role_name}: {output_filename}
 - Total rows: {N}
 - Tier distribution: A={N} B={N} C={N} D={N} F={N}
 - Math errors found: {N}
 - Duplicate candidates: {N}
 - Uncleaned rows: {N}
 
-### RC: _OUTPUT--Recruiting_Coord.xlsx
-- (same structure)
+(repeat for each output file)
 
 ## Clean Bill of Health
 {list of things that were checked and ARE correct — so the human knows you actually verified them, not just skipped them}
