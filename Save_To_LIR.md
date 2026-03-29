@@ -58,7 +58,7 @@ Only after BOTH confirmations proceed to execution.
 |-------|---------|-------------|
 | `THRESHOLD` | `A` (Tier = A, i.e., ≥80%) | Minimum tier or percentage to include. User can override: "save B and above", "save ≥85%", etc. |
 | `LIR_PROJECT` | None — must be provided by user | The LinkedIn Recruiter project name or URL to save candidates into |
-| `CSV_PATH` | `[output file from JD config]` in this directory | Path to the scored output xlsx file |
+| `OUTPUT_PATH` | `[output file from JD config]` in this directory | Path to the scored output xlsx file |
 | `EXCLUDE_ALREADY_SAVED` | `true` | Skip candidates already marked as saved (see Tracking below) |
 
 ---
@@ -150,9 +150,9 @@ For each candidate in the save list:
 
 ### Step 5: Update Output File Tracking
 
-After all candidates are processed, update the output xlsx. Add a note to the candidate's `Dim8_Note` column (or whichever appropriate text field) appending: `[Saved to LIR project: {project_name} on {date}]`
+After all candidates are processed, update the output xlsx. Add a note to the candidate's last dimension note column (read the active JD file's Column order block to find it — e.g., AM uses `Dim8_Note`, RC uses `Bonus2_Note`) appending: `[Saved to LIR project: {project_name} on {date}]`
 
-⚠️ Do NOT add new columns to the output file — the column structure is locked (AM=37, RC=40).
+⚠️ Do NOT add new columns to the output file — the column structure is defined by the active JD file's Column order block. Read the JD to determine the expected column count. Never hardcode column numbers.
 
 ---
 

@@ -456,3 +456,43 @@ CLEANUP | Checked: 512 | Valid: 502 | Rescored: 0 | Re-evaluated: 0 | Deduped: 0
 
 ### Summary
 CLEANUP | Checked: 542 | Valid: 525 | Rescored: 6 | Re-evaluated: 0 | Deduped: 0 | URLs filled: 1 | Names fixed: 0 | Stuck: 3 | Enrichment_Failed: 1 | Uncleaned: 3
+
+---
+
+## 2026-03-28 — Output Cleanup Scheduled Task Run (RC Pipeline)
+
+**Timestamp:** 2026-03-28 12:24:44 ET
+**Phase:** Output Cleanup (scheduled task — rc-chrome-cleanup)
+**Agent:** Cleanup Agent (automated scheduled task)
+
+### Context
+
+Scheduled task was queued when 13 rows were uncleaned in `_OUTPUT--Recruiting_Coord.xlsx`. By the time this pass executed, 12 of those 13 rows had already been marked TRUE by a concurrent cleanup process (likely a prior scheduled run). Only 1 row remained uncleaned.
+
+### STUCK: Row 201 — Himadree Patel (1st failure)
+
+**Row:** 201
+**Candidate:** Himadree Patel
+**Issue:** Row is completely shifted — all data in wrong columns. No LIR URL, Public LI URL, or any extractable identifier found anywhere in the row.
+
+**Column state at time of check:**
+- Col 1: "Himadree Patel" (name — correct)
+- Col 2: "F" (Tier value — shifted)
+- Col 3: "13.8%" (Percentage — shifted)
+- Col 4: "Hard No" (Verdict — shifted)
+- Col 5: "DataVizz" (Company — shifted)
+- Col 6–8: Scoring notes / concern text (shifted)
+- Col 9: "LIR-Coord-Test3-03-27-26" (source/batch identifier — shifted)
+- Col 10: "2026-03-27T03:54:44.327292" (timestamp in wrong format — shifted)
+- Cols 11–40: All None
+
+**Root cause:** CE sub-agent wrote the row with a different column order — evaluation text (notes, tier, verdict, %, company) populated early columns instead of URL columns. This is likely a test/pilot row from "LIR-Coord-Test3-03-27-26" batch where the CE used a different output format.
+
+**Action per Step 5:** No URL extractable → row left as-is, Cleaned? remains empty. This is the **first** failure (no prior log entry for this candidate) — do NOT mark ENRICHMENT_FAILED yet.
+
+**Resolution needed:** Manual intervention by Dan. Options:
+1. Find the LIR profile URL for Himadree Patel from DataVizz separately and add it to Col 4, then re-run cleanup
+2. Delete the row manually (only safe if this candidate can be found again via LIR search — check if "hide previously viewed" would surface her again given the LIR-Coord-Test3 batch identifier)
+
+### Summary
+CLEANUP | Checked: 1 | Valid: 0 | Rescored: 0 | Re-evaluated: 0 | Deduped: 0 | URLs filled: 0 | Names fixed: 0 | Stuck: 1 | Enrichment_Failed: 0 | Uncleaned: 1

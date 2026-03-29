@@ -30,7 +30,7 @@ Write the result row to:
 After writing the row, perform idle behavior on the profile page for DELAY_SECONDS per REF--Anti_Detection.md §3, then navigate the same tab to NEXT_URL (or close if empty).
 
 Return ONLY this summary line:
-{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company} | {DQ_Reason or ""}
 ```
 
 ---

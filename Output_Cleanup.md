@@ -232,9 +232,9 @@ Every unchecked row must pass ALL of the following tests. If any test fails, the
 **How to parse weights and current_max:**
 
 1. Read the active JD file's **Step 4: Calculate Score** formula block. This contains the exact formula, weights, and the `Max possible` value.
-2. **Read `current_max` directly from the `Max possible` line** — do NOT compute it yourself. Each role defines its own denominator differently (AM includes bonuses in the denominator: max=55.0; RC excludes bonuses: max=52.8). The JD file is the single source of truth for this value.
+2. **Read `current_max` directly from the `Max possible` line** — do NOT compute it yourself. Each role defines its own denominator differently (AM includes bonuses in the denominator: max=55.0; RC excludes bonuses: max=53.4). The JD file is the single source of truth for this value.
 3. Also read the **Rubric Summary** table (near the bottom) to get each dimension's name, weight, and max raw score. Use this for dimension range validation.
-4. Extract the **Percentage formula** from Step 4 — specifically what the denominator is (e.g., `/55.0` for AM, `/52.8` for RC). Use this same denominator in SC-RECALC.
+4. Extract the **Percentage formula** from Step 4 — specifically what the denominator is (e.g., `/55.0` for AM, `/53.4` for RC). Use this same denominator in SC-RECALC.
 5. The number of dimensions, their names, weights, max scores, and whether bonuses are in the denominator all vary by role — parse everything dynamically, never hardcode.
 
 | # | Test | Pass Criteria | What Failure Means |

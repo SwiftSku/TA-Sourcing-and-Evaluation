@@ -1,24 +1,24 @@
 {
   "status": "processing",
-  "source": "https://www.linkedin.com/talent/hire/1894950466/discover/recruiterSearch?searchContextId=312cab47-3c39-4273-839d-0cf94cae521c&searchHistoryId=20947970570&searchRequestId=749d83a2-b005-4d82-a255-6d122443d4a2&start=0",
-  "started_at": "2026-03-25 20:24:13",
+  "source": "LIR-Coord-Test5-03-28-26 — saved search + Gujarat recruiter titles search",
+  "started_at": "2026-03-28 18:07:38",
   "top5_summary": [
-    {"name": "Dhara Bharadiya", "tier": "B", "score_pct": "75.0%", "verdict": "Yes", "company": "eClinicalWorks", "wrote_to_file": true},
-    {"name": "Aman Jobanputra", "tier": "B", "score_pct": "76.3%", "verdict": "Yes", "company": "Adani Group", "wrote_to_file": true},
-    {"name": "Shephali Srivastava", "tier": "B", "score_pct": "74.4%", "verdict": "Yes", "company": "Nividous Software Solutions", "wrote_to_file": true},
-    {"name": "Krupal Panchal", "tier": "C", "score_pct": "57.2%", "verdict": "Maybe", "company": "eClinicalWorks", "wrote_to_file": true},
-    {"name": "Jennifer M.", "tier": "C", "score_pct": "59.3%", "verdict": "Maybe", "company": "SI2 Technologies Pvt Ltd", "wrote_to_file": true}
+    {"name": "Subhro Bose", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Qatar Airways", "raw_score": "0", "wrote_to_file": true},
+    {"name": "Sunpreet Aulakh", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Horizon Recruitment Services", "raw_score": "0", "wrote_to_file": true},
+    {"name": "Harsh Kumar Sharma", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "IMS Group", "raw_score": "0", "wrote_to_file": true},
+    {"name": "Dipak Badgujar", "tier": "C", "score_pct": "56.93%", "verdict": "Maybe", "company": "ZURU", "raw_score": "30.4", "wrote_to_file": true},
+    {"name": "Suvasmita Rout", "tier": "D", "score_pct": "49.4%", "verdict": "No", "company": "ARCHER Transnational Systems", "raw_score": "26.4", "wrote_to_file": true}
   ],
   "a_rated_count": 0,
-  "total_candidates_in_search": "unknown",
+  "total_candidates_in_search": 80,
   "run_parameters": {
-    "a_rated_target": 1,
-    "hard_cap": 60
+    "b_rated_target": 15,
+    "hard_cap": 300
   },
   "run_counters": {
-    "run_a_rated_count": 0,
-    "run_total_count": 5
+    "run_b_plus_count": 0,
+    "run_total_count": 6
   },
   "a_rated_cache": [],
-  "notes": "top5_summary is the canonical record of initial scores — if a row is corrupted, use these scores instead of re-evaluating (re-eval introduces scoring variance)."
+  "notes": "top5_summary is the canonical record of initial scores. Pivot rule: change filters after every non-B. Currently on Search 2 (Gujarat + recruiter titles, 79 results)."
 }

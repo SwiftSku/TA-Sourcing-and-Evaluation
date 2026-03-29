@@ -222,10 +222,10 @@ Percentage = Raw Score / 55.0 × 100 (include the `%` suffix when writing, e.g.,
 
 | Score % | Tier | Verdict                              |
 | ------- | ---- | ------------------------------------ |
-| 80–100% | A    | **Strong Yes** — advance immediately |
-| 65–79%  | B    | **Yes** — worth a closer look        |
-| 50–64%  | C    | **Maybe** — flag for Dan to decide   |
-| 35–49%  | D    | **No** — doesn't meet bar            |
+| ≥80%    | A    | **Strong Yes** — advance immediately |
+| 65–79.99%  | B    | **Yes** — worth a closer look     |
+| 50–64.99%  | C    | **Maybe** — flag for Dan to decide |
+| 35–49.99%  | D    | **No** — doesn't meet bar         |
 | <35%    | F    | **Hard No** — skip                   |
 
 ### Step 6: Write to Output File
@@ -371,7 +371,7 @@ The anti-detection delay is YOUR responsibility, not the parent's. After evaluat
 Return ONLY this single line to the parent agent:
 
 ```
-{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company}
+{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company} | {DQ_Reason or ""}
 ```
 
 Nothing else. No explanation. No profile details. The parent agent only needs this line.

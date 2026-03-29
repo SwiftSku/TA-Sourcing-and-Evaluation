@@ -24,7 +24,7 @@ The parent passes ALL of these in the spawn template:
 | `PAGE` | Page number to navigate to (1-indexed) |
 | `START_POS` | Position on page to start from (1-indexed, e.g., 6 means skip first 5 on this page) |
 | `LIR_LEARNINGS_PATH` | Full path to `REF--LIR_Interface_Learnings.md` |
-| `CSV_PATH` | Full path to the output xlsx file from JD config (`output_file`) |
+| `OUTPUT_PATH` | Full path to the output xlsx file from JD config (`output_file`) |
 | `SKIP_NAMES` | Comma-separated list of candidate names already processed this run (for dedup) |
 
 ---
@@ -86,7 +86,7 @@ After filter verification passes, read the **total result count** displayed at t
 
 ### Step 5: Check Output File for Duplicates
 
-Read the output file at `CSV_PATH`. Build a list of all candidate names already in the file (Column 1 — "Candidate Name"). Combine this with the `SKIP_NAMES` list from the parent.
+Read the output file at `OUTPUT_PATH`. Build a list of all candidate names already in the file (Column 1 — "Candidate Name"). Combine this with the `SKIP_NAMES` list from the parent.
 
 ### Step 5.5: Pre-Filter on Search Card Signals
 

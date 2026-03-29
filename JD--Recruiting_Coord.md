@@ -225,10 +225,10 @@ Percentage = Raw Score / 53.4 × 100 (include the `%` suffix — can exceed 100%
 
 | Score % | Tier | Verdict |
 |---|---|---|
-| 80-100% | A | **Strong Yes** — advance immediately |
-| 65-79% | B | **Yes** — worth a closer look |
-| 50-64% | C | **Maybe** — flag for Dan to decide |
-| 35-49% | D | **No** — doesn't meet bar |
+| ≥80% | A | **Strong Yes** — advance immediately |
+| 65–79.99% | B | **Yes** — worth a closer look |
+| 50–64.99% | C | **Maybe** — flag for Dan to decide |
+| 35–49.99% | D | **No** — doesn't meet bar |
 | <35% | F | **Hard No** — skip |
 
 ### Step 6: Write to Output File
@@ -485,3 +485,10 @@ Base max score: **53.4** (before bonuses).
 - **Key learning:** Expanding from Ahmedabad → all Gujarat did NOT improve quality. The Gujarat talent pool for recruiting coordinators is dominated by IT services/staffing firms (Simform, Stridely, Mindiance, Ecosmob, JoulestoWatts, Horizontal Talent, Ancile Digital, LanceSoft). These companies hire recruiters but are NOT SaaS product companies, triggering auto-DQ every time. The "(Software OR SaaS)" keyword filter matches profiles that mention SaaS tangentially but have never worked at a SaaS product company.
 - **The 3 B-rated candidates remain the ONLY viable finds across all 60 evaluations:** Dhara Bharadiya/eClinicalWorks (75%), Aman Jobanputra/Adani (76.3%), Shephali Srivastava/Nividous (74.4%). All found in the first 20 candidates from the original user project search.
 - **Conclusion:** The Recruiting Coordinator role in Gujarat on LIR is effectively exhausted. The SaaS + Gujarat + recruiting coordinator intersection is near-zero after filtering previously viewed profiles. Recommend: (1) pivot to non-LIR sources (Naukri, Indeed, referrals), (2) consider remote/relocation candidates from Bangalore/Pune/Mumbai SaaS hubs, (3) relax SaaS auto-DQ to a scored penalty instead of hard disqualification, or (4) redefine the role to accept IT services recruiting experience with SaaS training on the job.
+
+### 2026-03-28 — LIR-Coord-Test4-03-28-26 (FINAL @ 299, hard cap 300)
+- **Final results across all runs:** 299 evaluated (Search 3 exhausted at 80/80, 1 slot short of 300 hard cap). Tier distribution: 5 A (1.7%), 16 B (5.4%), 29 C (9.7%), 52 D (17.4%), 10 DQ/F (3.3%), 186 F (62.2%), 1 Unable to Evaluate. **A+B total: 21 (target 10+ exceeded).**
+- **Search 3 strategy:** Keywords `Greenhouse OR Lever OR Ashby OR "high volume" OR "phone screens"` with Gujarat location + mandatory filters. 80 results. This search found 2 notable candidates (Divya Karmakar A/80.9% at Lendingkart fintech, Urvish Parmar B/76.8% at Rupeek fintech) but was catastrophically polluted with staffing agencies from page 2 onward: IMS People Possible/IMS Group dominated pages 3-4 (8+ DQs), plus KTRIAN, Recruit Kings, TechMorph Solution (bench sales), Dangi Recruitment, LanceSoft, and various other agencies.
+- **Key learning — ATS keyword searches attract agency recruiters:** Searching for ATS names (Greenhouse, Lever, Ashby) in Gujarat pulls in staffing agency recruiters who list these tools because they submit candidates INTO client ATS systems. The keyword matches the wrong population. Future runs should combine ATS keywords with negative company filters (e.g., NOT "IMS" NOT "staffing" NOT "consulting") or use the Industries filter to exclude "Staffing and Recruiting."
+- **DQ rate this run was extreme:** ~65%+ of Search 3 candidates were auto-DQ for pure agency staffing. The Ahmedabad/Gujarat recruiting labor market is heavily dominated by staffing agencies, RPO providers, and IT body shops. In-house recruiting coordinators at SaaS/product companies remain extremely rare in this geography.
+- **Top candidates across all runs remain:** Divya Karmakar/Lendingkart (A, 80.9%), plus the original B-rated finds from Test2 (Dhara Bharadiya/eClinicalWorks 75%, Aman Jobanputra/Adani 76.3%, Shephali Srivastava/Nividous 74.4%, and others). The 21 A+B candidates provide a solid pipeline for outreach.

@@ -108,7 +108,7 @@ Extract candidates from this search:
 - PAGE: {page_number}
 - START_POS: {start_pos}
 - LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
-- CSV_PATH: [FULL PATH to [output file from JD config]]
+- OUTPUT_PATH: [FULL PATH to [output file from JD config]]
 - SKIP_NAMES: {comma_separated_names}
 
 Return ONLY: PAGE X | POS Y | N candidates, followed by numbered list of Name | URL.
@@ -315,7 +315,7 @@ Fill in parameters using these paths:
 - LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
 - ANTI_DETECTION_PATH: [FULL PATH to REF--Anti_Detection.md]
 
-Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Uncleaned: {N}
+Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Deduped: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Enrichment_Failed: {N} | Uncleaned: {N}
 ```
 
 ⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the output file). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`.
