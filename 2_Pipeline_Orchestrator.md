@@ -56,7 +56,7 @@ B-rated candidates (this run):
 
 ## Purpose
 
-This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents. It replaces the previous Search_Optimizer.md + Bulk_Processor.md two-file design.
+This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents.
 
 ⛔ **CORE PRINCIPLE: This agent NEVER touches Chrome.** ALL browser interaction happens in disposable Sonnet sub-agents (URL Extractor, Candidate Evaluator, Cleanup). This keeps the parent's context at ~35KB through candidate 60, vs. ~150KB by candidate 6 in the old architecture.
 

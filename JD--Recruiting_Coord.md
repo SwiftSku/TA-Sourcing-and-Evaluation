@@ -74,7 +74,6 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 
 | Disqualifier | Red Flag Signs |
 |---|---|
-| Majority of career in BPO / call centers | Teleperformance, Genpact, Wipro BPO, eClerx, DATALYST, transcription, Investis Digital (BPO ops) |
 | Majority of career in non-tech traditional industry | Banking (ICICI, HDFC, SBI, IndusInd, Paytm Bank), real estate, insurance ops, pharma field |
 | Majority of career in auto sales or heavy industries | Car dealerships, automotive OEM, steel, manufacturing, mining, construction, agriculture; red flag keywords: Pharmaceuticals, Purchasing, export, Professor |
 | Majority of career in accounting / bookkeeping / finance | CPA, CMA, QuickBooks, Sage, Tally, GST, TDS, bookkeeping, payroll; red flag keywords: Receivable, Taxation, Audit, Reconciliation |
@@ -91,8 +90,8 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 | Score | Criteria                                                                                                                                                                                                 |
 | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 3     | Recruiting Coordinator, Talent Acquisition Coordinator, Interview Coordinator, Scheduling Coordinator — primary title at a tech/SaaS company                                                             |
-| 2     | HR Coordinator or People Ops with significant recruiting coordination responsibilities; or Recruiting Coordinator at a non-tech company; or high-volume sourcer/recruiter with clear coordination duties |
+| 3     | Recruiting Coordinator, Talent Acquisition Coordinator, Interview Coordinator, Scheduling Coordinator — primary title clearly focused on recruiting coordination                                          |
+| 2     | HR Coordinator or People Ops with significant recruiting coordination responsibilities; or high-volume sourcer/recruiter with clear coordination duties                                                  |
 | 1     | General HR / admin role with some interview scheduling or hiring support duties                                                                                                                          |
 | 0     | No recruiting or coordination experience — pure generalist HR, payroll, compliance only                                                                                                                  |
 
@@ -109,45 +108,23 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Some indication of volume work — managed multiple reqs simultaneously, busy hiring environment |
 | 0 | No evidence of high-volume hiring experience |
 
-#### Dimension 3: Sales Hiring Experience (weight: 3×)
+#### Dimension 3: SaaS / Tech Company Experience (weight: 3×)
 
-> **Why 3× weight:** SwiftSku's core hiring need is Sales people — SDRs, AEs, Account Managers, BDRs. A recruiting coordinator who has specifically hired for Sales teams understands the candidate profile: hungry, metrics-driven, comfortable with cold outreach.
-
-| Score | Criteria |
-|---|---|
-| 3 | Explicitly recruited for Sales roles (SDRs, AEs, AMs, BDRs) at a SaaS/tech company — mentioned in title, job description, or accomplishments |
-| 2 | Recruited for Sales-adjacent roles (Customer Success, Business Development) or Sales roles at a non-tech company |
-| 1 | Some exposure to Sales hiring — supported Sales recruiting team, scheduled Sales interviews, but not primary responsibility |
-| 0 | No evidence of Sales hiring experience |
-
-#### Dimension 4: SaaS Experience (weight: 3×)
-
-> **Why 3× weight:** SwiftSku is a SaaS company selling a POS/mobile app to US convenience stores. Someone from banking or manufacturing won't understand SaaS hiring cycles, candidate profiles, product terminology, or the urgency of a startup hiring motion. This is the single strongest predictor of fit across every role.
+> **Why 3× weight:** SwiftSku is a SaaS company. A recruiter from a SaaS background understands the hiring urgency, candidate profiles, compensation benchmarks, and terminology. Someone from banking or manufacturing won't have this context.
 
 | Score | Criteria |
 |---|---|
-| 4 | US HQ SaaS company (Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, Freshworks, BrowserStack, Toast, etc.) |
-| 3 | Non-US SaaS company on the validated list below |
-| 2 | Clear SaaS/tech company, not on either validated list |
-| 1 | Mixed — some SaaS, some traditional |
-| 0 | No meaningful SaaS exposure — entirely non-tech or traditional industry employers |
+| 4 | US HQ SaaS or software company — if verifiably US-headquartered AND sells software/SaaS, score 4. The named companies below are examples, NOT an exhaustive list. |
+| 3 | Non-US SaaS or software company on the validated list below |
+| 2 | Clear SaaS or software company, not on validated list, AND not verifiably US-HQ |
+| 1 | Mixed — some SaaS/software, some traditional |
+| 0 | No meaningful SaaS/software exposure — entirely non-tech or traditional industry employers (includes BPO/call centers: Teleperformance, Genpact, Wipro BPO, eClerx, etc.) |
 
-**Validated SaaS companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo
+**Validated SaaS/software companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo, Lendingkart, Razorpay, Gupshup
 
-**US HQ SaaS (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics
+**US HQ SaaS/software (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, Freshworks, BrowserStack, Toast
 
-#### Dimension 5: Education & Credentials (weight: 0.7×)
-
-> **Why 0.7× weight:** Not a dealmaker but more than a tiebreaker. Relevant credentials (HR certifications, MBA) signal someone who's invested in the profession. Still secondary to actual recruiting experience.
-
-| Score | Criteria |
-|---|---|
-| 3 | MBA from recognized program (IIM, top-tier) + relevant undergrad, or HR certification (SHRM, PHR) |
-| 2 | MBA, relevant professional cert (PHR, talent acquisition cert), OR engineering degree (B.E./B.Tech) |
-| 1 | Bachelor's degree, relevant field (HR, Business, Psychology) |
-| 0 | No degree mentioned or unrelated degree only |
-
-#### Dimension 6: Recruiting Ops & ATS Proficiency (weight: 0.6×)
+#### Dimension 4: Recruiting Ops & ATS Proficiency (weight: 0.6×)
 
 | Score | Criteria |
 |---|---|
@@ -159,7 +136,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 > **Greenhouse = automatic 4.** If the word "Greenhouse" appears anywhere on the candidate's profile, score this dimension as 4. No other criteria needed. This is the highest possible score for this dimension.
 
-#### Dimension 7: Tenure & Stability (weight: 0.3×)
+#### Dimension 5: Tenure & Stability (weight: 0.3×)
 
 > **Why 0.3× weight:** Low but present. In the Indian tech market, shorter tenures are culturally more common than in the US. Not penalizing harshly, but watching for serial job-hopping patterns that signal someone who won't stick around through startup chaos.
 
@@ -189,6 +166,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 #### Bonus: Startup / VC-Backed Experience (additive, not in denominator)
 
+
 > SwiftSku is a YC-backed Series A startup. Startup experience is nice to have — someone who gets urgency, ambiguity, and wearing multiple hats. But it's not required.
 
 | Score | Criteria |
@@ -201,25 +179,53 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 > **Bonus math:** Startup_Bonus = Bonus2_Score × 2. Added to Raw_Score after base calculation. Not added to Max_Score.
 
+#### Bonus: Sales Hiring Experience (additive, not in denominator)
+
+> SwiftSku's core hiring need is Sales people — SDRs, AEs, Account Managers, BDRs. A coordinator who has hired for Sales teams understands the candidate profile, but it's not required for the coordination role itself. Nice to have.
+
+| Score | Criteria |
+|---|---|
+| 3 | Explicitly recruited for Sales roles (SDRs, AEs, AMs, BDRs) at a SaaS/tech company — mentioned in title, job description, or accomplishments |
+| 2 | Recruited for Sales-adjacent roles (Customer Success, Business Development) or Sales roles at a non-tech company |
+| 1 | Some exposure to Sales hiring — supported Sales recruiting team, scheduled Sales interviews, but not primary responsibility |
+| 0 | No evidence of Sales hiring experience |
+
+> **Bonus math:** SalesHiring_Bonus = Bonus3_Score × 2. Added to Raw_Score after base calculation. Not added to Max_Score.
+
+#### Bonus: Education & Credentials (additive, not in denominator)
+
+> Education and credentials signal professional investment. An MBA or HR certification shows commitment to the field, but track record matters more than degrees.
+
+| Score | Criteria |
+|---|---|
+| 3 | MBA from recognized program (IIM, top-tier) + relevant undergrad, or HR certification (SHRM, PHR) |
+| 2 | MBA, relevant professional cert (PHR, talent acquisition cert), OR engineering degree (B.E./B.Tech) |
+| 1 | Bachelor's degree, relevant field (HR, Business, Psychology) |
+| 0 | No degree mentioned or unrelated degree only |
+
+> **Bonus math:** Education_Bonus = Bonus4_Score × 1.5. Added to Raw_Score after base calculation. Not added to Max_Score.
+
 ---
 
 ### Step 4: Calculate Score
 
 ```
-Base Score = (Dim1 × 5) + (Dim2 × 4) + (Dim3 × 3) + (Dim4 × 3) + (Dim5 × 0.7) + (Dim6 × 0.6) + (Dim7 × 0.3)
+Base Score = (Dim1 × 5) + (Dim2 × 4) + (Dim3 × 3) + (Dim4 × 0.6) + (Dim5 × 0.3)
 US_Co_Bonus = Bonus1_Score × 0.8
 Startup_Bonus = Bonus2_Score × 2
-Raw Score = Base Score + US_Co_Bonus + Startup_Bonus
-Max possible (base) = 15 + 12 + 9 + 12 + 2.1 + 2.4 + 0.9 = 53.4
-Percentage = Raw Score / 53.4 × 100 (include the `%` suffix — can exceed 100% with bonuses)
+SalesHiring_Bonus = Bonus3_Score × 2
+Education_Bonus = Bonus4_Score × 1.5
+Raw Score = Base Score + US_Co_Bonus + Startup_Bonus + SalesHiring_Bonus + Education_Bonus
+Max possible (base) = 15 + 12 + 12 + 2.4 + 0.9 = 42.3
+Percentage = Raw Score / 42.3 × 100 (include the `%` suffix — can exceed 100% with bonuses)
 ```
 
 > **Mental model — 3 tiers of weight:**
-> - **Critical** (what the job IS): Title Match 5× → ~28% of the base max
-> - **Core** (strong signals): High-Volume Hiring 4×, Sales Hiring 3×, SaaS 3× → must have volume experience, sales hiring context, and understand SaaS
-> - **Standard** (differentiators): Education 0.7×, Recruiting Ops 0.6× → context and quality signals
+> - **Critical** (what the job IS): Title Match 5× → ~35% of the base max
+> - **Core** (strong signals): High-Volume Hiring 4×, SaaS 3× → must have volume experience and understand SaaS
+> - **Standard** (differentiators): Recruiting Ops 0.6× → ATS proficiency and process ownership
 > - **Minor** (tiebreaker): Tenure 0.3× → nice-to-have that barely moves the needle
-> - **Bonus** (cherry on top): US Company × 0.8, Startup/VC × 2 → additive, not in denominator — push score up but not required
+> - **Bonus** (cherry on top): US Company ×0.8, Startup/VC ×2, Sales Hiring ×2, Education ×1.5 → additive, not in denominator
 
 ### Step 5: Tier & Verdict
 
@@ -277,9 +283,9 @@ for col_idx, val in enumerate(values, 1):
 wb.save(output_path)
 ```
 
-**Column order (exactly 40 columns — Cleaned? is #40):**
+**Column order (exactly 42 columns — Cleaned? is #42):**
 
-⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 7 scored dims (14 cols) + 2 bonus dims (4 cols) = 18 dimension columns total.**
+⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 5 scored dims (10 cols) + 4 bonus dims (8 cols) = 18 dimension columns total.**
 
 ```
  1. Candidate
@@ -297,38 +303,40 @@ wb.save(output_path)
 13. Dim1_Note                           ← TEXT ONLY
 14. Dim2_HighVolume_Score (0-3)         ← NUMBER ONLY  [CORE — 4×]
 15. Dim2_Note                           ← TEXT ONLY
-16. Dim3_SalesHiring_Score (0-3)        ← NUMBER ONLY  [CORE — 3×]
+16. Dim3_SaaS_Score (0-4)              ← NUMBER ONLY  [CORE — 3×]
 17. Dim3_Note                           ← TEXT ONLY
-18. Dim4_SaaS_Score (0-4)              ← NUMBER ONLY  [CORE — 3×]
+18. Dim4_RecruitingOps_Score (0-4)      ← NUMBER ONLY  [STANDARD — 0.6×]  (4 = Greenhouse mentioned)
 19. Dim4_Note                           ← TEXT ONLY
-20. Dim5_Education_Score (0-3)          ← NUMBER ONLY  [STANDARD — 0.7×]
+20. Dim5_Tenure_Score (0-3)             ← NUMBER ONLY  [MINOR — 0.3×]
 21. Dim5_Note                           ← TEXT ONLY
-22. Dim6_RecruitingOps_Score (0-4)      ← NUMBER ONLY  [STANDARD — 0.6×]  (4 = Greenhouse mentioned)
-23. Dim6_Note                           ← TEXT ONLY
-24. Dim7_Tenure_Score (0-3)             ← NUMBER ONLY  [MINOR — 0.3×]
-25. Dim7_Note                           ← TEXT ONLY
-26. Bonus1_US_Co_Score (0-3)            ← NUMBER ONLY  [BONUS — ×0.8 additive]
-27. Bonus1_Note                         ← TEXT ONLY
-28. Bonus2_Startup_Score (0-4)          ← NUMBER ONLY  [BONUS — ×2 additive]
-29. Bonus2_Note                         ← TEXT ONLY
+22. Bonus1_US_Co_Score (0-3)            ← NUMBER ONLY  [BONUS — ×0.8 additive]
+23. Bonus1_Note                         ← TEXT ONLY
+24. Bonus2_Startup_Score (0-4)          ← NUMBER ONLY  [BONUS — ×2 additive]
+25. Bonus2_Note                         ← TEXT ONLY
+26. Bonus3_SalesHiring_Score (0-3)      ← NUMBER ONLY  [BONUS — ×2 additive]
+27. Bonus3_Note                         ← TEXT ONLY
+28. Bonus4_Education_Score (0-3)        ← NUMBER ONLY  [BONUS — ×1.5 additive]
+29. Bonus4_Note                         ← TEXT ONLY
 30. Base_Score
 31. US_Co_Bonus (Bonus1 × 0.8)
 32. Startup_Bonus (Bonus2 × 2)
-33. Raw_Score (Base + Bonuses)
-34. Max_Score (always 53.4)
-35. Percentage (with % suffix — can exceed 100%)
-36. Tier (A/B/C/D/F)
-37. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
-38. Whys (bullet list with \n between each — leave empty if Auto_DQ)
-39. Concern
-40. Cleaned? (always write as empty string — cleanup agent fills this)
+33. SalesHiring_Bonus (Bonus3 × 2)
+34. Education_Bonus (Bonus4 × 1.5)
+35. Raw_Score (Base + Bonuses)
+36. Max_Score (always 42.3)
+37. Percentage (with % suffix — can exceed 100%)
+38. Tier (A/B/C/D/F)
+39. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
+40. Whys (bullet list with \n between each — leave empty if Auto_DQ)
+41. Concern
+42. Cleaned? (always write as empty string — cleanup agent fills this)
 ```
 
 **Example row (score columns are JUST numbers, notes are JUST text):**
 ```python
 writer.writerow([
     "Priya Patel",                          # 1. Candidate
-    "",                                     # 2. Greenhouse URL (empty — filled manually or via Greenhouse integration)
+    "",                                     # 2. Greenhouse URL
     "https://linkedin.com/in/priyapatel",   # 3. Public LI URL
     "https://linkedin.com/talent/...",      # 4. LIR URL
     "2026-03-25 10:30:00",                  # 5. Date Added
@@ -339,34 +347,36 @@ writer.writerow([
     "No",                                   # 10. Auto_DQ
     "",                                     # 11. DQ_Reason
     "3",                                    # 12. Dim1 Title [CRITICAL 5×]
-    "Recruiting Coordinator title at SaaS", # 13. Dim1 NOTE
+    "Recruiting Coordinator title",         # 13. Dim1 NOTE
     "2",                                    # 14. Dim2 HighVolume [CORE 4×]
     "Multiple reqs, busy hiring env",       # 15. Dim2 NOTE
-    "2",                                    # 16. Dim3 SalesHiring [CORE 3×]
-    "Recruited for Sales-adjacent roles",   # 17. Dim3 NOTE
-    "3",                                    # 18. Dim4 SaaS [CORE 3×]
-    "BrowserStack — non-US SaaS validated", # 19. Dim4 NOTE
-    "1",                                    # 20. Dim5 Edu [STD 0.7×]
-    "Bachelor's in HR",                     # 21. Dim5 NOTE
-    "4",                                    # 22. Dim6 RecruitingOps [STD 0.6×]
-    "Greenhouse mentioned — auto 4",        # 23. Dim6 NOTE
-    "2",                                    # 24. Dim7 Tenure [MINOR 0.3×]
-    "2.5 yrs at BrowserStack",             # 25. Dim7 NOTE
-    "2",                                    # 26. Bonus1 US_Co BONUS [×0.8]
-    "India co, US client base",             # 27. Bonus1 NOTE
-    "3",                                    # 28. Bonus2 Startup BONUS [×2]
-    "BrowserStack was VC-backed pre-IPO",   # 29. Bonus2 NOTE
-    "38.7",                                 # 30. Base_Score
-    "1.6",                                  # 31. US_Co_Bonus (Bonus1 × 0.8)
-    "6.0",                                  # 32. Startup_Bonus (Bonus2 × 2)
-    "46.3",                                 # 33. Raw_Score
-    "53.4",                                 # 34. Max_Score
-    "86.7%",                                # 35. Percentage
-    "A",                                    # 36. Tier
-    "Strong Yes",                           # 37. Verdict
-    "• SaaS recruiting coord at BrowserStack\n• Ahmedabad-based, Gujarati speaker\n• Greenhouse experience — zero ramp-up",  # 38. Whys
-    "No US HQ company experience",          # 39. Concern
-    "",                                     # 40. Cleaned? (always empty)
+    "3",                                    # 16. Dim3 SaaS [CORE 3×]
+    "BrowserStack — non-US SaaS validated", # 17. Dim3 NOTE
+    "4",                                    # 18. Dim4 RecruitingOps [STD 0.6×]
+    "Greenhouse mentioned — auto 4",        # 19. Dim4 NOTE
+    "2",                                    # 20. Dim5 Tenure [MINOR 0.3×]
+    "2.5 yrs at BrowserStack",             # 21. Dim5 NOTE
+    "2",                                    # 22. Bonus1 US_Co [×0.8]
+    "India co, US client base",             # 23. Bonus1 NOTE
+    "3",                                    # 24. Bonus2 Startup [×2]
+    "BrowserStack was VC-backed pre-IPO",   # 25. Bonus2 NOTE
+    "2",                                    # 26. Bonus3 SalesHiring [×2]
+    "Recruited for Sales-adjacent roles",   # 27. Bonus3 NOTE
+    "1",                                    # 28. Bonus4 Education [×1.5]
+    "Bachelor's in HR",                     # 29. Bonus4 NOTE
+    "33.0",                                 # 30. Base_Score
+    "1.6",                                  # 31. US_Co_Bonus
+    "6.0",                                  # 32. Startup_Bonus
+    "4.0",                                  # 33. SalesHiring_Bonus
+    "1.5",                                  # 34. Education_Bonus
+    "46.1",                                 # 35. Raw_Score
+    "42.3",                                 # 36. Max_Score
+    "109.0%",                               # 37. Percentage
+    "A",                                    # 38. Tier
+    "Strong Yes",                           # 39. Verdict
+    "• SaaS recruiting coord at BrowserStack\n• Ahmedabad-based, Gujarati speaker\n• Greenhouse experience — zero ramp-up",  # 40. Whys
+    "No US HQ company experience",          # 41. Concern
+    "",                                     # 42. Cleaned? (always empty)
 ])
 ```
 
@@ -431,12 +441,10 @@ Base max score: **53.4** (before bonuses).
 |---|-----------|--------|-----|-------------|-------|
 | 1 | Title Match | 5× | 3 | 15.0 | Recruiting Coord / TA Coord |
 | 2 | High-Volume Hiring | 4× | 3 | 12.0 | Quantified sourcing volume / cold calling |
-| 3 | Sales Hiring Experience | 3× | 3 | 9.0 | Recruited for SDRs, AEs, AMs, BDRs |
-| 4 | SaaS Experience | 3× | 4 | 12.0 | Scores 0 if no SaaS — no longer auto-DQ |
-| 5 | Education | 0.7× | 3 | 2.1 | |
-| 6 | Recruiting Ops & ATS | 0.6× | 4 | 2.4 | Greenhouse = auto 4; other ATS + process ownership = 3 |
-| 7 | Tenure Stability | 0.3× | 3 | 0.9 | |
-| | **BASE TOTAL** | | | **53.4** | |
+| 3 | SaaS Experience | 3× | 4 | 12.0 | Scores 0 if no SaaS (includes BPO) |
+| 4 | Recruiting Ops & ATS | 0.6× | 4 | 2.4 | Greenhouse = auto 4; other ATS + process ownership = 3 |
+| 5 | Tenure Stability | 0.3× | 3 | 0.9 | |
+| | **BASE TOTAL** | | | **42.3** | |
 
 ### Bonus dimensions (cherry on top — not in denominator):
 
@@ -444,12 +452,13 @@ Base max score: **53.4** (before bonuses).
 |---|-----------|-----------|---------|----------|-------|
 | B1 | US Company Exposure | ×0.8 additive | 3 | +2.4 | Nice to have, trainable |
 | B2 | Startup/VC Experience | ×2 additive | 4 | +8.0 | Cherry on top |
+| B3 | Sales Hiring Experience | ×2 additive | 3 | +6.0 | Nice to have for Sales team context |
+| B4 | Education & Credentials | ×1.5 additive | 3 | +4.5 | Professional investment — MBA, certs |
 
 > **Note:** Each role has its own dimensions and weights. There are no "universal" dimensions — weights vary per role. See each JD file for that role's specific rubric.
 
 ### Auto-DQ triggers (Recruiting Coordinator):
 
-- BPO / call center career
 - Non-tech traditional industry (banking, real estate, pharma field)
 - Auto sales / heavy industries (automotive, steel, manufacturing, mining, construction)
 - Accounting / bookkeeping / finance career

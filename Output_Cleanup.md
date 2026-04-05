@@ -336,3 +336,6 @@ When column counts, max scores, or dimension weights change in a JD file, the fo
 
 1. **This file (`Output_Cleanup.md`)** — the "Expected column count" instruction above must remain dynamic (read from JD). Do NOT re-introduce hardcoded numbers.
 2. **`_Agent_Flowchart.svg`** — if agent names, file names, or pipeline flow changes, regenerate using `render_flowchart_svg.py` per `Z__In_Use_Ref_Files/_Flowchart_Preferences.md`.
+3. **`Z_Search_Cache.json`** — if cache fields change (e.g., `top5_summary`, `a_rated_cache`), variance protection in Step 4 of this file may break.
+4. **`CE_Spawn_Template.md`** — if the CE return format changes (field count or order), orchestrator parsing and this file's Step 4 CE re-eval spawning must match.
+5. **`Z_Pipeline_Error_Log.md`** — if error log format changes, any agent that writes errors must use the updated format.

@@ -75,7 +75,7 @@ Sub-agent spawning rules:
 • Sequential only — ONE Chrome agent at a time (non-Chrome agents can run in parallel during delays)
 • Anti-detection delays per `REF--Anti_Detection.md` (CE handles idle + tab reuse, orchestrator does not sleep)
 • Each sub-agent gets: the PATH to its instruction file, the PATH to the active JD file, inputs, output file path
-• Each CE sub-agent returns exactly: {Name} | {Tier} | {Score%} | {Verdict} | {Company}
+• Each CE sub-agent returns exactly: `{Full Name} | {Tier} | {Score%} | {Verdict} | {Current Company} | {DQ_Reason or ""}` — in dual-JD mode: `{Full Name} | {WinningRole} | {Tier} | {Score%} | {Verdict} | {Current Company} | {LosingRole}:{LosingScore%} | {DQ_Reason or ""}`
 • You never read a candidate's profile yourself — only sub-agents do
 • All sub-agents spawn with model: "sonnet"
 

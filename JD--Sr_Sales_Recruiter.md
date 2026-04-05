@@ -34,7 +34,7 @@ refinement_patterns:
     fix: "Add negative keywords: bench sales, IT staffing, contract staffing, H1B, visa, immigration"
 
 # A-rate signal reference (for Orchestrator search strategy)
-a_rate_signals: "A-rated candidates need strong Full-Cycle ownership (5×) and Sales Hiring track record (4×) — these two dimensions are 45.8% of base max. High-volume sourcing (3.5×) and SaaS experience (3×) separate A from B. Look for: 3+ years end-to-end recruiting, explicitly hired Sales/BD roles, quantified pipeline metrics, SaaS company background."
+a_rate_signals: "A-rated candidates need strong Full-Cycle ownership (5×, 16.7% of base max) and Recruitment Career Concentration (5×, 22.3%) — the two critical dimensions. Sales Hiring track record (4×, 13.4%) is the next strongest signal. Title Match (3×) confirms they're recruiters by title. High-volume sourcing (3.5×) and SaaS experience (3×) separate A from B. Look for: 3+ years end-to-end recruiting, recruiter titles, explicitly hired Sales/BD roles, quantified pipeline metrics, SaaS company background, 80%+ career in core recruitment, 4+ years dedicated recruiting experience."
 ```
 
 ## Purpose
@@ -73,13 +73,13 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 
 | Disqualifier | Red Flag Signs |
 |---|---|
-| Majority of career in BPO / call centers | Teleperformance, Genpact, Wipro BPO, eClerx, DATALYST, transcription, Investis Digital (BPO ops) |
 | Majority of career in non-tech traditional industry | Banking (ICICI, HDFC, SBI, IndusInd, Paytm Bank), real estate, insurance ops, pharma field |
 | Majority of career in auto sales or heavy industries | Car dealerships, automotive OEM, steel, manufacturing, mining, construction, agriculture |
 | Majority of career in accounting / bookkeeping / finance | CPA, CMA, QuickBooks, Sage, Tally, GST, TDS, bookkeeping, payroll |
 | No clear Gujarat/Gujarati connection | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count |
 | Pure coordination/scheduling — zero recruiting ownership | Only ever scheduled interviews, managed calendars, sent confirmation emails. Never sourced, screened, interviewed, or closed candidates independently. This is distinct from agency recruiters who DO own the full cycle for clients. |
 | Bench sales / IT body shop only | Entire career placing contractors on IT projects (bench sales, H1B staffing, contract-to-hire only). No direct hiring for product/SaaS companies. Red flags: "bench sales," "C2C," "W2 only," "visa processing" as primary duties. |
+| Less than 4 years of core recruitment experience | Count only dedicated recruiting roles (sourcing, screening, interviewing, closing). Do NOT count mixed HR/HRBP/generalist roles where recruiting was one of many duties. Must have 4+ years in titles like Recruiter, TA Specialist, Talent Partner, Sourcer, Recruitment Lead, etc. If total core recruitment tenure across all roles is <4 years → auto-DQ. |
 
 > **Note on agency recruiters:** Unlike the Recruiting Coordinator rubric, agency experience is NOT an auto-disqualifier for this role. Agency recruiters who owned full-cycle hiring (sourced → screened → interviewed → closed) are strong candidates — they know how to work a pipeline under pressure. The DQ is for people who ONLY did coordination/admin, or who ONLY did IT bench sales/body shop placement.
 
@@ -113,7 +113,20 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Partial ownership — does sourcing + screening but hands off to senior recruiter for interviews/close. Or coordinator who has grown into some independent recruiting duties. |
 | 0 | Pure coordination, scheduling, or admin — no evidence of independent recruiting ownership. Only manages calendars, sends emails, tracks candidates in ATS without sourcing or screening. |
 
-#### Dimension 2: Sales Hiring Track Record (weight: 4×)
+#### Dimension 2: Title Match — Recruiter (weight: 3×)
+
+> **Why 3× weight:** Title is a fast signal for whether this person is actually a recruiter vs. an HR generalist who occasionally hires. Less important than Full-Cycle Ownership (5×) because titles in India are often inflated or misleading — someone titled "HR Executive" might do full-cycle recruiting, while a "Senior Recruiter" might just screen resumes. Still, a strong recruiter title at a good company is a meaningful positive signal.
+
+| Score | Criteria |
+|---|---|
+| 3 | Senior Recruiter, Senior Talent Acquisition Specialist, Talent Acquisition Lead, Recruitment Lead, Talent Partner — primary title at a tech/SaaS company. Title clearly signals dedicated recruiting ownership. |
+| 2 | Recruiter, Talent Acquisition Specialist, HR Recruiter, Recruitment Specialist — at any company. Or senior recruiter title at a non-tech company. Title signals recruiting as primary function. |
+| 1 | HR Executive, HR Coordinator, People Ops, HR Manager — title is generalist but role includes significant recruiting duties visible in the description/notes. |
+| 0 | Pure HR generalist title (HRBP, HR Business Partner, Compensation & Benefits, L&D, Payroll) with no recruiting signal in the title itself. |
+
+> **Note:** This dimension scores the TITLE signal, not the actual work. A candidate with a generalist title but strong full-cycle evidence will score low here but high on Dim1. That's by design — the two dimensions measure different things.
+
+#### Dimension 3: Sales Hiring Track Record (weight: 4×)
 
 > **Why 4× weight:** SwiftSku's primary hiring need is Sales — SDRs, AEs, Account Managers, BDRs. A recruiter who has specifically hired for Sales roles understands the candidate profile: hungry, metrics-driven, comfortable with rejection, competitive. This is the second strongest predictor of success.
 
@@ -124,7 +137,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Some exposure to Sales hiring — supported Sales recruiting team, scheduled Sales interviews, filled occasional Sales roles among other req types. |
 | 0 | No evidence of Sales hiring experience — recruited exclusively for Engineering, Design, Product, or non-customer-facing roles. |
 
-#### Dimension 3: High-Volume Sourcing & Pipeline Building (weight: 3.5×)
+#### Dimension 4: High-Volume Sourcing & Pipeline Building (weight: 3.5×)
 
 > **Why 3.5× weight:** The JD says "source at high volume... build and maintain a steady pipeline." SwiftSku needs someone who can keep the Sales hiring engine running — that means proactive sourcing, not waiting for applications. Volume experience proves they can sustain throughput.
 
@@ -135,7 +148,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Some indication of volume work — managed multiple reqs simultaneously, busy hiring environment. Primarily inbound/application-based recruiting. |
 | 0 | No evidence of high-volume sourcing — filled occasional roles reactively, or only coordinated existing pipelines built by others. |
 
-#### Dimension 4: SaaS / Tech Company Experience (weight: 3×)
+#### Dimension 5: SaaS / Tech Company Experience (weight: 3×)
 
 > **Why 3× weight:** SwiftSku is a SaaS company. A recruiter from a SaaS background understands the hiring urgency, candidate profiles, compensation benchmarks, and terminology. Someone from banking or manufacturing won't have this context.
 
@@ -145,13 +158,29 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 3 | Non-US SaaS or software company on the validated list below |
 | 2 | Clear SaaS or software company, not on validated list, AND not verifiably US-HQ |
 | 1 | Mixed — some SaaS/software, some traditional |
-| 0 | No meaningful SaaS/software exposure — entirely non-tech or traditional industry employers |
+| 0 | No meaningful SaaS/software exposure — entirely non-tech or traditional industry employers (includes BPO/call centers: Teleperformance, Genpact, Wipro BPO, eClerx, etc.) |
 
 **Validated SaaS/software companies (non-US):** Zycus, Vymo, factoHR, Tata Tele Business Services (SaaS division), Quick Heal/SEQRITE, Phonon Communications, Salesmate, flydocs, Shipmnts, KlugKlug, Qoruz, Almashines, TECHstile ERP, Odoo, Reelo, VasyERP, PetPooja, CallHippo, Lendingkart, Razorpay, Gupshup
 
 **US HQ SaaS/software (score 4):** Automation Anywhere, Karat, LinkedIn, eClinicalWorks, Droisys, Searchmetrics, Freshworks, BrowserStack, Toast
 
-#### Dimension 5: Recruiting Seniority & Years of Experience (weight: 2×)
+#### Dimension 6: Recruitment Career Concentration (weight: 5×)
+
+> **Why 5× weight:** SwiftSku needs a career recruiter, not an HR generalist who happens to have done some hiring. This dimension is weighted equally to Full-Cycle Ownership because dedication to the recruiting craft over time is just as important as current pipeline ownership. This dimension measures what percentage of the candidate's career has been spent in core recruitment roles (sourcing, screening, interviewing, closing) vs. generalist HR work (HRBP, compensation, L&D, employee relations, payroll, compliance). **Recency matters heavily** — the last 5 years should be in core recruitment. Someone who was an HRBP for 6 years and recently pivoted to recruiting for 1 year is very different from someone who's been a recruiter for 7 straight years.
+
+| Score | Criteria |
+|---|---|
+| 4 | **Last 5+ years in core recruitment**, AND ≥80% of total career in recruitment. This is a career recruiter. Titles across their history are consistently Recruiter, TA Specialist, Talent Partner, etc. No meaningful HR generalist stints. |
+| 3 | **Last 3-5 years in core recruitment**, AND ≥60% of total career in recruitment. May have started in HR or another function but has been firmly in recruiting for the last several years. Clear career trajectory toward recruitment. |
+| 2 | **Last 2-3 years in core recruitment**, BUT <60% of total career. Recent pivot to recruiting from HRBP, HR generalist, or another function. Shows commitment to the pivot but limited recruiting track record. OR: mixed role where recruiting is ~50% of duties alongside other HR work. |
+| 1 | **Less than 2 years in core recruitment.** Majority of career in HR generalist, HRBP, L&D, compensation, employee relations, or other non-recruiting HR. May have "recruiting" mentioned as one of many duties. Recent or shallow pivot. |
+| 0 | **Zero core recruitment experience.** Entire career in non-recruiting HR (HRBP, comp & ben, L&D, payroll, compliance, employee relations) or non-HR altogether. Any "hiring" was incidental manager responsibility, not dedicated recruiting. |
+
+> **How to evaluate:** Scroll through ALL experience entries. For each role, classify as "core recruitment" or "other." Core recruitment = titles/duties focused on sourcing, screening, interviewing, closing candidates. "Other" = HRBP, HR Manager (generalist), L&D, compensation, payroll, employee relations, admin. A role titled "HR Manager" that explicitly describes "managed full-cycle hiring for 15+ roles" counts as core recruitment. A role titled "Recruiter" that describes "managed employee grievances, payroll, and occasional hiring" does NOT.
+>
+> **Recency weighting:** Weight the last 5 years 2× more than earlier career. If someone was an HRBP for 4 years (2017-2021) then a Recruiter for 4 years (2021-2025), they score a 3 (last 4 years are core recruitment, ~50% of total career but strong recency). If reversed (Recruiter 2017-2021, HRBP 2021-2025), they score a 1 (last 4 years are NOT recruitment).
+
+#### Dimension 7: Recruiting Seniority & Years of Experience (weight: 2×)
 
 > **Why 2× weight:** The JD requires "minimum 3 years of end-to-end recruitment experience." This isn't an entry-level role — SwiftSku needs someone who can hit the ground running and partner with founders on hiring strategy.
 
@@ -162,7 +191,7 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | 1–3 years of recruiting experience. Still developing — may need guidance on offer negotiation, stakeholder management, or sourcing strategy. |
 | 0 | Under 1 year of recruiting experience, or no recruiting experience (only coordination/admin). |
 
-#### Dimension 6: Sourcing Creativity & Tools (weight: 1×)
+#### Dimension 8: Sourcing Creativity & Tools (weight: 1×)
 
 > **Why 1× weight:** The JD emphasizes "source creatively using job boards, LinkedIn, Naukri, referrals, and unconventional channels." Multi-channel sourcing signals a resourceful recruiter who won't rely on a single pipeline. Lower weight because it's trainable.
 
@@ -173,20 +202,9 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 | 1 | Basic sourcing — posts jobs on boards and screens inbound applications. Single-channel. |
 | 0 | No sourcing evidence — only managed candidates already in the pipeline. |
 
-#### Dimension 7: Education & Credentials (weight: 0.5×)
+#### Dimension 9: Tenure & Stability (weight: 0.7×)
 
-> **Why 0.5× weight:** Minimal weight. Recruiting is a performance-driven profession — what matters is track record, not degrees. But relevant credentials signal professional investment.
-
-| Score | Criteria |
-|---|---|
-| 3 | MBA from recognized program (IIM, top-tier) + relevant undergrad, or HR certification (SHRM, PHR) |
-| 2 | MBA, relevant professional cert (PHR, talent acquisition cert), OR engineering degree (B.E./B.Tech) |
-| 1 | Bachelor's degree, relevant field (HR, Business, Psychology) |
-| 0 | No degree mentioned or unrelated degree only |
-
-#### Dimension 8: Tenure & Stability (weight: 0.3×)
-
-> **Why 0.3× weight:** Same rationale as the RC rubric — in the Indian tech market, shorter tenures are culturally more common. Not penalizing harshly, but watching for serial job-hopping that signals someone who won't stick through startup chaos. A senior recruiter who bounces every 6 months won't build the institutional knowledge SwiftSku needs.
+> **Why 0.7× weight:** Same rationale as the RC rubric — in the Indian tech market, shorter tenures are culturally more common. Not penalizing harshly, but watching for serial job-hopping that signals someone who won't stick through startup chaos. A senior recruiter who bounces every 6 months won't build the institutional knowledge SwiftSku needs.
 
 | Score | Criteria |
 |---|---|
@@ -226,25 +244,39 @@ Be conservative — a 4 or 3 should be genuinely impressive.
 
 > **Bonus math:** Startup_Bonus = Bonus2_Score × 2. Added to Raw_Score after base calculation. Not added to Max_Score.
 
+#### Bonus 3: Education & Credentials (additive, not in denominator)
+
+> Minimal impact. Recruiting is a performance-driven profession — what matters is track record, not degrees. But relevant credentials signal professional investment.
+
+| Score | Criteria |
+|---|---|
+| 3 | MBA from recognized program (IIM, top-tier) + relevant undergrad, or HR certification (SHRM, PHR) |
+| 2 | MBA, relevant professional cert (PHR, talent acquisition cert), OR engineering degree (B.E./B.Tech) |
+| 1 | Bachelor's degree, relevant field (HR, Business, Psychology) |
+| 0 | No degree mentioned or unrelated degree only |
+
+> **Bonus math:** Education_Bonus = Bonus3_Score × 0.5. Added to Raw_Score after base calculation. Not added to Max_Score.
+
 ---
 
 ### Step 4: Calculate Score
 
 ```
-Base Score = (Dim1 × 5) + (Dim2 × 4) + (Dim3 × 3.5) + (Dim4 × 3) + (Dim5 × 2) + (Dim6 × 1) + (Dim7 × 0.5) + (Dim8 × 0.3)
+Base Score = (Dim1 × 5) + (Dim2 × 3) + (Dim3 × 4) + (Dim4 × 3.5) + (Dim5 × 3) + (Dim6 × 5) + (Dim7 × 2) + (Dim8 × 1) + (Dim9 × 0.7)
 US_Co_Bonus = Bonus1_Score × 0.8
 Startup_Bonus = Bonus2_Score × 2
-Raw Score = Base Score + US_Co_Bonus + Startup_Bonus
-Max possible (base) = 15 + 12 + 10.5 + 12 + 6 + 3 + 1.5 + 0.9 = 60.9
-Percentage = Raw Score / 60.9 × 100 (include the `%` suffix — can exceed 100% with bonuses)
+Education_Bonus = Bonus3_Score × 0.5
+Raw Score = Base Score + US_Co_Bonus + Startup_Bonus + Education_Bonus
+Max possible (base) = 15 + 9 + 12 + 10.5 + 12 + 20 + 6 + 3 + 2.1 = 89.6
+Percentage = Raw Score / 89.6 × 100 (include the `%` suffix — can exceed 100% with bonuses)
 ```
 
-> **Mental model — 3 tiers of weight:**
-> - **Critical** (what the job IS): Full-Cycle Ownership 5× → 25% of base max. This person MUST be a recruiter, not a coordinator.
-> - **Core** (strong signals): Sales Hiring 4×, High-Volume 3.5×, SaaS 3× → must have recruited for Sales roles at volume in a tech context
-> - **Standard** (differentiators): Seniority 2× → need 3+ years per JD
-> - **Minor** (tiebreakers): Sourcing Creativity 1×, Education 0.5×, Tenure 0.3× → nice-to-have signals
-> - **Bonus** (cherry on top): US Company × 0.8, Startup/VC × 2 → additive, not in denominator
+> **Mental model — 4 tiers of weight:**
+> - **Critical** (what the job IS): Full-Cycle Ownership 5× (16.7%), Recruitment Career Concentration 5× (22.3%) — this person MUST own end-to-end recruiting AND be a career recruiter
+> - **Core** (strong signals): Sales Hiring 4× (13.4%), High-Volume 3.5× (11.7%), SaaS 3× (13.4%), Title Match 3× (10.0%) — must have recruited for Sales roles at volume in a SaaS context with a clear recruiter title
+> - **Standard** (career depth): Seniority 2× (6.7%), Tenure 0.7× (2.3%) — 3+ years who stick around
+> - **Minor** (tiebreaker): Sourcing Creativity 1× → nice-to-have signal
+> - **Bonus** (cherry on top): US Company ×0.8, Startup/VC ×2, Education ×0.5 → additive, not in denominator
 
 ### Step 5: Tier & Verdict
 
@@ -302,9 +334,9 @@ for col_idx, val in enumerate(values, 1):
 wb.save(output_path)
 ```
 
-**Column order (exactly 42 columns — Cleaned? is #42):**
+**Column order (exactly 47 columns — Cleaned? is #47):**
 
-⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 8 scored dims (16 cols) + 2 bonus dims (4 cols) = 20 dimension columns total.**
+⛔ **Each dimension gets TWO columns: a numeric score AND a separate text note. 9 scored dims (18 cols) + 3 bonus dims (6 cols) = 24 dimension columns total.**
 
 ```
  1. Candidate
@@ -318,37 +350,42 @@ wb.save(output_path)
  9. Gujarat/Gujarati (EXPLICIT - Y/N)
 10. Auto_DQ (Y/N)
 11. DQ_Reason
-12. Dim1_FullCycle_Score (0-3)           ← NUMBER ONLY  [CRITICAL — 5×]
-13. Dim1_Note                            ← TEXT ONLY
-14. Dim2_SalesHiring_Score (0-3)         ← NUMBER ONLY  [CORE — 4×]
-15. Dim2_Note                            ← TEXT ONLY
-16. Dim3_HighVolume_Score (0-3)          ← NUMBER ONLY  [CORE — 3.5×]
-17. Dim3_Note                            ← TEXT ONLY
-18. Dim4_SaaS_Score (0-4)               ← NUMBER ONLY  [CORE — 3×]
-19. Dim4_Note                            ← TEXT ONLY
-20. Dim5_Seniority_Score (0-3)           ← NUMBER ONLY  [STANDARD — 2×]
-21. Dim5_Note                            ← TEXT ONLY
-22. Dim6_SourcingCreativity_Score (0-3)  ← NUMBER ONLY  [MINOR — 1×]
-23. Dim6_Note                            ← TEXT ONLY
-24. Dim7_Education_Score (0-3)           ← NUMBER ONLY  [MINOR — 0.5×]
-25. Dim7_Note                            ← TEXT ONLY
-26. Dim8_Tenure_Score (0-3)              ← NUMBER ONLY  [MINOR — 0.3×]
-27. Dim8_Note                            ← TEXT ONLY
-28. Bonus1_US_Co_Score (0-3)             ← NUMBER ONLY  [BONUS — ×0.8 additive]
-29. Bonus1_Note                          ← TEXT ONLY
-30. Bonus2_Startup_Score (0-4)           ← NUMBER ONLY  [BONUS — ×2 additive]
-31. Bonus2_Note                          ← TEXT ONLY
-32. Base_Score
-33. US_Co_Bonus (Bonus1 × 0.8)
-34. Startup_Bonus (Bonus2 × 2)
-35. Raw_Score (Base + Bonuses)
-36. Max_Score (always 60.9)
-37. Percentage (with % suffix — can exceed 100%)
-38. Tier (A/B/C/D/F)
-39. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
-40. Whys (bullet list with \n between each — leave empty if Auto_DQ)
-41. Concern
-42. Cleaned? (always write as empty string — cleanup agent fills this)
+12. Dim1_FullCycle_Score (0-3)              ← NUMBER ONLY  [CRITICAL — 5×]
+13. Dim1_Note                               ← TEXT ONLY
+14. Dim2_Title_Score (0-3)                  ← NUMBER ONLY  [CORE — 3×]
+15. Dim2_Note                               ← TEXT ONLY
+16. Dim3_SalesHiring_Score (0-3)            ← NUMBER ONLY  [CORE — 4×]
+17. Dim3_Note                               ← TEXT ONLY
+18. Dim4_HighVolume_Score (0-3)             ← NUMBER ONLY  [CORE — 3.5×]
+19. Dim4_Note                               ← TEXT ONLY
+20. Dim5_SaaS_Score (0-4)                  ← NUMBER ONLY  [CORE — 3×]
+21. Dim5_Note                               ← TEXT ONLY
+22. Dim6_RecruitCareer_Score (0-4)          ← NUMBER ONLY  [CRITICAL — 5×]
+23. Dim6_Note                               ← TEXT ONLY
+24. Dim7_Seniority_Score (0-3)              ← NUMBER ONLY  [STANDARD — 2×]
+25. Dim7_Note                               ← TEXT ONLY
+26. Dim8_SourcingCreativity_Score (0-3)     ← NUMBER ONLY  [MINOR — 1×]
+27. Dim8_Note                               ← TEXT ONLY
+28. Dim9_Tenure_Score (0-3)                 ← NUMBER ONLY  [STANDARD — 0.7×]
+29. Dim9_Note                               ← TEXT ONLY
+30. Bonus1_US_Co_Score (0-3)                ← NUMBER ONLY  [BONUS — ×0.8 additive]
+31. Bonus1_Note                             ← TEXT ONLY
+32. Bonus2_Startup_Score (0-4)              ← NUMBER ONLY  [BONUS — ×2 additive]
+33. Bonus2_Note                             ← TEXT ONLY
+34. Bonus3_Education_Score (0-3)            ← NUMBER ONLY  [BONUS — ×0.5 additive]
+35. Bonus3_Note                             ← TEXT ONLY
+36. Base_Score
+37. US_Co_Bonus (Bonus1 × 0.8)
+38. Startup_Bonus (Bonus2 × 2)
+39. Education_Bonus (Bonus3 × 0.5)
+40. Raw_Score (Base + Bonuses)
+41. Max_Score (always 89.6)
+42. Percentage (with % suffix — can exceed 100%)
+43. Tier (A/B/C/D/F)
+44. Verdict (Strong Yes/Yes/Maybe/No/Hard No)
+45. Whys (bullet list with \n between each — leave empty if Auto_DQ)
+46. Concern
+47. Cleaned? (always write as empty string — cleanup agent fills this)
 ```
 
 **Example row (score columns are JUST numbers, notes are JUST text):**
@@ -367,35 +404,40 @@ writer.writerow([
     "",                                     # 11. DQ_Reason
     "3",                                    # 12. Dim1 FullCycle [CRITICAL 5×]
     "Full-cycle TA at Razorpay, owns sourcing→close",  # 13. Dim1 NOTE
-    "3",                                    # 14. Dim2 SalesHiring [CORE 4×]
-    "Hired 20+ SDRs and AEs in 6 months",  # 15. Dim2 NOTE
-    "3",                                    # 16. Dim3 HighVolume [CORE 3.5×]
-    "50+ hires/quarter, cold outreach campaigns",  # 17. Dim3 NOTE
-    "3",                                    # 18. Dim4 SaaS [CORE 3×]
-    "Razorpay — non-US SaaS validated",     # 19. Dim4 NOTE
-    "2",                                    # 20. Dim5 Seniority [STD 2×]
-    "4 yrs recruiting, Senior title",       # 21. Dim5 NOTE
-    "2",                                    # 22. Dim6 Sourcing [MINOR 1×]
-    "LinkedIn + Naukri + referrals",         # 23. Dim6 NOTE
-    "1",                                    # 24. Dim7 Edu [MINOR 0.5×]
-    "Bachelor's in HR",                     # 25. Dim7 NOTE
-    "3",                                    # 26. Dim8 Tenure [MINOR 0.3×]
-    "4 yrs at Razorpay",                   # 27. Dim8 NOTE
-    "2",                                    # 28. Bonus1 US_Co [BONUS ×0.8]
-    "India co, US-facing recruiting",       # 29. Bonus1 NOTE
-    "3",                                    # 30. Bonus2 Startup [BONUS ×2]
-    "Razorpay was VC-backed, previous startup too",  # 31. Bonus2 NOTE
-    "51.9",                                 # 32. Base_Score
-    "1.6",                                  # 33. US_Co_Bonus
-    "6.0",                                  # 34. Startup_Bonus
-    "59.5",                                 # 35. Raw_Score
-    "60.9",                                 # 36. Max_Score
-    "97.7%",                                # 37. Percentage
-    "A",                                    # 38. Tier
-    "Strong Yes",                           # 39. Verdict
-    "• Full-cycle senior recruiter at Razorpay\n• Hired 20+ salespeople in 6 months\n• High-volume sourcing with cold outreach\n• Gujarat-based",  # 40. Whys
-    "No US HQ company experience",          # 41. Concern
-    "",                                     # 42. Cleaned? (always empty)
+    "3",                                    # 14. Dim2 Title [CORE 3×]
+    "Senior Talent Acquisition Specialist", # 15. Dim2 NOTE
+    "3",                                    # 16. Dim3 SalesHiring [CORE 4×]
+    "Hired 20+ SDRs and AEs in 6 months",  # 17. Dim3 NOTE
+    "3",                                    # 18. Dim4 HighVolume [CORE 3.5×]
+    "50+ hires/quarter, cold outreach campaigns",  # 19. Dim4 NOTE
+    "3",                                    # 20. Dim5 SaaS [CORE 3×]
+    "Razorpay — non-US SaaS validated",     # 21. Dim5 NOTE
+    "4",                                    # 22. Dim6 RecruitCareer [CRITICAL 5×]
+    "Last 6 yrs all core recruiting, 100% career in TA",  # 23. Dim6 NOTE
+    "2",                                    # 24. Dim7 Seniority [STD 2×]
+    "4 yrs recruiting, Senior title",       # 25. Dim7 NOTE
+    "2",                                    # 26. Dim8 Sourcing [MINOR 1×]
+    "LinkedIn + Naukri + referrals",         # 27. Dim8 NOTE
+    "3",                                    # 28. Dim9 Tenure [STD 0.7×]
+    "4 yrs at Razorpay",                   # 29. Dim9 NOTE
+    "2",                                    # 30. Bonus1 US_Co [BONUS ×0.8]
+    "India co, US-facing recruiting",       # 31. Bonus1 NOTE
+    "3",                                    # 32. Bonus2 Startup [BONUS ×2]
+    "Razorpay was VC-backed, previous startup too",  # 33. Bonus2 NOTE
+    "1",                                    # 34. Bonus3 Education [BONUS ×0.5]
+    "Bachelor's in HR",                     # 35. Bonus3 NOTE
+    "83.6",                                 # 36. Base_Score
+    "1.6",                                  # 37. US_Co_Bonus
+    "6.0",                                  # 38. Startup_Bonus
+    "0.5",                                  # 39. Education_Bonus
+    "91.7",                                 # 40. Raw_Score
+    "89.6",                                 # 41. Max_Score
+    "102.3%",                               # 42. Percentage
+    "A",                                    # 43. Tier
+    "Strong Yes",                           # 44. Verdict
+    "• Full-cycle senior recruiter at Razorpay\n• Hired 20+ salespeople in 6 months\n• High-volume sourcing with cold outreach\n• 100% career in core recruitment\n• Gujarat-based",  # 45. Whys
+    "No US HQ company experience",          # 46. Concern
+    "",                                     # 47. Cleaned? (always empty)
 ])
 ```
 
@@ -448,21 +490,22 @@ The Senior Sales Recruiter is a **full-cycle recruiting role** — this person s
 
 ## Rubric Summary — Senior Sales Recruiter
 
-Base max score: **60.9** (before bonuses).
+Base max score: **89.6** (before bonuses).
 
 ### All scored dimensions (ordered by weight):
 
 | # | Dimension | Weight | Max | Weighted Max | Notes |
 |---|-----------|--------|-----|-------------|-------|
 | 1 | Full-Cycle Recruiting Ownership | 5× | 3 | 15.0 | Owns sourcing → screening → interview → close |
-| 2 | Sales Hiring Track Record | 4× | 3 | 12.0 | Recruited for SDRs, AEs, AMs, BDRs |
-| 3 | High-Volume Sourcing & Pipeline | 3.5× | 3 | 10.5 | Quantified sourcing volume, proactive outreach |
-| 4 | SaaS/Tech Experience | 3× | 4 | 12.0 | Same validated lists as other roles |
-| 5 | Recruiting Seniority & Years | 2× | 3 | 6.0 | 3+ years required per JD |
-| 6 | Sourcing Creativity & Tools | 1× | 3 | 3.0 | Multi-channel, creative approaches |
-| 7 | Education & Credentials | 0.5× | 3 | 1.5 | Minimal weight — track record > degrees |
-| 8 | Tenure & Stability | 0.3× | 3 | 0.9 | Job-hopping check — low weight, culturally aware |
-| | **BASE TOTAL** | | | **60.9** | |
+| 2 | Title Match — Recruiter | 3× | 3 | 9.0 | Recruiter vs. HR generalist title signal |
+| 3 | Sales Hiring Track Record | 4× | 3 | 12.0 | Recruited for SDRs, AEs, AMs, BDRs |
+| 4 | High-Volume Sourcing & Pipeline | 3.5× | 3 | 10.5 | Quantified sourcing volume, proactive outreach |
+| 5 | SaaS/Tech Experience | 3× | 4 | 12.0 | Same validated lists as other roles |
+| 6 | Recruitment Career Concentration | 5× | 4 | 20.0 | % of career in core recruitment, recency-weighted |
+| 7 | Recruiting Seniority & Years | 2× | 3 | 6.0 | 3+ years required per JD |
+| 8 | Sourcing Creativity & Tools | 1× | 3 | 3.0 | Multi-channel, creative approaches |
+| 9 | Tenure & Stability | 0.7× | 3 | 2.1 | Job-hopping check — culturally aware |
+| | **BASE TOTAL** | | | **89.6** | |
 
 ### Bonus dimensions (cherry on top — not in denominator):
 
@@ -470,16 +513,17 @@ Base max score: **60.9** (before bonuses).
 |---|-----------|-----------|---------|----------|-------|
 | B1 | US Company Exposure | ×0.8 additive | 3 | +2.4 | Nice to have, trainable |
 | B2 | Startup/VC Experience | ×2 additive | 4 | +8.0 | Cherry on top |
+| B3 | Education & Credentials | ×0.5 additive | 3 | +1.5 | Track record > degrees |
 
 ### Auto-DQ triggers (Senior Sales Recruiter):
 
-- BPO / call center career
 - Non-tech traditional industry (banking, real estate, pharma field)
 - Auto sales / heavy industries (automotive, steel, manufacturing, mining, construction)
 - Accounting / bookkeeping / finance career
 - No Gujarat/Gujarati connection
 - Pure coordination/scheduling — zero recruiting ownership
 - Bench sales / IT body shop only
+- Less than 4 years of core recruitment experience (dedicated recruiting roles only — not mixed HR/HRBP)
 
 ---
 

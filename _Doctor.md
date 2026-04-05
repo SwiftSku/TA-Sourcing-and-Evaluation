@@ -276,10 +276,15 @@ Each file that contains a "Maintenance Checklist" or "Keep In Sync" section — 
 
 ## Reporting Format
 
-After completing ALL phases, produce a single structured report:
+After completing ALL phases, determine whether a report is needed:
+
+**If no Critical or High issues are found**, do NOT create a report file. Instead, reply with a brief summary in chat:
+> "Doctor run complete — {N} files audited, no Critical or High issues. {N} Medium/Low findings (if any): {one-line descriptions}."
+
+**If any Critical or High issues are found**, produce a full structured report saved as `Doc-Report--{MM-DD-YY}--{HHmm}.md` (24hr Eastern time):
 
 ```
-# Doctor Report — {date}
+# Doc-Report — {MM-DD-YY} {HH:mm ET}
 
 ## Summary
 - Files audited: {N} (list them)
