@@ -84,6 +84,41 @@
       "gujarat_city": "Ahmedabad",
       "confidence": "high",
       "source": "US HQ verified; Customer support SaaS per G2; Ahmedabad office confirmed on LinkedIn"
+    },
+    {
+      "name": "York IE",
+      "hq": "New Hampshire, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ verified per Google; Expanding Ahmedabad office into global acceleration center per AI Overview; B2B SaaS software development"
+    },
+    {
+      "name": "Palo Alto Networks",
+      "hq": "Santa Clara, California, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ verified per LinkedIn; Innovation Labs presence in Ahmedabad confirmed; B2B SaaS cybersecurity platform"
+    },
+    {
+      "name": "SolarWinds",
+      "hq": "Austin, Texas, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "high",
+      "source": "US HQ verified; LinkedIn job postings for IT Infrastructure Engineer in Greater Ahmedabad Area; B2B SaaS IT monitoring"
+    },
+    {
+      "name": "Fortive",
+      "hq": "Delaware, USA (global HQ operations)",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "medium",
+      "source": "US HQ verified; Business Development Manager role posted for Ahmedabad, Gujarat; B2B SaaS industrial software and data analytics"
+    },
+    {
+      "name": "Twilio",
+      "hq": "San Francisco, California, USA",
+      "gujarat_city": "Ahmedabad",
+      "confidence": "medium",
+      "source": "US HQ verified per LinkedIn; Software engineers and developers with Twilio experience in Ahmedabad Area verified via search; B2B SaaS CPaaS/communications"
     }
   ]
 }

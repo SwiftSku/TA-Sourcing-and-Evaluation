@@ -31,11 +31,13 @@ Your job is to find US-headquartered B2B SaaS companies with offices or signific
 
 ### How to Research
 
-1. Open Chrome. Search LinkedIn using the `lir_title_filters` from the active JD config + Gujarat/Ahmedabad. Note which COMPANIES appear repeatedly.
-2. Search Google for: "US SaaS companies Ahmedabad office", "SaaS companies Gujarat India", "US tech companies Vadodara"
-3. Search Wellfound/AngelList for SaaS startups with India/Gujarat offices
-4. Search G2/Capterra top SaaS companies, cross-reference with India office presence
-5. Check Glassdoor for US SaaS companies hiring in Ahmedabad/Vadodara
+⛔ **Use WebFetch and WebSearch tools for ALL research. Do NOT open Chrome/browser.** The browser is only for logged-in LinkedIn Recruiter interactions (which this agent does NOT do). Web fetch handles everything below.
+
+1. Use WebSearch to find companies on LinkedIn matching the `lir_title_filters` from the active JD config + Gujarat/Ahmedabad. Note which COMPANIES appear repeatedly.
+2. Use WebSearch for: "US SaaS companies Ahmedabad office", "SaaS companies Gujarat India", "US tech companies Vadodara"
+3. Use WebSearch/WebFetch to check Wellfound/AngelList for SaaS startups with India/Gujarat offices
+4. Use WebSearch/WebFetch to check G2/Capterra top SaaS companies, cross-reference with India office presence
+5. Use WebSearch/WebFetch to check Glassdoor for US SaaS companies hiring in Ahmedabad/Vadodara
 
 ### Exclusions
 

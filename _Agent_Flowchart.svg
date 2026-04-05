@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     viewBox="0 0 1000 1803" width="1000" height="1803"
+     viewBox="0 0 1000 1933" width="1000" height="1933"
      style="background:#fff">
 <defs>
   <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
@@ -44,7 +44,7 @@
 <text x="54" y="240" class="box-title" fill="#333333">Company Research · Sonnet</text>
 <text x="54" y="260" class="box-body" fill="#333333">Parallel: finds US-HQ B2B SaaS</text>
 <text x="54" y="274" class="box-body" fill="#333333">w/ Gujarat office → feeds Tier 2</text>
-<text x="54" y="290" class="box-hint">Company_Research_Agent.md</text>
+<text x="54" y="290" class="box-hint">Target_Companies/Company_Research_Agent.md</text>
 <line x1="360" y1="247" x2="320" y2="257" stroke="#555" stroke-width="1.5"/>
 <text x="324" y="249" class="label-gray">parallel</text>
 <text x="324" y="263" class="label-gray">(no Chrome)</text>
@@ -54,7 +54,7 @@
 <text x="694" y="274" class="box-body" fill="#333333">Must finish before Phase 1</text>
 <text x="694" y="290" class="box-hint">Output_Cleanup.md</text>
 <line x1="640" y1="247" x2="680" y2="257" stroke="#555" stroke-width="1.5"/>
-<text x="644" y="239" class="label-gray">parallel</text>
+<text x="644" y="239" class="label-gray">sequential</text>
 <text x="644" y="253" class="label-gray">(no Chrome)</text>
 <line x1="500" y1="308" x2="500" y2="326" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
 <polygon points="500,326 548,374 500,422 452,374" fill="#FBBC04" stroke="#E0A800" stroke-width="2"/>
@@ -149,8 +149,9 @@
 <text x="694" y="1300" class="box-body" fill="#FFFFFF">Resume prompt: source, page/pos, counters</text>
 <text x="694" y="1316" class="box-hint">Context_Legacy_Prompt.md</text>
 <polyline points="548,1269 670,1269" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
-<text x="556" y="1263" class="label-gray">Canary/</text>
-<text x="556" y="1277" class="label-gray">compaction</text>
+<text x="556" y="1256" class="label-gray">Hard cap /</text>
+<text x="556" y="1270" class="label-gray">canary / compaction</text>
+<text x="556" y="1284" class="label-gray">/ quality drift</text>
 <line x1="500" y1="1317" x2="500" y2="1335" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
 <text x="508" y="1329" class="label-gray">Yes → done</text>
 <rect x="360" y="1335" width="280" height="55" rx="8" fill="#F5A623" stroke="#E09000" stroke-width="2"/>
@@ -166,24 +167,37 @@
 <rect x="515" y="1436" width="280" height="55" rx="8" fill="#FFFF00" stroke="#CCB800" stroke-width="2"/>
 <text x="529" y="1459" class="box-title" fill="#333333">COMING SOON</text>
 <text x="529" y="1479" class="box-body" fill="#333333">Send to Greenhouse</text>
-<rect x="190" y="1431" width="640" height="91" rx="6" fill="none" stroke="#3367D6" stroke-width="1.5" stroke-dasharray="8,4"/>
-<text x="500" y="1552" text-anchor="middle" class="phase">Shared Files</text>
-<rect x="100" y="1568" width="800" height="64" rx="6" fill="#E8EAF6" stroke="#5C6BC0" stroke-width="1"/>
-<text x="500" y="1584" text-anchor="middle" class="shared">[output file] · Z_Search_Cache.json · company_research.json</text>
-<text x="500" y="1600" text-anchor="middle" class="shared">Chat_Log-*.md · Error_Log.md · LIR_Learnings.md</text>
-<text x="500" y="1616" text-anchor="middle" class="shared">CE_Spawn_Template.md · Context_Legacy_Prompt.md · Anti_Detection.md</text>
-<text x="500" y="1657" text-anchor="middle" class="phase">Legend</text>
-<rect x="280" y="1675" width="20" height="20" rx="4" fill="#4285F4" stroke="#3367D6" stroke-width="1"/>
-<text x="306" y="1690" class="legend-text">User / Manual (Dan)</text>
-<rect x="280" y="1701" width="20" height="20" rx="4" fill="#F5A623" stroke="#E09000" stroke-width="1"/>
-<text x="306" y="1716" class="legend-text">Opus — parent orchestrator</text>
-<rect x="280" y="1727" width="20" height="20" rx="4" fill="#34A853" stroke="#2E8B47" stroke-width="1"/>
-<text x="306" y="1742" class="legend-text">Sonnet — sub-agents</text>
-<rect x="540" y="1675" width="20" height="20" rx="4" fill="#FBBC04" stroke="#E0A800" stroke-width="1"/>
-<text x="566" y="1690" class="legend-text">Decision gate</text>
-<rect x="540" y="1701" width="20" height="20" rx="4" fill="#E8D5F5" stroke="#7B4DB5" stroke-width="1"/>
-<text x="566" y="1716" class="legend-text">Refinement</text>
-<rect x="540" y="1727" width="20" height="20" rx="4" fill="#EA4335" stroke="#C62828" stroke-width="1"/>
-<text x="566" y="1742" class="legend-text">Self-destruct</text>
-<text x="500" y="1768" text-anchor="middle" class="stats">AM: 37 cols, max 55.0  |  RC: 40 cols, max 52.8</text>
+<rect x="190" y="1431" width="640" height="191" rx="6" fill="none" stroke="#3367D6" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+<rect x="205" y="1536" width="280" height="81" rx="8" fill="#9C27B0" stroke="#7B1FA2" stroke-width="2"/>
+<text x="219" y="1559" class="box-title" fill="#FFFFFF">Doctor · Audit Engine</text>
+<text x="219" y="1579" class="box-body" fill="#FFFFFF">7-phase integrity audit across all files</text>
+<text x="219" y="1593" class="box-body" fill="#FFFFFF">Schema · scoring · output health · flowchart</text>
+<text x="219" y="1609" class="box-hint">_Doctor.md</text>
+<rect x="515" y="1536" width="280" height="55" rx="8" fill="#9C27B0" stroke="#7B1FA2" stroke-width="2"/>
+<text x="529" y="1559" class="box-title" fill="#FFFFFF">Doctor Reports</text>
+<text x="529" y="1579" class="box-body" fill="#FFFFFF">Doctor_Report--{date}.md</text>
+
+<text x="500" y="1652" text-anchor="middle" class="phase">Shared Files</text>
+<rect x="100" y="1668" width="800" height="80" rx="6" fill="#E8EAF6" stroke="#5C6BC0" stroke-width="1"/>
+<text x="500" y="1686" text-anchor="middle" class="shared">[output file] · Z_Search_Cache.json · Target_Companies/company_research.json</text>
+<text x="500" y="1702" text-anchor="middle" class="shared">Z_Old_Chat_Logs/Chat_Log-*.md · Z_Pipeline_Error_Log.md · REF--LIR_Interface_Learnings.md</text>
+<text x="500" y="1718" text-anchor="middle" class="shared">CE_Spawn_Template.md · Context_Legacy_Prompt.md · REF--Anti_Detection.md</text>
+<text x="500" y="1734" text-anchor="middle" class="shared">Target_Companies/Company_Research_Specs.md · Target_Companies/_OUTPUT-Target_Companies.xlsx</text>
+<text x="500" y="1767" text-anchor="middle" class="phase">Legend</text>
+<rect x="280" y="1785" width="20" height="20" rx="4" fill="#4285F4" stroke="#3367D6" stroke-width="1"/>
+<text x="306" y="1800" class="legend-text">User / Manual (Dan)</text>
+<rect x="280" y="1811" width="20" height="20" rx="4" fill="#F5A623" stroke="#E09000" stroke-width="1"/>
+<text x="306" y="1826" class="legend-text">Opus — parent orchestrator</text>
+<rect x="280" y="1837" width="20" height="20" rx="4" fill="#34A853" stroke="#2E8B47" stroke-width="1"/>
+<text x="306" y="1852" class="legend-text">Sonnet — sub-agents</text>
+<rect x="540" y="1785" width="20" height="20" rx="4" fill="#FBBC04" stroke="#E0A800" stroke-width="1"/>
+<text x="566" y="1800" class="legend-text">Decision gate</text>
+<rect x="540" y="1811" width="20" height="20" rx="4" fill="#E8D5F5" stroke="#7B4DB5" stroke-width="1"/>
+<text x="566" y="1826" class="legend-text">Refinement</text>
+<rect x="540" y="1837" width="20" height="20" rx="4" fill="#EA4335" stroke="#C62828" stroke-width="1"/>
+<text x="566" y="1852" class="legend-text">Self-destruct</text>
+<rect x="280" y="1863" width="20" height="20" rx="4" fill="#9C27B0" stroke="#7B1FA2" stroke-width="1"/>
+<text x="306" y="1878" class="legend-text">Audit (Doctor)</text>
+<text x="500" y="1908" text-anchor="middle" class="stats">AM: 37 cols, max 55.0  |  RC: 40 cols, max 53.4</text>
 </svg>

@@ -1,24 +1,27 @@
 {
   "status": "processing",
-  "source": "LIR-Coord-Test5-03-28-26 — saved search + Gujarat recruiter titles search",
-  "started_at": "2026-03-28 18:07:38",
+  "source": "Coord--04-03-26 — company-targeted searches (Sprinklr, Salesforce, Atlassian) + Gujarat keyword search",
+  "started_at": "2026-04-03 17:35:00",
   "top5_summary": [
-    {"name": "Subhro Bose", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Qatar Airways", "raw_score": "0", "wrote_to_file": true},
-    {"name": "Sunpreet Aulakh", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "Horizon Recruitment Services", "raw_score": "0", "wrote_to_file": true},
-    {"name": "Harsh Kumar Sharma", "tier": "F", "score_pct": "0%", "verdict": "Hard No", "company": "IMS Group", "raw_score": "0", "wrote_to_file": true},
-    {"name": "Dipak Badgujar", "tier": "C", "score_pct": "56.93%", "verdict": "Maybe", "company": "ZURU", "raw_score": "30.4", "wrote_to_file": true},
-    {"name": "Suvasmita Rout", "tier": "D", "score_pct": "49.4%", "verdict": "No", "company": "ARCHER Transnational Systems", "raw_score": "26.4", "wrote_to_file": true}
+    {"name": "Harleen Sodhi", "tier": "B", "score_pct": "69.85%", "verdict": "Yes", "company": "Sprinklr", "raw_score": "37.3", "wrote_to_file": true},
+    {"name": "Sukritha Sankaran", "tier": "B", "score_pct": "74.34%", "verdict": "Yes", "company": "Thoughtworks/ex-Sprinklr", "raw_score": "39.7", "wrote_to_file": true},
+    {"name": "Prabhleen Chopra", "tier": "B", "score_pct": "78.3%", "verdict": "Yes", "company": "Sprinklr", "raw_score": "41.8", "wrote_to_file": true},
+    {"name": "Aman Verma", "tier": "B", "score_pct": "75.7%", "verdict": "Yes", "company": "Salesforce", "raw_score": "40.4", "wrote_to_file": true},
+    {"name": "Kejal Joshi", "tier": "B", "score_pct": "79.2%", "verdict": "Yes", "company": "Salesforce", "raw_score": "42.3", "wrote_to_file": true}
   ],
-  "a_rated_count": 0,
-  "total_candidates_in_search": 80,
+  "a_rated_count": 2,
+  "total_candidates_in_search": "15K+ Gujarat broad + 68 Sprinklr + 8 Gujarat tech + 254 Salesforce + 200 Atlassian",
   "run_parameters": {
-    "b_rated_target": 15,
-    "hard_cap": 300
+    "a_rated_target": 20,
+    "hard_cap": 600
   },
   "run_counters": {
-    "run_b_plus_count": 0,
-    "run_total_count": 6
+    "run_a_rated_count": 2,
+    "run_total_count": 102
   },
-  "a_rated_cache": [],
-  "notes": "top5_summary is the canonical record of initial scores. Pivot rule: change filters after every non-B. Currently on Search 2 (Gujarat + recruiter titles, 79 results)."
+  "a_rated_cache": [
+    {"name": "Leena Visora", "tier": "A", "score_pct": "94.6%", "verdict": "Strong Yes", "company": "Atlassian", "raw_score": "50.5"},
+    {"name": "Tanvi Jain", "tier": "A", "score_pct": "84.5%", "verdict": "Strong Yes", "company": "Atlassian", "raw_score": "45.1"}
+  ],
+  "notes": "top5_summary is canonical record. A-rated candidates found at Atlassian. Gujarat auto-DQ check needs verification for A-rated candidates during cleanup."
 }

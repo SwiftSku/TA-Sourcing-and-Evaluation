@@ -21,11 +21,6 @@ This document defines which companies SwiftSku targets when sourcing candidates 
 - **Outbound Sales Motion**: Companies whose sales teams actively do outbound prospecting (cold calls, cold emails, SDR/BDR functions) produce candidates with directly transferable skills for SwiftSku's pipeline.
 - **High-Volume Cold Calling (100+ per day)**: The gold standard. Companies that expect their SDRs to make 100+ outbound activities/calls per day produce the highest-caliber outbound reps.
 
-### Nice-to-Haves
-
-- **201+ Employees**: Larger companies tend to have more structured training programs and more candidates in the talent pool.
-- **Public or Late-Stage**: Signals operational maturity and professional development standards.
-
 ### Deprioritized
 
 - **India-Only Customer Base**: Still valid for Gujarat presence, but candidates may lack US-market experience.
@@ -36,38 +31,38 @@ This document defines which companies SwiftSku targets when sourcing candidates 
 
 ## Tier System
 
-| Tier | Meaning | Source |
-|------|---------|--------|
-| **Tier 1 (AM + RC)** | Proven top-producing companies for both Account Manager and Recruiting Coordinator pipelines. Hardcoded in both JD configs. | `JD--Acct_Mgr.md` and `JD--Recruiting_Coord.md` `tier1_companies` lists |
-| **Tier 1 (AM only)** | Proven for Account Manager pipeline only. Hardcoded in AM JD config but not RC. | `JD--Acct_Mgr.md` `tier1_companies` list |
-| **Tier 2 (Research)** | Discovered through company research. High confidence Gujarat presence verified via LinkedIn. | `company_research.json` |
-| **Validated SaaS (US)** | Appears on the validated US HQ SaaS company list in the AM scoring rubric. Gujarat presence not yet confirmed for all. | `JD--Acct_Mgr.md` scoring rubric |
-| **Validated SaaS (Non-US)** | Appears on the validated non-US SaaS company list. Typically India-HQ'd B2B SaaS with Gujarat presence. | `JD--Acct_Mgr.md` scoring rubric |
-| **New Addition** | Manually added by Dan; not yet categorized into a pipeline tier. | Direct request |
+| Tier                        | Meaning                                                                                                                     | Source                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Tier 1 (AM + RC)**        | Proven top-producing companies for both Account Manager and Recruiting Coordinator pipelines. Hardcoded in both JD configs. | `JD--Acct_Mgr.md` and `JD--Recruiting_Coord.md` `tier1_companies` lists |
+| **Tier 1 (AM only)**        | Proven for Account Manager pipeline only. Hardcoded in AM JD config but not RC.                                             | `JD--Acct_Mgr.md` `tier1_companies` list                                |
+| **Tier 2 (Research)**       | Discovered through company research. High confidence Gujarat presence verified via LinkedIn.                                | `company_research.json`                                                 |
+| **Validated SaaS (US)**     | Appears on the validated US HQ SaaS company list in the AM scoring rubric. Gujarat presence not yet confirmed for all.      | `JD--Acct_Mgr.md` scoring rubric                                        |
+| **Validated SaaS (Non-US)** | Appears on the validated non-US SaaS company list. Typically India-HQ'd B2B SaaS with Gujarat presence.                     | `JD--Acct_Mgr.md` scoring rubric                                        |
+| **New Addition**            | Manually added by Dan; not yet categorized into a pipeline tier.                                                            | Direct request                                                          |
 
 ---
 
 ## _OUTPUT-Target_Companies.xlsx — Column Reference
 
-| # | Column | Type | Description |
-|---|--------|------|-------------|
-| 1 | **Company** | Text | Company name |
-| 2 | **Tier** | Text | Tier classification (see Tier System above) |
-| 3 | **Source** | Text | Where this company was sourced from (`JD Config`, `company_research.json`, `JD Rubric`, `LinkedIn URL provided`) |
-| 4 | **US_HQ** | Yes/No | Is the company headquartered in the US? |
-| 5 | **B2B_SaaS** | Yes/No | Is this a B2B SaaS company? |
-| 6 | **Serves_US_Customers** | Yes/No | Does the company sell to US-based customers? |
-| 7 | **Gujarat_Presence** | Yes/No/Possible | Does the company have employees or offices in Gujarat, India? |
-| 8 | **Gujarat_City** | Text | Specific city in Gujarat (usually Ahmedabad) |
-| 9 | **VC_Backed_Startup** | Yes/No | Is the company VC-backed, PE-backed, or a high-growth startup? |
-| 10 | **Approx_Size** | Text | Approximate employee count range |
-| 11 | **SaaS_Score_AM** | Number (0-4) | Score a candidate from this company would receive on the SaaS/Software dimension in the **AM rubric** (Dim 2, weight 2.5×). 4 = US HQ SaaS, 3 = Non-US validated or Tier 1 non-US SaaS, 2 = clear SaaS not on validated list |
-| 12 | **SaaS_Score_RC** | Number (0-4) | Score for the **RC rubric** SaaS dimension (Dim 4, weight 3×). Same 4/3/2 scale but the RC JD's US HQ SaaS list explicitly includes BrowserStack, Freshworks, and Toast |
-| 13 | **Notes** | Text | Free-form notes about the company and its relevance |
-| 14 | **Outbound_Sales_Degree** | Text | How much the company's sales team relies on outbound prospecting: Very High, High, Medium, Low, or Low (PLG) |
-| 15 | **Outbound_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source |
-| 16 | **100+_Cold_Calls_Per_Day** | Yes/No/Unknown | Whether the company's SDRs/BDRs are expected to make 100+ cold calls or outbound activities per day |
-| 17 | **Cold_Call_Proof** | Text | Evidence snippet (<15 words) with hyperlink to source (primarily from job descriptions) |
+| #   | Column                      | Type            | Description                                                                                                                                                                                                                  |
+| --- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Company**                 | Text            | Company name                                                                                                                                                                                                                 |
+| 2   | **Tier**                    | Text            | Tier classification (see Tier System above)                                                                                                                                                                                  |
+| 3   | **Source**                  | Text            | Where this company was sourced from (`JD Config`, `company_research.json`, `JD Rubric`, `LinkedIn URL provided`)                                                                                                             |
+| 4   | **US_HQ**                   | Yes/No          | Is the company headquartered in the US?                                                                                                                                                                                      |
+| 5   | **B2B_SaaS**                | Yes/No          | Is this a B2B SaaS company?                                                                                                                                                                                                  |
+| 6   | **Serves_US_Customers**     | Yes/No          | Does the company sell to US-based customers?                                                                                                                                                                                 |
+| 7   | **Gujarat_Presence**        | Yes/No/Possible | Does the company have employees or offices in Gujarat, India?                                                                                                                                                                |
+| 8   | **Gujarat_City**            | Text            | Specific city in Gujarat (usually Ahmedabad)                                                                                                                                                                                 |
+| 9   | **VC_Backed_Startup**       | Yes/No          | Is the company VC-backed, PE-backed, or a high-growth startup?                                                                                                                                                               |
+| 10  | **Approx_Size**             | Text            | Approximate employee count range                                                                                                                                                                                             |
+| 11  | **SaaS_Score_AM**           | Number (0-4)    | Score a candidate from this company would receive on the SaaS/Software dimension in the **AM rubric** (Dim 2, weight 2.5×). 4 = US HQ SaaS, 3 = Non-US validated or Tier 1 non-US SaaS, 2 = clear SaaS not on validated list |
+| 12  | **SaaS_Score_RC**           | Number (0-4)    | Score for the **RC rubric** SaaS dimension (Dim 4, weight 3×). Same 4/3/2 scale but the RC JD's US HQ SaaS list explicitly includes BrowserStack, Freshworks, and Toast                                                      |
+| 13  | **Notes**                   | Text            | Free-form notes about the company and its relevance                                                                                                                                                                          |
+| 14  | **Outbound_Sales_Degree**   | Text            | How much the company's sales team relies on outbound prospecting: Very High, High, Medium, Low, or Low (PLG)                                                                                                                 |
+| 15  | **Outbound_Proof**          | Text            | Evidence snippet (<15 words) with hyperlink to source                                                                                                                                                                        |
+| 16  | **100+_Cold_Calls_Per_Day** | Yes/No/Unknown  | Whether the company's SDRs/BDRs are expected to make 100+ cold calls or outbound activities per day                                                                                                                          |
+| 17  | **Cold_Call_Proof**         | Text            | Evidence snippet (<15 words) with hyperlink to source (primarily from job descriptions)                                                                                                                                      |
 
 ---
 
@@ -75,7 +70,7 @@ This document defines which companies SwiftSku targets when sourcing candidates 
 
 When a candidate is evaluated, their current/previous company affects their score via the **SaaS/Software** dimension (2.5x weight):
 
-- **Score 4**: Current company is on the validated US HQ SaaS list
+- **Score 4**: Current company is onΩz mmhmm the validated US HQ SaaS list
 - **Score 3**: Current company is on the validated non-US SaaS list
 - **Score 2**: Works in SaaS/software but company not on either validated list
 - **Score 1**: Non-SaaS/software company

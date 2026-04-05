@@ -1,0 +1,23 @@
+{
+  "skill_name": "zbrowser",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Go to producthunt.com and find the #1 product of the day. Tell me its name and tagline, then close everything when you're done.",
+      "expected_output": "Claude should: (1) call tabs_context_mcp first, (2) create a new tab, (3) navigate to producthunt.com, (4) extract the top product info, (5) close the tab after getting the info, (6) report the name and tagline concisely.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I need you to check these 3 company websites and tell me their one-line descriptions: stripe.com, linear.app, notion.so",
+      "expected_output": "Claude should use subagents (or at minimum WebFetch) for the repeated task of visiting 3 sites rather than doing them sequentially in the parent. Should prefer WebFetch/WebSearch over browser since no interaction is needed. If browser is used, tabs should be closed after each site is checked.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Open up linkedin.com/feed in the browser so I can see my feed.",
+      "expected_output": "Claude should: (1) call tabs_context_mcp, (2) create a new tab, (3) navigate to linkedin.com/feed, (4) NOT close the tab since user wants to see the feed (it's an ongoing view, not a data extraction task). Should use Dan Windows Chrome.",
+      "files": []
+    }
+  ]
+}

@@ -219,6 +219,7 @@ Return ONLY: RESEARCH | {count} companies found ({high_count} high, {medium_coun
 
 **Rules (kept here — these are orchestrator behavior):**
 - Runs on `model: "sonnet"` — same as other sub-agents
+- ⛔ **Uses WebFetch/WebSearch ONLY — does NOT use Chrome/browser.** All company research is done via web fetch tools. This is why it can safely run in parallel with Chrome-using agents.
 - Spawned once during Phase 0, runs in parallel with Tier 1 company searches
 - The orchestrator checks for `Target_Companies/company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
 - If the research agent fails or returns 0 companies, log it and continue — Tier 1 alone is valuable
