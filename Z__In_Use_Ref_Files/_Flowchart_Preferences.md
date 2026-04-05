@@ -80,7 +80,7 @@ SVG uses CSS font stacks — no local font files required.
 The pipeline flows top-to-bottom through these stages on the center spine:
 
 1. **Pipeline Starter** (user/manual, blue) → triggers Orchestrator
-2. **Pipeline Orchestrator** (Opus, orange, NO Chrome) — center spine anchor; **Company Research** (Sonnet, green, left branch) + **Pre-Flight Cleanup** (Sonnet, green, right branch) spawn in parallel (both no Chrome)
+2. **Pipeline Orchestrator** (Opus, orange, NO Chrome) — center spine anchor; **Pre-Flight Cleanup** (Sonnet, green, right branch) spawns pre-flight (no Chrome). **Company Research** is standalone (see below Doctor).
 3. **Decision: Source type?** — diamond: LIR branch left (→ URL Extractor), Static branch right (→ Orchestrator Dedup)
 4. **URL Extractor** (Sonnet, Chrome, green, left) — extracts 5 non-dup URLs per invocation; verifies filters READ-ONLY
 5. **Orchestrator Dedup** (Opus, orange, right) — name + normalized LI URL check for static sources

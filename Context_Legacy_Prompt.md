@@ -20,7 +20,7 @@ All files are in this directory: /sessions/wizardly-cool-brown/mnt/TA-ACM
 - `CE_Spawn_Template.md` → both orchestrator and cleanup read at spawn time, you pass the path
 - `Target_Companies/Company_Research_Agent.md` → company research sub-agent reads from disk, you pass the path
 - `_OUTPUT--Recruiting_Coord.xlsx` → sub-agents write here, you pass the path
-- `Z_Chat_Log--Agent_Maker.md` → update at end of run only
+- `Z_ChangeLog-AgentMaker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors
 
 ## Step 2: Understand Where We Left Off

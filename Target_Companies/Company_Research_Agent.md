@@ -1,14 +1,16 @@
-# Company Research Agent — SwiftSku Candidate Pipeline
+# Company Research Agent — SwiftSku Target Company Discovery
 
-> **This agent runs IN PARALLEL with candidate processing.** Spawn it during Phase 0 and don't wait for it. Its results feed Tier 2 of the target company list.
+> **This is a standalone, manually triggered flow.** Run it any time you want to discover new target companies. It is NOT part of the candidate pipeline — run it separately, review the results, then update the JD file's `tier1_companies` list before starting a pipeline run.
 
 ## Model
 
-Runs on `model: "sonnet"` — same as other sub-agents.
+Runs on `model: "sonnet"`.
 
 ---
 
-## Spawn Template
+## How to Invoke
+
+Tell the agent:
 
 ```
 You are a company research agent. Read your instructions at:
@@ -20,12 +22,13 @@ Also read the company research specs at:
 The active JD file is:
 [FULL PATH to [active JD file]]
 
-Return ONLY: RESEARCH | {count} companies found ({high_count} high, {medium_count} medium)
+The target companies Excel file is at:
+[FULL PATH to Target_Companies/_OUTPUT-Target_Companies.xlsx]
 ```
 
 ---
 
-## Instructions (read by the sub-agent at runtime)
+## Instructions
 
 Your job is to find US-headquartered B2B SaaS companies with offices or significant employee presence in Gujarat, India (especially Ahmedabad, Vadodara, Gandhinagar, Surat, Rajkot).
 
@@ -41,22 +44,34 @@ Your job is to find US-headquartered B2B SaaS companies with offices or signific
 
 ### Exclusions
 
-**Already known (DO NOT include these):**
-Read the `tier1_companies` list from the active JD file's Pipeline Config. Do not include any company already on that list.
+**Already in the target companies Excel (DO NOT include these):**
+Read `Target_Companies/_OUTPUT-Target_Companies.xlsx` column A to get all existing company names. Also read the `tier1_companies` list from the active JD file's Pipeline Config. Do not include any company already in either list.
 
 ### Output
 
-Write results to `[FULL PATH]/Target_Companies/company_research.json` in this format:
+Write new companies directly to `Target_Companies/_OUTPUT-Target_Companies.xlsx` as new rows. Follow the 17-column schema defined in `Target_Companies/Company_Research_Specs.md`:
 
-```json
-{
-  "discovered_at": "YYYY-MM-DD HH:MM:SS",
-  "companies": [
-    {"name": "...", "hq": "...", "gujarat_city": "...", "confidence": "high/medium", "source": "where you found this"},
-    ...
-  ]
-}
-```
+| Column | Value |
+|--------|-------|
+| Company | Company name |
+| Tier | `Tier 2 (Research)` |
+| Source | `Company Research Agent` |
+| US_HQ | `Yes` or `No` |
+| B2B_SaaS | `Yes` or `No` |
+| Serves_US_Customers | `Yes`, `No`, or `Unknown` |
+| Gujarat_Presence | `Yes`, `No`, or `Possible` |
+| Gujarat_City | Specific city (e.g., `Ahmedabad`) |
+| VC_Backed_Startup | `Yes`, `No`, or `Unknown` |
+| Approx_Size | Employee count range (e.g., `1000-5000`) |
+| SaaS_Score_AM | Score 0-4 per AM rubric (see Company_Research_Specs.md) |
+| SaaS_Score_RC | Score 0-4 per RC rubric (see Company_Research_Specs.md) |
+| Notes | Brief description of company and relevance |
+| Outbound_Sales_Degree | `Very High`, `High`, `Medium`, `Low`, or `Low (PLG)` |
+| Outbound_Proof | Evidence snippet with hyperlink (<15 words) |
+| 100+_Cold_Calls_Per_Day | `Yes`, `No`, or `Unknown` |
+| Cold_Call_Proof | Evidence snippet with hyperlink (<15 words) |
+
+Use `openpyxl` to append rows. Match the formatting of existing rows (font, alignment, column widths are already set). Find the last data row by walking column A backwards — do NOT trust `ws.max_row`.
 
 Aim for at least 10 new companies. Prioritize HIGH confidence (verified Gujarat office) over quantity.
 
@@ -68,32 +83,25 @@ Every company you include MUST have:
 2. **Verified Gujarat presence** — at least ONE of: (a) LinkedIn shows employees with Gujarat/Ahmedabad/Vadodara in their location at this company, (b) Glassdoor/Indeed shows open roles in Gujarat, (c) company website lists a Gujarat office. "India office" alone is NOT enough — it could be Bangalore/Hyderabad/Pune.
 3. **B2B SaaS confirmed** — the company must sell software to businesses, not consumers. Check G2, Capterra, or company website.
 
-For each company, record the SPECIFIC evidence for all 3 checks in the "source" field. Example:
-  "source": "US HQ per LinkedIn company page; 4 CSMs in Ahmedabad on LinkedIn; listed on G2 as B2B SaaS"
+For each company, record the SPECIFIC evidence for all 3 checks in the Notes column. Example:
+  "US HQ per LinkedIn company page; 4 CSMs in Ahmedabad on LinkedIn; listed on G2 as B2B SaaS"
 
-Companies with only MEDIUM confidence (e.g., "I think they have a Gujarat office but couldn't verify") should be marked as such and placed LAST in the list. The orchestrator will search HIGH confidence companies first.
+Companies where Gujarat presence could not be strongly verified should have `Gujarat_Presence` = `Possible` and should be appended LAST.
 
 ### Return Format
 
-Return ONLY: `RESEARCH | {count} companies found ({high_count} high, {medium_count} medium)`
+After writing to the xlsx, return a summary:
 
----
+```
+RESEARCH COMPLETE | {count} new companies added to _OUTPUT-Target_Companies.xlsx
+High confidence: {high_count} | Medium/Possible: {medium_count}
 
-## Rules (for the Orchestrator)
+New companies:
+- {Name} | {Gujarat_City} | {Confidence}
+- ...
 
-- Spawned once during Phase 0, runs in parallel with Tier 1 company searches
-- The orchestrator checks for `Target_Companies/company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
-- If the research agent fails or returns 0 companies, log it and continue — Tier 1 alone is valuable
-- Do NOT wait for this agent before starting Tier 1 searches
-
-### ⛔ Orchestrator Validation Before Queuing Tier 2 Companies
-
-When reading `Target_Companies/company_research.json`, the orchestrator MUST:
-
-1. Skip any company missing the `source` field or where `source` is vague (e.g., "found online")
-2. Queue `high` confidence companies before `medium` confidence companies
-3. If a company-targeted search returns 0 results after 2 pages, remove it from the queue — the Gujarat presence claim was likely wrong
-4. Log every Tier 2 company searched and its yield to the per-run chat log: `COMPANY_SEARCH: {company} | {candidates_found} | {a_count}A {b_count}B`
+Next step: Review the xlsx, then add any promising companies to the JD file's tier1_companies list before your next pipeline run.
+```
 
 ---
 
@@ -101,5 +109,6 @@ When reading `Target_Companies/company_research.json`, the orchestrator MUST:
 
 - Does NOT evaluate or score candidates — that's the CE's job
 - Does NOT modify search filters — that's the orchestrator's job
-- Does NOT touch the output xlsx — it only writes to `company_research.json`
+- Does NOT touch the candidate output xlsx files — it only writes to `_OUTPUT-Target_Companies.xlsx`
 - Does NOT hold context between invocations — single-shot agent
+- Does NOT run automatically during pipeline runs — manual trigger only

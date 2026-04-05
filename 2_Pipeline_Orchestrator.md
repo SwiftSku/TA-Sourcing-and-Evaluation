@@ -12,6 +12,48 @@ The Pipeline Starter specifies which JD file to use. At startup, parse the JD fi
 
 **Also read the `Run Learnings` section at the bottom of the active JD file.** This contains accumulated knowledge from previous runs about which filters, companies, and refinements produced A-rated candidates (and which didn't). Use these learnings to inform your search strategy — e.g., prioritize companies that historically produced A-rates, avoid filter combos that failed, and apply refinements that worked before.
 
+### Dual-JD Mode (Recruiting Pipeline)
+
+When the Pipeline Starter specifies **two JD files** (a primary and secondary), the pipeline runs in **dual-JD mode**. This is used when two roles share a candidate pool (e.g., Recruiting Coordinator + Senior Sales Recruiter).
+
+**How dual-JD mode works:**
+
+1. **The Pipeline Starter specifies:** `primary_jd` and `secondary_jd` file paths, plus which role is the "priority" for search filters.
+2. **Search filters come from the priority role's JD.** The orchestrator reads `lir_title_filters`, `negative_keywords`, `tier1_companies`, etc. from the priority JD. Since both roles share the same candidate pool, one set of filters is used — but they should be the UNION of relevant titles (e.g., both "Recruiter" and "Recruiting Coordinator" titles).
+3. **CE sub-agents use the dual-rubric template** from `CE_Spawn_Template.md`. Each CE reads BOTH JD files, scores the candidate against BOTH rubrics, and writes to whichever output file corresponds to the higher score.
+4. **The CE return line includes both scores:** `{Name} | {WinningRole} | {Tier} | {Score%} | {Verdict} | {Company} | {LosingRole}:{LosingScore%} | {DQ_Reason}`
+5. **A-rated tracking is per-role.** Maintain separate counters: `run_a_rated_primary` and `run_a_rated_secondary`. The pipeline termination A-rated target applies to the COMBINED count across both roles.
+6. **Quality gate (3 consecutive non-A) considers the WINNING tier** — i.e., the higher of the two scores. If someone is B for Sr Recruiter but C for RC, they're tracked as "B" for the quality gate.
+7. **Run learnings are written to BOTH JD files** at the end of the run.
+8. **Cleanup runs on BOTH output files** — spawn cleanup for each output file separately.
+
+**Dual-JD CE spawn:** Instead of the single-rubric template, use the dual-rubric template from `CE_Spawn_Template.md`, filling in:
+- `PRIMARY_JD_FILE_PATH` / `SECONDARY_JD_FILE_PATH`
+- `PRIMARY_OUTPUT_FILE_PATH` / `SECONDARY_OUTPUT_FILE_PATH`
+
+**Final summary in dual-JD mode** includes per-role breakdowns:
+
+```
+## Pipeline Complete (Dual-JD Mode)
+
+Source: {source description}
+This run: {run_total_count} candidates processed
+
+PRIMARY ROLE — {primary_role_name}:
+  A: {count} | B: {count} | C: {count} | D: {count} | F: {count}
+
+SECONDARY ROLE — {secondary_role_name}:
+  A: {count} | B: {count} | C: {count} | D: {count} | F: {count}
+
+A-rated candidates (this run):
+- {Name} | {WinningRole} | {Score%} | {Company} | (also: {LosingRole} {LosingScore%})
+- ...
+
+B-rated candidates (this run):
+- {Name} | {WinningRole} | {Score%} | {Company} | (also: {LosingRole} {LosingScore%})
+- ...
+```
+
 ## Purpose
 
 This is the **single parent orchestrator** for the entire pipeline. It runs on **Opus** and manages all sub-agents. It replaces the previous Search_Optimizer.md + Bulk_Processor.md two-file design.
@@ -83,9 +125,7 @@ There is **no separate validation phase**. The pipeline goes straight to process
 2. Generate canary token (see Canary Token Setup below)
 3. Create per-run chat log (see Per-Run Chat Log below)
 4. If LinkedIn source: read `REF--LIR_Interface_Learnings.md`
-5. **Spawn two parallel agents** (neither uses Chrome, no conflict):
-   - **Company Research Agent** — reads instructions from `Target_Companies/Company_Research_Agent.md`. Runs in background; results feed Tier 2.
-   - **Pre-Flight Cleanup Agent** — see Cleanup Agent Spawn Template below. Validates existing output file before new rows are added. Must finish before Phase 1 starts.
+5. **Spawn Pre-Flight Cleanup Agent** (does not use Chrome). See Cleanup Agent Spawn Template below. Validates existing output file before new rows are added. Must finish before Phase 1 starts.
 
 ### Phase 1: URL Extraction (batch of 5)
 
@@ -110,10 +150,19 @@ Extract candidates from this search:
 - LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
 - OUTPUT_PATH: [FULL PATH to [output file from JD config]]
 - SKIP_NAMES: {comma_separated_names}
+- VERDICT_DIR: [FULL PATH to directory containing output file]
 
-Return ONLY: PAGE X | POS Y | N candidates, followed by numbered list of Name | URL.
+⛔ Write your results to `_URL_BATCH.txt` in VERDICT_DIR (overwrite any existing content). Do NOT return results in the Agent response — Chrome context must not leak to the parent.
+
+Format in `_URL_BATCH.txt`:
+PAGE X | POS Y | N candidates
+1. {Full Name} | {LIR_Profile_URL}
+2. {Full Name} | {LIR_Profile_URL}
+...
 If page exhausted, append PAGE_EXHAUSTED. If entire search exhausted, append SEARCH_EXHAUSTED.
 ```
+
+**Reading URL Extractor results:** After the Agent call completes, read `_URL_BATCH.txt`, parse the URLs, then **delete the file immediately**. If the file does not exist, the extractor failed — follow error recovery.
 
 ### Phase 2: Candidate Evaluation (one at a time)
 
@@ -130,6 +179,17 @@ For each URL returned by the extractor, spawn a **Candidate Evaluator** sub-agen
 ⛔ **The output file MUST be updated immediately after every single CE verdict — one candidate, one write, no batching.** Dan must be able to open the xlsx file at any point during the run and see every candidate evaluated so far.
 
 ALL candidates get rows regardless of tier. There is no D/F exclusion.
+
+#### Reading CE Verdicts — File-Based (Context Protection)
+
+⛔ **CRITICAL: Do NOT parse the Agent tool's return value for CE verdicts.** The Agent tool return may contain Chrome tool artifacts (screenshots, DOM reads, page text) that would bloat the parent's context window. Instead, use file-based communication:
+
+1. After the CE Agent call completes, **read `_VERDICT.txt`** in the same directory as the output xlsx. This file contains exactly one line: the CE's verdict summary.
+2. **Parse the verdict line** from the file (same format as before: `{Name} | {Tier} | {Score%} | {Verdict} | {Company} | {DQ_Reason}`). In dual-JD mode: `{Name} | {WinningRole} | {Tier} | {Score%} | {Verdict} | {Company} | {LosingRole}:{LosingScore%} | {DQ_Reason}`.
+3. **Delete `_VERDICT.txt` immediately** after reading. This prevents stale data from persisting between candidates.
+4. **If `_VERDICT.txt` does not exist** after the Agent call returns, the CE sub-agent failed before writing its verdict. Treat as a CE failure — follow the Sub-Agent Error Recovery procedure.
+
+This pattern ensures the parent's context only ever grows by ~100 bytes per candidate (the one-line verdict), regardless of how much Chrome interaction happened inside the CE sub-agent.
 
 ### Phase 3: Quality Gate — 3 Consecutive Non-A Rule
 
@@ -165,7 +225,7 @@ Loop: URL Extractor (5 URLs) → CE × 5 → check termination → next batch.
 
 ### Pre-Flight Cleanup
 
-Spawned in Phase 0 step 5 **in parallel with Company Research** (neither uses Chrome). The orchestrator MUST wait for Pre-Flight Cleanup to finish before entering Phase 1, but does NOT need to wait for Company Research.
+Spawned in Phase 0 step 5 (does not use Chrome). The orchestrator MUST wait for Pre-Flight Cleanup to finish before entering Phase 1.
 
 ---
 
@@ -175,62 +235,23 @@ Spawned in Phase 0 step 5 **in parallel with Company Research** (neither uses Ch
 
 ### Target Company List
 
-**Tier 1 — Proven A-producers (search these FIRST):**
-Read `tier1_companies` from the active JD file's Pipeline Config block.
-
-**Tier 2 — Research-discovered (populated by Company Research Agent during the run):**
-Starts empty. The Company Research Agent (instructions in `Target_Companies/Company_Research_Agent.md`) runs in parallel during Phase 0 and appends companies here. Check `Target_Companies/company_research.json` for updates before each new company search.
+Read `tier1_companies` from the active JD file's Pipeline Config block. These are proven A-producers — search them FIRST. To add more companies, run the Company Research flow separately (see `Target_Companies/Company_Research_Agent.md`) and update the JD file's `tier1_companies` list before starting a pipeline run.
 
 ### Company-Targeted Search Execution
 
-1. **Work through Tier 1 sequentially.** For each company:
+1. **Work through the company list sequentially.** For each company:
    - Set LIR filters: Company = [company name], Title = [titles from `lir_title_filters` in JD config], Location = India, Hide previously viewed = 2 years
    - Spawn URL Extractor → CE loop as normal (Phase 1-2)
    - When SEARCH_EXHAUSTED for this company → move to next company
    - Track which companies have been searched in `company_search_log` (in-memory list)
 
-2. **Interleave Tier 2 as results arrive.** When the Company Research Agent returns results (written to `Target_Companies/company_research.json`), add those companies to the queue. You do NOT need to finish all of Tier 1 first — if Tier 2 results arrive while you're mid-Tier-1, append them to the queue and continue in order.
-
-3. **Fall back to keyword search ONLY when both tiers are exhausted** and termination targets are not met. Then use the Search Refinement Logic below.
+2. **Fall back to keyword search ONLY when the company list is exhausted** and termination targets are not met. Then use the Search Refinement Logic below.
 
 ### Why This Works
 
 Read `a_rate_signals` from the active JD file's Pipeline Config for role-specific search strategy guidance. Company-targeted search guarantees hits on the two highest-weight dimensions (SaaS + Title). The only variance is in the lower-weight dimensions.
 
 ---
-
-## Company Research Agent
-
-> **Moved to `Target_Companies/Company_Research_Agent.md`.** The sub-agent reads its instructions from that file at runtime. The orchestrator only needs the path for the spawn template.
-
-**Spawn Template:**
-```
-You are a company research agent. Read your instructions at:
-[FULL PATH to Target_Companies/Company_Research_Agent.md]
-
-Also read the company research specs at:
-[FULL PATH to Target_Companies/Company_Research_Specs.md]
-
-The active JD file is:
-[FULL PATH to [active JD file]]
-
-Return ONLY: RESEARCH | {count} companies found ({high_count} high, {medium_count} medium)
-```
-
-**Rules (kept here — these are orchestrator behavior):**
-- Runs on `model: "sonnet"` — same as other sub-agents
-- ⛔ **Uses WebFetch/WebSearch ONLY — does NOT use Chrome/browser.** All company research is done via web fetch tools. This is why it can safely run in parallel with Chrome-using agents.
-- Spawned once during Phase 0, runs in parallel with Tier 1 company searches
-- The orchestrator checks for `Target_Companies/company_research.json` existence before starting each new company search. If the file exists and has new companies, add them to the Tier 2 queue.
-- If the research agent fails or returns 0 companies, log it and continue — Tier 1 alone is valuable
-- Do NOT wait for this agent before starting Tier 1 searches
-
-**⛔ Orchestrator Validation Before Queuing Tier 2 Companies:**
-When reading `Target_Companies/company_research.json`, the orchestrator MUST:
-1. Skip any company missing the `source` field or where `source` is vague (e.g., "found online")
-2. Queue `high` confidence companies before `medium` confidence companies
-3. If a company-targeted search returns 0 results after 2 pages, remove it from the queue — the Gujarat presence claim was likely wrong
-4. Log every Tier 2 company searched and its yield to the per-run chat log: `COMPANY_SEARCH: {company} | {candidates_found} | {a_count}A {b_count}B`
 
 ---
 
@@ -316,10 +337,13 @@ Fill in parameters using these paths:
 - LIR_LEARNINGS_PATH: [FULL PATH to REF--LIR_Interface_Learnings.md]
 - ANTI_DETECTION_PATH: [FULL PATH to REF--Anti_Detection.md]
 
-Return ONLY: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Deduped: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Enrichment_Failed: {N} | Uncleaned: {N}
+⛔ Write your summary to `_CLEANUP_RESULT.txt` in the same directory as the output xlsx (overwrite). Do NOT return results in the Agent response — Chrome context from enrichment must not leak to the parent.
+Format: CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Deduped: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Enrichment_Failed: {N} | Uncleaned: {N}
 ```
 
-⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After the cleanup agent returns, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the output file). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`.
+**Reading Cleanup results:** After the Cleanup Agent call completes, read `_CLEANUP_RESULT.txt`, parse the summary, then **delete the file immediately**.
+
+⛔ **CLEANUP GATE (applies to ALL cleanup passes — periodic AND final):** After reading the cleanup result file, check the `Uncleaned` field (ground truth — actual count of rows without Cleaned?=TRUE in the output file). For **periodic** passes, if `Uncleaned` > 0, log it and continue. For the **final** pass, this is a hard gate — see Pipeline Termination for the re-run rule. The pipeline CANNOT output a summary until the final cleanup returns `Uncleaned: 0`. If `_CLEANUP_RESULT.txt` does not exist after the Agent call, the cleanup agent failed — log error and retry once.
 
 ---
 
@@ -481,9 +505,9 @@ All files are in this directory: [FULL ABSOLUTE PATH TO THIS DIRECTORY]
 - `[active JD file]` → CE sub-agents read from disk, you pass the path
 - `Output_Cleanup.md` → cleanup sub-agents read from disk, you pass the path
 - `CE_Spawn_Template.md` → both orchestrator and cleanup read at spawn time, you pass the path
-- `Target_Companies/Company_Research_Agent.md` → company research sub-agent reads from disk, you pass the path
+- `Target_Companies/Company_Research_Agent.md` → standalone flow, not part of this pipeline. Run separately.
 - `[output file from JD config]` → sub-agents write here, you pass the path
-- `Z_Chat_Log--Agent_Maker.md` → update at end of run only
+- `Z_ChangeLog-AgentMaker.md` → update at end of run only
 - `Z_Pipeline_Error_Log.md` → log errors here, do NOT read past errors
 
 ## Step 2: Understand Where We Left Off
@@ -594,7 +618,7 @@ The orchestrator's context should contain ONLY:
 - `Output_Cleanup.md` — cleanup sub-agents read from disk
 - `CE_Spawn_Template.md` — both orchestrator and cleanup read at spawn time
 - `[output file from JD config]` — sub-agents handle all xlsx operations
-- `Z_Chat_Log--Agent_Maker.md` — append at end of run only
+- `Z_ChangeLog-AgentMaker.md` — append at end of run only
 - `Z_Pipeline_Error_Log.md` — append errors, don't read past ones
 
 ---

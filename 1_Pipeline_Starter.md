@@ -17,9 +17,12 @@ You are running the Pipeline Orchestrator for SwiftSku's candidate hiring pipeli
 **Available JD files in this directory:**
 - `JD--Acct_Mgr.md` — Senior Account Manager
 - `JD--Recruiting_Coord.md` — Recruiting Coordinator
+- `JD--Sr_Sales_Recruiter.md` — Senior Sales Recruiter
 - *(add new JD files here as roles are created)*
 
 **ALWAYS ask the user to select a role from the numbered list above — even if they mention a role in their initial message.** Confirm the selection before loading the JD config.
+
+**Dual-JD mode:** If the user selects BOTH Recruiting Coordinator AND Senior Sales Recruiter (or says "both recruiting roles"), the pipeline runs in dual-JD mode. Ask which role is the **priority** (drives search filters). See `2_Pipeline_Orchestrator.md` → "Dual-JD Mode" section for details.
 
 **Once the JD file is confirmed, pass its path to ALL sub-agent spawn templates.** The JD file's `Pipeline Config` block contains every role-specific value the pipeline needs.
 
@@ -39,9 +42,9 @@ These files exist in this same folder. Sub-agents read them from disk. You only 
 - `[active JD file]` — CE sub-agents read this, not you. Pass the path in spawn templates.
 - `Output_Cleanup.md` — cleanup sub-agents read this, not you. Pass the path in spawn templates.
 - `CE_Spawn_Template.md` — the canonical CE spawn template. Both orchestrator and cleanup read this at spawn time. Pass the path.
-- `Target_Companies/Company_Research_Agent.md` — company research sub-agent reads this, not you. Pass the path in spawn templates.
+- `Target_Companies/Company_Research_Agent.md` — standalone flow, not part of this pipeline. Run separately.
 - `[output file from JD config]` — sub-agents write here. You never read it yourself. Pass the path.
-- `Z_Chat_Log--Agent_Maker.md` — update this ONCE at end of run with a summary entry. Do NOT read the full history.
+- `Z_ChangeLog-AgentMaker.md` — update this ONCE at end of run with a summary entry. Do NOT read the full history.
 - `Z_Pipeline_Error_Log.md` — log errors here during the run. Do NOT read past errors.
 
 ---
@@ -53,8 +56,10 @@ Before doing anything else, **ALWAYS** ask me these questions — do NOT skip an
    Which role are we sourcing for?
    1. Senior Account Manager (JD--Acct_Mgr.md)
    2. Recruiting Coordinator (JD--Recruiting_Coord.md)
+   3. Senior Sales Recruiter (JD--Sr_Sales_Recruiter.md)
+   4. DUAL: Recruiting Coordinator + Senior Sales Recruiter (both — specify priority)
    ```
-   Wait for my selection before proceeding. To add new roles, add their JD file to this list.
+   Wait for my selection before proceeding. Option 4 runs dual-JD mode — each candidate scored against both rubrics, placed in whichever role scores higher.
 2. **Source name** — what to call this search in the Source column (e.g., "ACM LIR Search v5")
 3. **Source URL or location** — the search URL, file path, or candidate list to process
 4. **Run parameters** — confirm defaults (20 A-rated target, 60 hard cap) or let me override. These are PER-RUN counts starting at 0 — prior rows do NOT count toward these targets.

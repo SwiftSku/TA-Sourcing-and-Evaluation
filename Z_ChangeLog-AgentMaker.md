@@ -12,7 +12,7 @@
 **When Dan opens a new session to work on the agent system, he will paste this prompt:**
 
 ```
-Read Chat_Log--Agent_Maker.md in the folder I selected. Start with ONLY the 🧠 Pipeline Architecture Reference section at the top — do NOT read the full history entries below it unless I ask you to investigate a specific past decision.
+Read Z_ChangeLog-AgentMaker.md in the folder I selected. Start with ONLY the 🧠 Pipeline Architecture Reference section at the top — do NOT read the full history entries below it unless I ask you to investigate a specific past decision.
 
 You are continuing architecture work on my multi-agent candidate evaluation pipeline. This chat log is the canonical record of every design decision.
 
@@ -92,7 +92,7 @@ ALL candidates get CSV rows regardless of tier.
 | `Senior_AM_Scorecard_Review.csv` | Candidate data (38 columns) | CE sub-agents write; Cleanup reads |
 | `search_handoff.json` | First-5 results cache + run counters | Parent + Cleanup agent |
 | `Z_Error_Log.md` | All pipeline errors (ERR-001+) | All agents append |
-| `Chat_Log--Agent_Maker.md` | THIS FILE — architecture decisions | New sessions read top section |
+| `Z_ChangeLog-AgentMaker.md` | THIS FILE — architecture decisions | New sessions read top section |
 | `Z_Archived_Not_Needed/` | Archived files (old SO, BP, Framework) | Nobody |
 
 ### Scoring Rubric Summary (8 dimensions, max 33.8 points)
@@ -2433,3 +2433,35 @@ Added a "Transposed" sheet to `_OUTPUT--AMD_Recruiting_Coord.xlsx`. Rows and col
 3. **Fixed 3 markdown files to prevent recurrence:**
    - **`JD--AMD_Recruiting_Coord.md`** + **`JD--Acct_Mgr.md`** (CE instructions): Replaced vague "Public LI URL" instruction with explicit extraction rules — NEVER guess/construct URLs from names, extract ONLY from "Public profile" link on LIR page, sanity-check slug matches candidate name, leave empty if not found.
    - **`CSV_Cleanup_Agent.md`**: Added new validation test **I2c (slug-name match)** — extracts slug from public URL, checks that at least one word from candidate name appears in it. Fails → clears URL, forces re-enrichment. Also updated Step 6b enrichment to run I2c check on extracted URLs.
+
+---
+
+### 147. Decouple Company Research into Standalone Flow + File Rename (2026-04-05)
+
+> **Dan:** "The time has come to where I need to simplify this pipeline process into separate, distinct flows that I manually trigger because the complexity has made a lot of surface area for things to break." After reviewing the full architecture, Dan chose to decouple Company Research as the first separation. Also requested renaming `Z_Chat_Log--Agent_Maker.md` → `Z_ChangeLog-AgentMaker.md`.
+
+**Context:** Dan reviewed the entire pipeline architecture with Claude to identify logical splits. Claude proposed 4 separate flows (Extract URLs, Evaluate Batch, Cleanup & Enrich, Company Research). Dan rejected most suggestions — specifically wanted to keep the auto-refinement quality gate (3-consecutive-non-A rule) intact within the main pipeline. Only Company Research was separated, since it was already the cleanest cut: WebSearch-only (no Chrome), independent output, and its mid-run Tier 2 interleaving added complexity without enough value.
+
+**Actions taken:**
+
+**Company Research decoupled:**
+- **`2_Pipeline_Orchestrator.md`**: Removed Phase 0 parallel Company Research spawn, entire Company Research Agent section (spawn template + orchestrator Tier 2 validation rules + queuing logic), Tier 2 interleaving from Search Strategy. Simplified to: read `tier1_companies` from JD config, search sequentially, fall back to keyword search when exhausted. Added pointer to run Company Research separately.
+- **`1_Pipeline_Starter.md`**: Changed Company Research Agent path note from "pass the path in spawn templates" to "standalone flow, not part of this pipeline. Run separately."
+- **`Target_Companies/Company_Research_Agent.md`**: Fully rewritten as standalone manual flow. Writes directly to `_OUTPUT-Target_Companies.xlsx` (all 17 columns via openpyxl) instead of `company_research.json`. Removed orchestrator coupling (spawn template, "Rules for the Orchestrator" section, Tier 2 queue references). Return format now shows xlsx row count + "next step: update JD tier1_companies".
+- **`Target_Companies/Company_Research_Specs.md`**: Updated source references from `company_research.json` to `Company Research Agent`.
+- **`Target_Companies/company_research.json`**: Deleted. All 17 companies were already present in `_OUTPUT-Target_Companies.xlsx` (verified programmatically via openpyxl before deletion).
+
+**New workflow:** Run Company Research standalone → review xlsx → manually add promising companies to JD's `tier1_companies` list → then start pipeline run. User is the orchestrator between these steps.
+
+**File rename — `Z_Chat_Log--Agent_Maker.md` → `Z_ChangeLog-AgentMaker.md`:**
+- Renamed file
+- Updated all active references in: `1_Pipeline_Starter.md`, `2_Pipeline_Orchestrator.md`, `Z_Pipeline_Error_Log.md`, `Context_Legacy_Prompt.md`, and the file's own instruction block + file inventory table
+- Historical entries within this changelog and archived files (`ZZ_Archived_Not_Needed/`) left unchanged (they record what happened at that time)
+- `_Agent_Flowchart.svg` has a stale reference — will be caught on next Doctor run
+
+**What was NOT changed:**
+- The main pipeline loop (Extract → Evaluate → Refine) is untouched
+- Quality gate (3 consecutive non-A → auto-refine) preserved exactly as-is
+- Cleanup, Save-to-LIR, Doctor all unchanged
+- Canary token / self-destruct / Context_Legacy_Prompt system unchanged
+- Z_Search_Cache.json handoff file unchanged

@@ -2,7 +2,7 @@
 
 > **⚠️ HISTORICAL NOTE (2026-03-25):** Entries prior to 2026-03-24 reflect the V6-era pipeline state: 40-column schema, CSV format, `CSV_Cleanup_Agent.md` filename, and pre-expansion SaaS auto-DQ rules. The pipeline has since migrated to xlsx-only output, role-agnostic column counts (AM=37, RC=38), renamed `Output_Cleanup.md`, and broadened auto-DQ to include VC-backed tech companies. Treat older entries as historical context, not current specs.
 
-> **⚠️ STANDING INSTRUCTION — ALL AGENTS:** Any agent that encounters an error, unexpected behavior, or rule violation during a pipeline run MUST log it here before the session ends. This file is the canonical record of all pipeline failures. The chat log (`Z_Chat_Log--Agent_Maker.md`) is for architectural decisions only — errors go HERE.
+> **⚠️ STANDING INSTRUCTION — ALL AGENTS:** Any agent that encounters an error, unexpected behavior, or rule violation during a pipeline run MUST log it here before the session ends. This file is the canonical record of all pipeline failures. The chat log (`Z_ChangeLog-AgentMaker.md`) is for architectural decisions only — errors go HERE.
 
 ---
 

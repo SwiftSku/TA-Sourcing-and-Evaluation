@@ -239,16 +239,28 @@ Append one row to the output xlsx file specified in the JD config (`output_file`
 ⛔ **NEVER use `ws.max_row + 1` to find the next row.** `max_row` counts styled-but-empty rows and causes hundreds of blank rows to appear in the spreadsheet. You MUST use the backward-walk method below. **Copy this code block exactly — do not improvise an alternative:**
 
 ```python
+import os
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
+# GUARD 1: File must already exist — CE agents NEVER create new files
+if not os.path.exists(output_path):
+    raise FileNotFoundError(f"FATAL: Output file not found at {output_path}. CE agents NEVER create new files.")
 wb = load_workbook(output_path)
 ws = wb.active
+# GUARD 2: Header sanity check — confirms we loaded the real output file, not a blank Workbook()
+if ws.cell(1, 1).value != "Candidate" or ws.cell(1, 2).value != "Greenhouse URL":
+    raise Exception(f"ABORT: Headers are '{ws.cell(1, 1).value}' | '{ws.cell(1, 2).value}', expected 'Candidate' | 'Greenhouse URL'. File is corrupt or wrong workbook was loaded. Do NOT save.")
 # Find actual last row with data (NOT max_row):
+existing_row_count = 0
 next_row = 1
 for row in range(ws.max_row, 0, -1):
     if ws.cell(row, 1).value is not None:
+        existing_row_count = row
         next_row = row + 1
         break
+# GUARD 3: Anti-clobber — if file has >10 rows, saving with <10 means data was lost
+if existing_row_count > 10 and next_row < 10:
+    raise Exception(f"ABORT: Would overwrite {existing_row_count} rows. Output file appears corrupted or was replaced. Do NOT save.")
 values = [candidate, greenhouse_url, public_li_url, lir_url, source, date_added, ..., '']  # last column is Cleaned? — always write as empty string
 for col_idx, val in enumerate(values, 1):
     cell = ws.cell(row=next_row, column=col_idx, value=val)

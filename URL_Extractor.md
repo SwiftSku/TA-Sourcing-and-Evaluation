@@ -26,6 +26,7 @@ The parent passes ALL of these in the spawn template:
 | `LIR_LEARNINGS_PATH` | Full path to `REF--LIR_Interface_Learnings.md` |
 | `OUTPUT_PATH` | Full path to the output xlsx file from JD config (`output_file`) |
 | `SKIP_NAMES` | Comma-separated list of candidate names already processed this run (for dedup) |
+| `VERDICT_DIR` | Full path to directory where `_URL_BATCH.txt` should be written (same directory as output xlsx) |
 
 ---
 
@@ -142,9 +143,11 @@ https://www\.linkedin\.com/talent/profile/[A-Za-z0-9_-]{20,}
 
 Only URLs that pass validation are included in the return list. If validation drops your count below 5 and the page has more candidates, keep extracting until you hit 5 valid URLs or the page is exhausted.
 
-### Step 7: Return Results
+### Step 7: Write Results to File
 
-Return your results in this EXACT format (plain text, nothing else):
+⛔ **Do NOT return results in the Agent response.** Chrome context (screenshots, DOM reads) must not leak to the parent's context window. Instead, write results to `_URL_BATCH.txt` in the `VERDICT_DIR` provided by the parent. Overwrite any existing content.
+
+Write this EXACT format to `_URL_BATCH.txt`:
 
 ```
 PAGE {page_number} | POS {next_position} | {count} candidates
@@ -158,6 +161,8 @@ PAGE {page_number} | POS {next_position} | {count} candidates
 - `POS {next_position}` = the position the NEXT extractor should start from (e.g., if you started at 1 and extracted 5 from positions 1-7 because 2 were duplicates, next_position = 8)
 - If the page is exhausted, append on a new line: `PAGE_EXHAUSTED`
 - If the ENTIRE search is exhausted (last page, no more results), append: `SEARCH_EXHAUSTED`
+
+The parent will read and delete this file after you finish.
 
 ### Step 8: Close Tabs & Die
 

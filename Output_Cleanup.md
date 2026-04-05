@@ -97,7 +97,7 @@ For each broken row:
    - `DELAY_SECONDS` = random 45-200 (generate here, never same twice in a row)
    - `NEXT_URL` = empty (cleanup processes one at a time)
 
-6. **Wait for the sub-agent to finish** before processing the next broken row.
+6. **Wait for the sub-agent to finish.** Then read `_VERDICT.txt` in the same directory as the output xlsx to confirm the verdict. **Delete `_VERDICT.txt` immediately.** If the file does not exist, the CE sub-agent failed — keep the broken row as-is and continue to the next.
 7. **After the re-evaluation writes a new clean row**, mark the NEW row as `Cleaned?` = `TRUE`.
 8. **Now remove the OLD broken row** — but ONLY if the new row was successfully written (or was reconstructed from handoff data in step 1). Verify the new row exists in the output file before removing the old one. If the sub-agent failed or didn't write a row, **keep the broken row as-is**. This is the ONLY circumstance in which a row may be removed: when it is being replaced by a freshly evaluated row for the same candidate.
 
@@ -165,9 +165,11 @@ Write the updated xlsx back to the same path using `openpyxl`. Preserve all exis
 
 ⛔ **NEVER apply formatting to empty rows.** Only modify cells in rows that contain data. Styling empty rows inflates `max_row` and causes the CE sub-agent to write new candidates hundreds of rows below the actual data. If you need to find the last data row, walk column A backwards — do NOT trust `ws.max_row`.
 
-### Step 8: Return Summary
+### Step 8: Write Summary to File
 
-Return ONLY this summary to the parent agent:
+⛔ **Do NOT return results in the Agent response.** Chrome context from enrichment (screenshots, DOM reads) must not leak to the parent's context window. Instead, write the summary to `_CLEANUP_RESULT.txt` in the same directory as the output xlsx. Overwrite any existing content. The parent will read and delete this file.
+
+Write ONLY this line to `_CLEANUP_RESULT.txt`:
 
 ```
 CLEANUP | Checked: {N} | Valid: {N} | Rescored: {N} | Re-evaluated: {N} | Deduped: {N} | URLs filled: {N} | Names fixed: {N} | Stuck: {N} | Enrichment_Failed: {N} | Uncleaned: {N}
