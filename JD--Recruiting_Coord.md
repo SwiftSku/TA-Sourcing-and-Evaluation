@@ -79,6 +79,8 @@ Check these first. If ANY apply → score all dimensions as 0, tier as F, verdic
 | Majority of career in accounting / bookkeeping / finance | CPA, CMA, QuickBooks, Sage, Tally, GST, TDS, bookkeeping, payroll; red flag keywords: Receivable, Taxation, Audit, Reconciliation |
 | No clear Gujarat/Gujarati connection | Must have EXPLICIT Gujarat location on profile OR Gujarati listed as a language — implied or inferred doesn't count |
 | Pure agency staffing recruiter with no in-house experience | Only worked at staffing/recruiting agencies (Randstad, ManpowerGroup, TeamLease, etc.) with zero in-house recruiting coordinator or ops experience at a product company |
+| Less than 2 years of core recruitment experience | Count only dedicated recruiting/coordination roles (sourcing, screening, scheduling, ATS management). Do NOT count mixed HR/HRBP/generalist roles where recruiting was one of many duties. Must have 2+ years in titles like Recruiting Coordinator, TA Coordinator, Recruiter, Sourcer, etc. If total core recruitment tenure across all roles is <2 years → auto-DQ. |
+| Not actively recruiting for the entirety of the last 2 years | The candidate must have held a core recruitment/coordination role at some point within the last 2 years. If they've been completely out of recruiting for 2+ consecutive years (moved to HRBP, L&D, management, or left the field entirely) → auto-DQ. Someone who left recruiting 18 months ago but was actively recruiting before that is NOT DQ'd. |
 
 ### Step 3: Score Each Dimension
 
@@ -464,6 +466,8 @@ Base max score: **53.4** (before bonuses).
 - Accounting / bookkeeping / finance career
 - No Gujarat/Gujarati connection
 - Pure agency staffing recruiter with no in-house experience
+- Less than 2 years of core recruitment experience (dedicated recruiting/coordination roles only)
+- Not actively recruiting for the entirety of the last 2 years (completely out of recruiting for 2+ consecutive years)
 
 ---
 

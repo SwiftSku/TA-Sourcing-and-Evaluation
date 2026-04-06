@@ -1,165 +1,415 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     viewBox="0 0 1000 1725" width="1000" height="1725">
-<rect width="100%" height="100%" fill="#FFFFFF"/>
-<defs>
-  <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
-    <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
-  </marker>
-  <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" markerUnits="strokeWidth">
-    <polygon points="0 0, 10 3.5, 0 7" fill="#EA4335"/>
-  </marker>
-</defs>
-<style>
-  .title { font: bold 18px 'Segoe UI', system-ui, sans-serif; fill: #333; }
-  .subtitle { font: 11px 'Segoe UI', system-ui, sans-serif; fill: #888; }
-  .phase { font: bold 14px 'Segoe UI', system-ui, sans-serif; fill: #888; }
-  .box-title { font: bold 12px 'Segoe UI', system-ui, sans-serif; }
-  .box-body { font: 11px 'Segoe UI', system-ui, sans-serif; }
-  .box-hint { font: 8px 'Segoe UI', system-ui, sans-serif; fill: #888; }
-  .diamond-text { font: bold 11px 'Segoe UI', system-ui, sans-serif; fill: #333; }
-  .label-gray { font: 9px 'Segoe UI', system-ui, sans-serif; fill: #555; }
-  .label-red { font: bold 9px 'Segoe UI', system-ui, sans-serif; fill: #EA4335; }
-  .shared { font: 10px 'Segoe UI', system-ui, sans-serif; fill: #333; }
-  .stats { font: 9px 'Segoe UI', system-ui, sans-serif; fill: #888; }
-</style>
-<text x="500" y="40" text-anchor="middle" class="title">SwiftSku TA Pipeline</text>
-<text x="500" y="58" text-anchor="middle" class="subtitle">Agent Flowchart · File-Based Sub-Agent Communication</text>
-<text x="500" y="75" text-anchor="middle" class="phase">Phase 0 · Pre-Flight</text>
-  <rect x="360.0" y="93" width="280" height="85" rx="8" fill="#4285F4" stroke="#3367D6" stroke-width="2"/>
-  <text x="500" y="118" text-anchor="middle" class="box-title" fill="#fff">Pipeline Starter</text>
-  <text x="500" y="138" text-anchor="middle" class="box-body" fill="#fff">Dan answers 4 startup Qs</text>
-  <text x="500" y="152" text-anchor="middle" class="box-body" fill="#fff">Role selection → JD config</text>
-  <text x="500" y="168" text-anchor="middle" class="box-hint">1_Pipeline_Starter.md</text>
-  <line x1="500" y1="178" x2="500" y2="198" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="360.0" y="198" width="280" height="85" rx="8" fill="#F5A623" stroke="#E09000" stroke-width="2"/>
-  <text x="500" y="223" text-anchor="middle" class="box-title" fill="#333">Pipeline Orchestrator · Opus</text>
-  <text x="500" y="243" text-anchor="middle" class="box-body" fill="#333">NO Chrome · spawns sub-agents</text>
-  <text x="500" y="257" text-anchor="middle" class="box-body" fill="#333">Company-targeted: Tier 1 → keyword fallback</text>
-  <text x="500" y="273" text-anchor="middle" class="box-hint">2_Pipeline_Orchestrator.md</text>
-  <line x1="640.0" y1="228" x2="680.0" y2="228" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="660.0" y="220" text-anchor="middle" class="label-gray">pre-flight (no Chrome)</text>
-  <rect x="680.0" y="198" width="280" height="85" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
-  <text x="820" y="223" text-anchor="middle" class="box-title" fill="#333">Pre-flight Cleanup · Sonnet</text>
-  <text x="820" y="243" text-anchor="middle" class="box-body" fill="#333">Validate existing output file</text>
-  <text x="820" y="257" text-anchor="middle" class="box-body" fill="#333">Must finish before Phase 1</text>
-  <text x="820" y="273" text-anchor="middle" class="box-hint">Output_Cleanup.md</text>
-  <polyline points="820,283 820,293 500,293" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="500" y="323" text-anchor="middle" class="phase">Phase 1 · Extraction &amp; Scoring</text>
-  <line x1="500" y1="323" x2="500" y2="341" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <polygon points="500,341 548,389 500,437 452,389" fill="#FBBC04" stroke="#E0A800" stroke-width="2"/>
-  <text x="500" y="383" text-anchor="middle" class="diamond-text" fill="#333">Source</text>
-  <text x="500" y="397" text-anchor="middle" class="diamond-text" fill="#333">type?</text>
-  <line x1="452" y1="389" x2="322.0" y2="389" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="386.0" y="377" text-anchor="middle" class="label-gray">LinkedIn Recruiter</text>
-  <rect x="40.0" y="354" width="280" height="85" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
-  <text x="180" y="379" text-anchor="middle" class="box-title" fill="#333">URL Extractor · Sonnet</text>
-  <text x="180" y="399" text-anchor="middle" class="box-body" fill="#333">LinkedIn Recruiter → 5 URLs</text>
-  <text x="180" y="413" text-anchor="middle" class="box-body" fill="#333">Writes _URL_BATCH.txt</text>
-  <text x="180" y="429" text-anchor="middle" class="box-hint">URL_Extractor.md</text>
-  <image x="292.0" y="360" width="22" height="22" href="data:image/png;base64,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"/>
-  <line x1="548" y1="389" x2="678.0" y2="389" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="614.0" y="377" text-anchor="middle" class="label-gray">Static (PDF/spreadsheet)</text>
-  <rect x="680.0" y="354" width="280" height="85" rx="8" fill="#F5A623" stroke="#E09000" stroke-width="2"/>
-  <text x="820" y="379" text-anchor="middle" class="box-title" fill="#333">Orchestrator Dedup · Opus</text>
-  <text x="820" y="399" text-anchor="middle" class="box-body" fill="#333">Static sources (PDF/spreadsheet)</text>
-  <text x="820" y="413" text-anchor="middle" class="box-body" fill="#333">Name + URL normalization</text>
-  <text x="820" y="429" text-anchor="middle" class="box-hint">2_Pipeline_Orchestrator.md</text>
-  <polyline points="180,439 180,459 360.0,459" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <polyline points="820,439 820,459 640.0,459" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="360.0" y="454" width="280" height="85" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
-  <text x="500" y="479" text-anchor="middle" class="box-title" fill="#333">Candidate Evaluator · Sonnet</text>
-  <text x="500" y="499" text-anchor="middle" class="box-body" fill="#333">Per-candidate evaluation + scoring</text>
-  <text x="500" y="513" text-anchor="middle" class="box-body" fill="#333">Writes _VERDICT.txt</text>
-  <text x="500" y="529" text-anchor="middle" class="box-hint">CE_Spawn_Template.md</text>
-  <image x="612.0" y="460" width="22" height="22" href="data:image/png;base64,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"/>
-  <rect x="680.0" y="459" width="280" height="85" rx="8" fill="#E8D5F5" stroke="#7B4DB5" stroke-width="2"/>
-  <text x="820" y="484" text-anchor="middle" class="box-title" fill="#333">CE_Spawn_Template.md</text>
-  <text x="820" y="504" text-anchor="middle" class="box-body" fill="#333">Canonical spawn template</text>
-  <text x="820" y="518" text-anchor="middle" class="box-body" fill="#333">Single source of truth</text>
-  <text x="820" y="534" text-anchor="middle" class="box-hint">CE_Spawn_Template.md</text>
-  <line x1="640.0" y1="484" x2="678.0" y2="484" stroke="#7B4DB5" stroke-width="2" marker-end="url(#arrow)"/>
-  <line x1="500" y1="539" x2="500" y2="564" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="360.0" y="564" width="280" height="85" rx="8" fill="#F5A623" stroke="#E09000" stroke-width="2"/>
-  <text x="500" y="589" text-anchor="middle" class="box-title" fill="#333">Update Z_Search_Cache.json</text>
-  <text x="500" y="609" text-anchor="middle" class="box-body" fill="#333">45–200s delay</text>
-  <text x="500" y="623" text-anchor="middle" class="box-body" fill="#333">CE handles idle + tab reuse</text>
-  <text x="500" y="639" text-anchor="middle" class="box-hint">Per-batch cache</text>
-<text x="500" y="679" text-anchor="middle" class="phase">Phase 2 · Quality Gate &amp; Cleanup</text>
-  <line x1="500" y1="679" x2="500" y2="697" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <polygon points="500,697 548,745 500,793 452,745" fill="#FBBC04" stroke="#E0A800" stroke-width="2"/>
-  <text x="500" y="739" text-anchor="middle" class="diamond-text" fill="#333">3 consecutive</text>
-  <text x="500" y="753" text-anchor="middle" class="diamond-text" fill="#333">non-A?</text>
-  <line x1="452" y1="745" x2="322.0" y2="745" stroke="#EA4335" stroke-width="2" marker-end="url(#arrow-red)"/>
-  <text x="386.0" y="733" text-anchor="middle" class="label-red">Fail (3 non-A)</text>
-  <rect x="40.0" y="710" width="280" height="85" rx="8" fill="#E8D5F5" stroke="#7B4DB5" stroke-width="2"/>
-  <text x="180" y="735" text-anchor="middle" class="box-title" fill="#333">Search Refinement</text>
-  <text x="180" y="755" text-anchor="middle" class="box-body" fill="#333">Orchestrator reads refinement_patterns</text>
-  <text x="180" y="769" text-anchor="middle" class="box-body" fill="#333">Applies fix → fresh URL Extractor</text>
-  <text x="180" y="785" text-anchor="middle" class="box-hint">2_Pipeline_Orchestrator.md</text>
-  <polyline points="40.0,745 25,745 25,359 40.0,359" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="55" y="549.5" text-anchor="middle" class="label-red">loop back</text>
-  <line x1="500" y1="793" x2="500" y2="815" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="520" y="808" text-anchor="middle" class="label-gray">Pass</text>
-  <rect x="360.0" y="815" width="280" height="85" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
-  <text x="500" y="840" text-anchor="middle" class="box-title" fill="#333">Cleanup Agent · Sonnet</text>
-  <text x="500" y="860" text-anchor="middle" class="box-body" fill="#333">Rubric rescore, dedup, enrichment</text>
-  <text x="500" y="874" text-anchor="middle" class="box-body" fill="#333">Writes _CLEANUP_RESULT.txt</text>
-  <text x="500" y="890" text-anchor="middle" class="box-hint">Output_Cleanup.md</text>
-  <image x="612.0" y="821" width="22" height="22" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAC0WlDQ1BJQ0MgUHJvZmlsZQAAeJyNlM9LFGEYx7+zjRgoQWBme4ihQ0ioTBZlROWuv9i0bVl/lBLE7Oy7u5Ozs9PM7JoiEV46ZtE9Kg8e+gM8eOiUl8LALALpblFEgpeS7Xlnxt0R7ccLM/N5nx/f53nf4X2BGlkxTT0kAXnDsZJ9Uen66JhU+xEhHEEdwqhTVNuMJBIDoMFjsWtsvofAvyute/v/OurStpoHhP1A6Eea2Sqw7xfZC1lqBBC5XsOEYzrE9zhbnv0x55TH8659KNlFvEh8QDUtHv+auEPNKWmgRiRuyQZiUgHO60XV7+cgPfXMGB6k73Hq6S6ze3wWZtJKdz9xG/HnNOvu4ZrE8xmtN0bcTM9axuod9lg4oTmxIY9DI4YeH/C5yUjFr/qaoulEk9v6dmmwZ9t+S7mcIA4TJ8cL/TymkXI7p3JD1zwW9KlcV9znd1Yxyeseo5g5U3f/F/UWeoVR6GDQYNDbgIQk+hBFK0xYKCBDHo0iNLIyN8YitjG+Z6SORIAl8q9TzrqbcxtFyuZZI4jGMdNSUZDkD/JXeVV+Ks/JX2bDxeaqZ8a6qanLD76TLq+8ret7/Z48fZXqRsirI0vWfGVNdqDTQHcZYzZcVeI12P34ZmCVLFCpFSlXadytVHJ9Nr0jgWp/2j2KXZpebKrWWhUXbqzUL03v2KvCrlWxyqp2zqtxwXwmHhVPijGxQzwHSbwkdooXxW6anRcHKhnDpKJhwlWyoVCWgUnymjv+mRcL76y5o6GPGczSVImf/4RVyGg6CxzRf7j/c/B7xaOxIvDCBg6frto2ku4dIjQuV23OFeDCN7oP3lZtzXQeDj0BFs6oRavkSwvCG4pmdxw+6SqYk5aWzTlSuyyflSJ0JTEpZqhtLZKi65LrsiWL2cwqsXQb7Mypdk+lnnal5lO5vEHnr/YRsPWwXP75rFzeek49rAEv9d/AvP1FtoHToQAADedJREFUeJzNmXuMXcV9xz+/mXPv3bsvrx/rB2CjYMDGGDtggzHEmLoolBBQiNltqkRtIjWq1PwDSQkpJdxdRJO+iNW0EVIVhYDUFq1J0kQxj0ZRTcAxLjau7doIbLCB+LG79r7v45wzM7/+ce6ud+21sVpH6kijM+feOXM+53t+8/v9Zo5wkYqCUCoJBw7IlD+WLVO6u1VAL9a9/tdFSyWjpfWRlkrmgvquv7C+5yvy0V2muXlHh6WnJ4jIhGqb1q9su3l++4ImE821EjUCeHWVcnB9ew8NHvuTXbuGJ65XFTo7jWze7H+rwFrC0M3E693z6Q03zG5r/FS+IX97FEXXYMy8BmttZLJhnQ9U4tiT+N40Td9Ka8nWvvLoC6tffv1NqJsRiEC46MDa0WHHFXnnrnUbZzQ1fiUq5NfPbCoab4QESIEACqoERYOKCUGioORVMT4wVK6GNElfGS5Xv3fN1h0/OnPs/zOwgqCKiOhrt1y/dnFb67dbG4vrTWQZUwVjHJEIYowYQUSyMVXRoKgPqt6D90FdUHyImhFC6hmu1F45NDL657fv/u/tqiqI8FGT87zACmJAFdi/dtWj7c3FUmOhEI2q92ItYo011oIRyGCzF6ygKASFENAQUJ9VXCA459UrLSK2Uo1df7nWfd2efU9I9obkfNDnBB6HXQPFZ1Z//IcLW5s7hzSoigQTWSvWgBXEmKmwkl2cGcY4cP3oA/jT8MF5b4KaGYh8OFru+dL+A1/cAdXzQU8LPG4GnSINT6xc/pOFTU13DmhI1UhkrBGxBoxBrCCSAU9Mn4lBtA6umcIT0DoBjg8EHxTn3Sxjc78ZK7/8zYPv3NejWjuXeUzrEzf3dBhB+ObVVz97aZS/s79SSzX1OXFeNPWExKGpI8SOkKSEOM3acTqpuiltTVx2XeIgdWjqCc6D86JecyercXpprnDnX1x+xbMiAh0d07KdpfD4jN05Z9FjV89v6x70PiUyOTFnmICpm8C4OZw5Wl0bDZnTIOhpE/H18xDAT1I+hHSW2Nz+yljplmMfPK50WGGq95gCXNKS6ZbusPT7t6z97rNDry4/7IibImMQwUr91ddhz7BbEYH6w0wAq6IaMiAdn4SnwQl6Gl4VVTQSgqjyhg6t2/he3/agmMl+OppG9Vz7pc2bXvzDol30yCEf5SXzVOG0qjp+rNutRDa7Ya2MxkkGVFdYTB6RYnY+Ycs6obxOoAiAJAqtNrKLy62bVBeug11TFJ4A7ujpsN3S7W996ub72xvya/ZdrX7nJ9rszb8aJm0rkHNKEMnmlQiYuqrWEoaHCGLIXbOEhuuuJTd/Lqjgxk5QG9qLG92PIUDUgsExLpiIMh7ds3FBUOvAf6zImlfDwfvkSXq0Byud+CkmoaoiIuaTz9/xanN78eZK6kJ7b2offPQweacUcxEWOT1t6+agI8PkbruNOQ/8KblVNzBsi1Rc9n9zXphhqrixHQy+87foyC8x+TaM8RmsUYzR022rGBMwVn2hTc3gEX191trqOs200gmFS6WSEZGwqnvV6lxTtCatOgpe7bFFDfzqrlnc/VwfYzOEFrGYSdBhZJTmBx9g9je+xt6+lO2/7qN3OMbXO0RGmN9S4NYln+C6lbczcrALf/TbmKgFMQFjFGNDVlEMigQFh/W9aEuTrPn5P0arRdwOVYwIIQI40HVA6IbWhY335JvzJh1LnRqJihXP1rtmc/1rw8zpTykXoMlYjI3wQ0M0fe0BWh9+iGf+4wivvjNCoSFHY8ES2cwjVZLAiZFR/vPwAL+ztI3P3dJFWlDMycex+RZEHJOC4xSvq+CjVomWLbb3gNsxbg0GoIeeAEjUlL9Ng4KoqIB1Srkt4qXPzsHEHodSVcWPjBKtv422h7/KD146xM/3DFDIW4woSRqoJo5q4kicxwL5yPKTXf08s/UwDYu6MTNux8oYYmzdHDk7RCiCh9Zme1sdNmTAioiIzt0wd67N2SUhCaBiAIIVimOe3eva2Le8SDSaEmugjDLrga+w7dAoW/acpLnBUEs8ceyJE5cd6+1a4qjFnpaC5adv9rL93TK5+Y/hg2GSizirKBhiaMiz5HMbmCuCqiKm1FUSgHnXz7tMjMwJ/oxHVQUr/OL351O2kIyOwrKlhJUr+Om2D/AIceqppY449cRJHTpx9bav/x9IvfBvO4+Q5teiDdeBVjlHsEUA78AYO+czG3KXjv9sDlybrcEa2qJ2mzeGoAGZ5D2MUCh7jqxo4Y3bZ6KnxsjfsILjScTbR0dBMlutpYFq6qmmjlrqs5r4iXY1ydzpW0eHOTacxzbemAWScwAjSFBCQ17M7DlmLgCbkYneJrJNImaK058MnY8Dr3UsoL9ZKMxpp3c0ZaCS4lzIlB0HTAKVxFNJMshqHTpOPc4HTpUTekdSTO6y8ye+KmjIUgEruSYAOiZHOs/pDOvsa4niwODCIts+PZeVYykOJfGBqvNYEawRjMhEZB7PM7PApvigeFViH3AhXNgSWoEwKXvYDNGyjmUKENdc1aeaaa4Z5OREI1ihYcyz5975HHp3mLkErA0k3mNEkJABZwGrvujI0nhClifgQyBvAjOLQkiOnnf1oCqAwaVCuRqqdYXV0JV1SE+l/b7mAiqmfp+ziqQeP6eJF68+yQJJWDAzYqRSxfmU1DkS50i8J/aO2GftxDlS53A+ZaRa5bKZBS5tTfCVnfVE6WxPoSqgoqLGlCsSjp3QfgC6wHR3dSvA8V8fP+aTcEpEsgxqGuQgSjHk2dNylA/0MJ0rFjAwNkaSJtSSGrUkJk5i4jTJahITpzG1pEaSxgyXR/nMDZdT9G9g4r0gxWmBQQhBMGJIEjn1s63VY3VgNQiqqjKwZ6DXVf1BMQZVDfXl7zRDCajnXz58nntXtHPHklY+6B/AuZgkrVGNq1NqnNTwLub9vgHuvnYW966Yi+v7NtZ4pvMQWp9sGkywJqJc4eCW1+nN1sGoAeik0wAuHoxfQwEvqgGmgw4EGqNGdo/s4sfHfsR3N97I7y2dwbHek4wOj+BqFUKcVVerMDI8zNHefj67Yibfun8do31/Q0P6S1SayGb6VDlUDRoM3ltFLf0DvAa48aeLAJZ1ZRNv4MDAiy2XtDxkG8RiyHJdmWYCaqDJNvHc8ecAeOrz97H5qvf54ba3OdQ3Qi3NQIo5y1XzW/ny+hXcd9MV/Ozg99lgn0Aai3V3f4YYmuXd3lnURXaoImHb7vTFcfGzR5p4FSoi0rD+H9a/0nxZ82ofXLCRWImy3JczoMfNo+zLXN+yij9YuJE5sogP+xN6h2uICAtmFlnUXqA/PcyTu37M7zb+M3/0sQGSNIeVqbY7oayzpEnkG6OCeff9sHNJ5/H1qtSmpJcAXXQJUB16b+ipxvbGH2g9CTUo49BnKq0ozVEze8Z2s+/AXhY3LWZpy1W0z58FCDvGTvL0f73Nm33vsTg3yBeWjuKdxUyBzSYYagjO4tOIkEak3sqet5OngPH4PVVhyPLi7u7uxlufvO2VGQubb/DeeVMw1lgQK2CnV9qQecJaqJEGl/nfAL4WiJwlSRrZdOU+bprZT+IibH2VoZrZLEHwPoNNE+sbo4I9eCS8ufwLv1mvSkXk/Gu6sRM7ex8ptOa35BpstiLMiQiKINnuysRypm579fEaTANFWw8aTtFcYCC1bJh5gpva+knrsFofoO4NCN7i0gifWsVFDI0Z/9L20UeAMc5wJVNOuru7Q0dPh333X99++dShwU0YazVRFxJFU80gXH3hGM6O5IoSNBA04IMnCUqTSfjjBYczGx33AmpQn5mASyNcksMnEWkcuQbTYHfuTzf92fcGX9Ye7GR1zwIG2Ny52Ze0ZPb89a7SqYODL4iNcqEaXIghJEpwZPAe1NfBx+FPb/Ygqoz4iI1zjnJ5Y5nE5ZAgBG8JaQaapjlckiONI2qVyDVHxdyb+5MX7n74aEm1ZMYXnpPLucK5qCrSLO2rv3Hr8zMvb12niXMmL1ZyIhKBGEFstgE3sTcxPmJQagnMlph/WrSbovFZwh6EUDcB9YbgDWliNU2sby00RPsPxq/e+/Uj958Yo59s2AvbqgJUEKjQt/OvtnWcPDS4JYiNfFXxleBDTQlxvSZKSDOTCS6rmgSqqeHzrUdpDYFarYCP86RxHhfncXGOpJajWsn5pFqgaIrR7gPxlnu+fqSjr0LfuWDPp3BWShi6UITm5Q+ueqxlUetXiy15g/PeRIiJjJGI+tZVNpoRGEuE5YUx/m7eOyTBZmu2urreCc6Z4J3VBpuzwyMa3jpS/c49j374uCpj54P9aOB6n5KWpFu6ddHGK++evXLeY02zGm+McoL4gBi8WMQYEbECqFSd8K25R/h4ocyYj5QAIYgGb1S9sYUoIo2F4/3JG7/YNfz4I0+f3KKZE/rIr00X/Mmgo6fDbu7c7IFZV3xxeUfr5a1fyjfl1xRa8vUsUYlQhpzoHY2j+tCsXkZ8JJkLN0TGIEEYGPGMjLode9+rPf3lvz+6GRjQng4rnRfpk8GUctpEFGib/6nFN89YPOOThdbC2qgQLSYys1vzYp5sP8k866k4qCUhpKmeqlb9u/3DfvvOg+V//8vn+l8HhlQRuhDp/i18lJnCrSXTRZdO+uzVmr8kvyB35YJLbmqX9o0zq42VYKnFvtI/6Pq3Hhg9tu9IchwYAVCtb3/LhYNenKJISUtGs9B1/q6KqJZMHfb/RREUKZVKRpXJVS4m5P8AqWxJh9DrmesAAAAASUVORK5CYII="/>
-  <line x1="500" y1="900" x2="500" y2="920" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <polygon points="500,920 548,968 500,1016 452,968" fill="#FBBC04" stroke="#E0A800" stroke-width="2"/>
-  <text x="500" y="962" text-anchor="middle" class="diamond-text" fill="#333">Uncleaned</text>
-  <text x="500" y="976" text-anchor="middle" class="diamond-text" fill="#333">= 0?</text>
-  <line x1="452" y1="968" x2="240" y2="968" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="346.0" y="956" text-anchor="middle" class="label-gray">No</text>
-  <polyline points="240,968 240,820 360.0,820" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <line x1="500" y1="1016" x2="500" y2="1036" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="520" y="1031" text-anchor="middle" class="label-gray">Yes</text>
-  <polygon points="500,1036 548,1084 500,1132 452,1084" fill="#FBBC04" stroke="#E0A800" stroke-width="2"/>
-  <text x="500" y="1078" text-anchor="middle" class="diamond-text" fill="#333">60 total?</text>
-  <text x="500" y="1092" text-anchor="middle" class="diamond-text" fill="#333">20 A?</text>
-  <line x1="452" y1="1084" x2="25" y2="1084" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="233.5" y="1072" text-anchor="middle" class="label-gray">No</text>
-  <polyline points="15,1084 15,389 452,389" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <line x1="548" y1="1084" x2="678.0" y2="1084" stroke="#EA4335" stroke-width="2" marker-end="url(#arrow-red)"/>
-  <text x="614.0" y="1072" text-anchor="middle" class="label-red">Canary/Compaction</text>
-  <rect x="680.0" y="1049" width="280" height="85" rx="8" fill="#EA4335" stroke="#C62828" stroke-width="2"/>
-  <text x="820" y="1074" text-anchor="middle" class="box-title" fill="#fff">Self-Destruct</text>
-  <text x="820" y="1094" text-anchor="middle" class="box-body" fill="#fff">Writes Context_Legacy_Prompt.md</text>
-  <text x="820" y="1108" text-anchor="middle" class="box-body" fill="#fff">STOP — resume in new session</text>
-  <text x="820" y="1124" text-anchor="middle" class="box-hint">Context_Legacy_Prompt.md</text>
-  <line x1="500" y1="1132" x2="500" y2="1154" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
-  <text x="530" y="1147" text-anchor="middle" class="label-gray">Yes → done</text>
-  <rect x="360.0" y="1154" width="280" height="85" rx="8" fill="#F5A623" stroke="#E09000" stroke-width="2"/>
-  <text x="500" y="1179" text-anchor="middle" class="box-title" fill="#333">Output Summary · STOP</text>
-  <text x="500" y="1199" text-anchor="middle" class="box-body" fill="#333">Pipeline complete</text>
-  <text x="500" y="1213" text-anchor="middle" class="box-body" fill="#333">Write run learnings to JD file</text>
-  <text x="500" y="1229" text-anchor="middle" class="box-hint">2_Pipeline_Orchestrator.md</text>
-<text x="500" y="1269" text-anchor="middle" class="phase">Manual — Post Pipeline</text>
-  <rect x="50" y="1283" width="900" height="90" rx="8" fill="none" stroke="#4285F4" stroke-width="1.5" stroke-dasharray="8,4"/>
-  <rect x="100.0" y="1291" width="280" height="71" rx="8" fill="#4285F4" stroke="#3367D6" stroke-width="2"/>
-  <text x="240" y="1316" text-anchor="middle" class="box-title" fill="#fff">Save_To_LIR · Dan</text>
-  <text x="240" y="1336" text-anchor="middle" class="box-body" fill="#fff">Upload output to LIR</text>
-  <text x="240" y="1352" text-anchor="middle" class="box-hint">Save_To_LIR.md</text>
-  <image x="352.0" y="1297" width="22" height="22" href="data:image/png;base64,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"/>
-  <rect x="620.0" y="1291" width="280" height="71" rx="8" fill="#FFFF00" stroke="#CCB800" stroke-width="2"/>
-  <text x="760" y="1316" text-anchor="middle" class="box-title" fill="#333">COMING SOON</text>
-  <text x="760" y="1336" text-anchor="middle" class="box-body" fill="#333">Send to Greenhouse</text>
-  <text x="760" y="1352" text-anchor="middle" class="box-hint">Auto ATS sync</text>
-  <line x1="50" y1="1403" x2="950" y2="1403" stroke="#CCC" stroke-width="1"/>
-<text x="500" y="1423" text-anchor="middle" class="phase">Standalone Flows</text>
-  <rect x="360.0" y="1441" width="280" height="99" rx="8" fill="#34A853" stroke="#2E8B47" stroke-width="2"/>
-  <text x="500" y="1466" text-anchor="middle" class="box-title" fill="#333">Company Research · Sonnet</text>
-  <text x="500" y="1486" text-anchor="middle" class="box-body" fill="#333">Standalone — run separately</text>
-  <text x="500" y="1500" text-anchor="middle" class="box-body" fill="#333">Discovers target companies → xlsx</text>
-  <text x="500" y="1514" text-anchor="middle" class="box-body" fill="#333">Uses WebSearch, no Chrome</text>
-  <text x="500" y="1530" text-anchor="middle" class="box-hint">Target_Companies/Company_Research_Agent.md</text>
-  <line x1="50" y1="1570" x2="950" y2="1570" stroke="#CCC" stroke-width="1"/>
-<text x="60" y="1590" class="phase">Shared Files</text>
-  <rect x="50" y="1600" width="900" height="80" rx="8" fill="#E8EAF6" stroke="#5C6BC0" stroke-width="1.5"/>
-  <text x="65" y="1620" class="shared">[output xlsx] · Z_Search_Cache.json · _VERDICT.txt · _URL_BATCH.txt · _CLEANUP_RESULT.txt</text>
-  <text x="65" y="1638" class="shared" font-style="italic" fill="#888">File-based communication: CE, URL Extractor, Cleanup write ephemeral files → parent reads &amp; deletes</text>
-  <text x="65" y="1656" class="shared">REF--Anti_Detection.md · REF--LIR_Interface_Learnings.md · CE_Spawn_Template.md</text>
-  <text x="500" y="1695" text-anchor="middle" class="stats">AM: 37 cols, max 55.0 | RC: 40 cols, max 52.8</text>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: TA_Pipeline Pages: 1 -->
+<svg width="1151pt" height="1720pt"
+ viewBox="0.00 0.00 1150.70 1720.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 1698.6)">
+<title>TA_Pipeline</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-1698.6 1129.1,-1698.6 1129.1,21.6 -21.6,21.6"/>
+<g id="clust1" class="cluster">
+<title>cluster_phase_0</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="64.5,-1574 64.5,-1669 240.5,-1669 240.5,-1574 64.5,-1574"/>
+<text text-anchor="middle" x="124" y="-1656.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 0 — Startup</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_phase_1</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="76.5,-1354 76.5,-1446 237.5,-1446 237.5,-1354 76.5,-1354"/>
+<text text-anchor="middle" x="157" y="-1433.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 1 — URL Extraction</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_phase_2</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="73.5,-986 73.5,-1203 474.5,-1203 474.5,-986 73.5,-986"/>
+<text text-anchor="middle" x="171.5" y="-1190.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 2 — Candidate Evaluation</text>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_phase_3</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="274.5,-735 274.5,-958 430.5,-958 430.5,-735 274.5,-735"/>
+<text text-anchor="middle" x="349" y="-945.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 3 — Quality Gate</text>
+</g>
+<g id="clust7" class="cluster">
+<title>cluster_phase_4</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="454.5,-624 454.5,-838 647.5,-838 647.5,-624 454.5,-624"/>
+<text text-anchor="middle" x="551" y="-825.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 4 — Cleanup &amp; Validation</text>
+</g>
+<g id="clust8" class="cluster">
+<title>cluster_phase_5</title>
+<polygon fill="white" stroke="#bbbbbb" stroke-dasharray="5,2" points="390.5,-379 390.5,-596 759.5,-596 759.5,-379 390.5,-379"/>
+<text text-anchor="middle" x="480" y="-583.2" font-family="Segoe UI" font-size="11.00" fill="#888888">Phase 5 — Termination Check</text>
+</g>
+<!-- starter -->
+<g id="node1" class="node">
+<title>starter</title>
+<path fill="#4285f4" stroke="#3367d6" stroke-width="2" d="M229,-1649C229,-1649 76,-1649 76,-1649 70,-1649 64,-1643 64,-1637 64,-1637 64,-1586 64,-1586 64,-1580 70,-1574 76,-1574 76,-1574 229,-1574 229,-1574 235,-1574 241,-1580 241,-1586 241,-1586 241,-1637 241,-1637 241,-1643 235,-1649 229,-1649"/>
+<text text-anchor="start" x="95.5" y="-1635.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#ffffff">Pipeline Starter (User)</text>
+<text text-anchor="start" x="74.5" y="-1617.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Selects JD file, source, run params</text>
+<text text-anchor="start" x="104.5" y="-1607.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Triggers Orchestrator</text>
+<text text-anchor="start" x="106" y="-1583.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[1_Pipeline_Starter.md]</text>
+</g>
+<!-- orchestrator -->
+<g id="node2" class="node">
+<title>orchestrator</title>
+<path fill="#f5a623" stroke="#e09000" stroke-width="2" d="M231,-1551C231,-1551 74,-1551 74,-1551 68,-1551 62,-1545 62,-1539 62,-1539 62,-1478 62,-1478 62,-1472 68,-1466 74,-1466 74,-1466 231,-1466 231,-1466 237,-1466 243,-1472 243,-1478 243,-1478 243,-1539 243,-1539 243,-1545 237,-1551 231,-1551"/>
+<text text-anchor="start" x="79.5" y="-1537.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Pipeline Orchestrator (Opus)</text>
+<text text-anchor="start" x="99" y="-1519.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Manages entire pipeline</text>
+<text text-anchor="start" x="80.5" y="-1509.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Spawns all sub&#45;agents (Sonnet)</text>
+<text text-anchor="start" x="72.5" y="-1499.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Tracks A&#45;rated &amp; hard cap counters</text>
+<text text-anchor="start" x="94.5" y="-1475.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[2_Pipeline_Orchestrator.md]</text>
+</g>
+<!-- starter&#45;&gt;orchestrator -->
+<g id="edge1" class="edge">
+<title>starter&#45;&gt;orchestrator</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M152.5,-1573.75C152.5,-1569.74 152.5,-1565.61 152.5,-1561.46"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="156,-1561.18 152.5,-1551.18 149,-1561.18 156,-1561.18"/>
+</g>
+<!-- preflight -->
+<g id="node3" class="node">
+<title>preflight</title>
+<path fill="#34a853" stroke="#2e8b47" stroke-width="2" d="M456.5,-1546C456.5,-1546 316.5,-1546 316.5,-1546 310.5,-1546 304.5,-1540 304.5,-1534 304.5,-1534 304.5,-1483 304.5,-1483 304.5,-1477 310.5,-1471 316.5,-1471 316.5,-1471 456.5,-1471 456.5,-1471 462.5,-1471 468.5,-1477 468.5,-1483 468.5,-1483 468.5,-1534 468.5,-1534 468.5,-1540 462.5,-1546 456.5,-1546"/>
+<text text-anchor="start" x="314.5" y="-1532.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Pre&#45;Flight Cleanup (Sonnet)</text>
+<text text-anchor="start" x="322" y="-1514.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Validates existing output file</text>
+<text text-anchor="start" x="342.5" y="-1504.3" font-family="Segoe UI" font-size="9.00" fill="#333333">No Chrome needed</text>
+<text text-anchor="start" x="343" y="-1480.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Output_Cleanup.md]</text>
+</g>
+<!-- orchestrator&#45;&gt;preflight -->
+<g id="edge2" class="edge">
+<title>orchestrator&#45;&gt;preflight</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M243.31,-1508.5C259.9,-1508.5 277.24,-1508.5 293.89,-1508.5"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="294.15,-1512 304.15,-1508.5 294.15,-1505 294.15,-1512"/>
+<text text-anchor="middle" x="273.75" y="-1514.1" font-family="Segoe UI" font-size="8.00">Pre&#45;flight</text>
+</g>
+<!-- source_decision -->
+<g id="node4" class="node">
+<title>source_decision</title>
+<polygon fill="#fbbc04" stroke="#e0a800" stroke-width="2" points="152.5,-1426 104.5,-1390 152.5,-1354 200.5,-1390 152.5,-1426"/>
+<text text-anchor="middle" x="152.5" y="-1393" font-family="Segoe UI" font-size="10.00" fill="#333333">Source</text>
+<text text-anchor="middle" x="152.5" y="-1382" font-family="Segoe UI" font-size="10.00" fill="#333333">type?</text>
+</g>
+<!-- orchestrator&#45;&gt;source_decision -->
+<g id="edge3" class="edge">
+<title>orchestrator&#45;&gt;source_decision</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M152.5,-1465.77C152.5,-1456.28 152.5,-1446.14 152.5,-1436.5"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="156,-1436.29 152.5,-1426.29 149,-1436.29 156,-1436.29"/>
+</g>
+<!-- url_extractor -->
+<g id="node5" class="node">
+<title>url_extractor</title>
+<path fill="#34a853" stroke="#2e8b47" stroke-width="2" d="M149,-1314C149,-1314 12,-1314 12,-1314 6,-1314 0,-1308 0,-1302 0,-1302 0,-1235 0,-1235 0,-1229 6,-1223 12,-1223 12,-1223 149,-1223 149,-1223 155,-1223 161,-1229 161,-1235 161,-1235 161,-1302 161,-1302 161,-1308 155,-1314 149,-1314"/>
+<text text-anchor="start" x="10.5" y="-1297.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">URL Extractor (Sonnet)</text>
+<image xlink:href="data:image/png;base64,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" width="22px" height="16px" preserveAspectRatio="xMinYMin meet" x="135.5" y="-1306.5"/>
+<text text-anchor="start" x="24.5" y="-1276.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Opens LIR, verifies filters</text>
+<text text-anchor="start" x="15" y="-1266.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Extracts 5 non&#45;dup URLs/call</text>
+<text text-anchor="start" x="29.5" y="-1256.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Writes _URL_BATCH.txt</text>
+<text text-anchor="start" x="42.5" y="-1232.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[URL_Extractor.md]</text>
+</g>
+<!-- source_decision&#45;&gt;url_extractor -->
+<g id="edge4" class="edge">
+<title>source_decision&#45;&gt;url_extractor</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M137.93,-1364.82C130.72,-1352.84 121.7,-1337.87 112.96,-1323.37"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="115.73,-1321.19 107.57,-1314.43 109.74,-1324.8 115.73,-1321.19"/>
+<text text-anchor="middle" x="142" y="-1336.6" font-family="Segoe UI" font-size="8.00">LinkedIn</text>
+<text text-anchor="middle" x="142" y="-1327.6" font-family="Segoe UI" font-size="8.00">Recruiter</text>
+</g>
+<!-- dedup -->
+<g id="node6" class="node">
+<title>dedup</title>
+<path fill="#f5a623" stroke="#e09000" stroke-width="2" d="M346.5,-1306C346.5,-1306 198.5,-1306 198.5,-1306 192.5,-1306 186.5,-1300 186.5,-1294 186.5,-1294 186.5,-1243 186.5,-1243 186.5,-1237 192.5,-1231 198.5,-1231 198.5,-1231 346.5,-1231 346.5,-1231 352.5,-1231 358.5,-1237 358.5,-1243 358.5,-1243 358.5,-1294 358.5,-1294 358.5,-1300 352.5,-1306 346.5,-1306"/>
+<text text-anchor="start" x="203" y="-1292.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Orchestrator Dedup (Opus)</text>
+<text text-anchor="start" x="196.5" y="-1274.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Name + normalized LI URL check</text>
+<text text-anchor="start" x="209" y="-1264.3" font-family="Segoe UI" font-size="9.00" fill="#333333">For static source candidates</text>
+<text text-anchor="start" x="214" y="-1240.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[2_Pipeline_Orchestrator.md]</text>
+</g>
+<!-- source_decision&#45;&gt;dedup -->
+<g id="edge5" class="edge">
+<title>source_decision&#45;&gt;dedup</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M172.59,-1369C187.85,-1353.8 209.42,-1332.32 228.62,-1313.2"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="231.22,-1315.55 235.84,-1306.01 226.28,-1310.59 231.22,-1315.55"/>
+<text text-anchor="middle" x="254.5" y="-1336.6" font-family="Segoe UI" font-size="8.00">Static</text>
+<text text-anchor="middle" x="254.5" y="-1327.6" font-family="Segoe UI" font-size="8.00">(PDF/spreadsheet)</text>
+</g>
+<!-- ce -->
+<g id="node7" class="node">
+<title>ce</title>
+<path fill="#34a853" stroke="#2e8b47" stroke-width="2" d="M278,-1183C278,-1183 107,-1183 107,-1183 101,-1183 95,-1177 95,-1171 95,-1171 95,-1104 95,-1104 95,-1098 101,-1092 107,-1092 107,-1092 278,-1092 278,-1092 284,-1092 290,-1098 290,-1104 290,-1104 290,-1171 290,-1171 290,-1177 284,-1183 278,-1183"/>
+<text text-anchor="start" x="105.5" y="-1166.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Candidate Evaluator (Sonnet)</text>
+<image xlink:href="data:image/png;base64,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" width="22px" height="16px" preserveAspectRatio="xMinYMin meet" x="264.5" y="-1175.5"/>
+<text text-anchor="start" x="130.5" y="-1145.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Opens profile, scores rubric</text>
+<text text-anchor="start" x="136" y="-1135.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Writes row to output xlsx</text>
+<text text-anchor="start" x="148" y="-1125.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Writes _VERDICT.txt</text>
+<text text-anchor="start" x="140.5" y="-1101.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[CE_Spawn_Template.md]</text>
+</g>
+<!-- url_extractor&#45;&gt;ce -->
+<g id="edge6" class="edge">
+<title>url_extractor&#45;&gt;ce</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M119.36,-1222.74C128.31,-1212.44 137.9,-1201.39 147.1,-1190.79"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="149.8,-1193.02 153.71,-1183.18 144.51,-1188.43 149.8,-1193.02"/>
+</g>
+<!-- dedup&#45;&gt;ce -->
+<g id="edge7" class="edge">
+<title>dedup&#45;&gt;ce</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M249.79,-1230.88C242.21,-1218.66 233.61,-1204.78 225.41,-1191.57"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="228.35,-1189.66 220.1,-1183.01 222.4,-1193.35 228.35,-1189.66"/>
+</g>
+<!-- ce_template -->
+<g id="node8" class="node">
+<title>ce_template</title>
+<path fill="#e8d5f5" stroke="#7b4db5" stroke-width="2" d="M233.5,-1061C233.5,-1061 85.5,-1061 85.5,-1061 79.5,-1061 73.5,-1055 73.5,-1049 73.5,-1049 73.5,-998 73.5,-998 73.5,-992 79.5,-986 85.5,-986 85.5,-986 233.5,-986 233.5,-986 239.5,-986 245.5,-992 245.5,-998 245.5,-998 245.5,-1049 245.5,-1049 245.5,-1055 239.5,-1061 233.5,-1061"/>
+<text text-anchor="start" x="109" y="-1047.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">CE Spawn Template</text>
+<text text-anchor="start" x="83.5" y="-1029.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Single&#45;rubric or Dual&#45;rubric mode</text>
+<text text-anchor="start" x="105.5" y="-1019.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Canonical spawn config</text>
+<text text-anchor="start" x="107" y="-995.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[CE_Spawn_Template.md]</text>
+</g>
+<!-- ce&#45;&gt;ce_template -->
+<g id="edge8" class="edge">
+<title>ce&#45;&gt;ce_template</title>
+<path fill="none" stroke="#999999" stroke-dasharray="5,2" d="M179.36,-1091.91C177.33,-1085.03 175.23,-1077.9 173.19,-1070.98"/>
+<polygon fill="#999999" stroke="#999999" points="176.44,-1069.63 170.26,-1061.02 169.73,-1071.6 176.44,-1069.63"/>
+</g>
+<!-- cache -->
+<g id="node9" class="node">
+<title>cache</title>
+<path fill="#f5a623" stroke="#e09000" stroke-width="2" d="M462.5,-1061C462.5,-1061 282.5,-1061 282.5,-1061 276.5,-1061 270.5,-1055 270.5,-1049 270.5,-1049 270.5,-998 270.5,-998 270.5,-992 276.5,-986 282.5,-986 282.5,-986 462.5,-986 462.5,-986 468.5,-986 474.5,-992 474.5,-998 474.5,-998 474.5,-1049 474.5,-1049 474.5,-1055 468.5,-1061 462.5,-1061"/>
+<text text-anchor="start" x="280.5" y="-1047.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Update Z_Search_Cache.json (Opus)</text>
+<text text-anchor="start" x="324.5" y="-1029.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Cache A&#45;rated scores</text>
+<text text-anchor="start" x="307" y="-1019.3" font-family="Segoe UI" font-size="9.00" fill="#333333">45&#45;200s anti&#45;detection delay</text>
+<text text-anchor="start" x="326" y="-995.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Z_Search_Cache.json]</text>
+</g>
+<!-- ce&#45;&gt;cache -->
+<g id="edge9" class="edge">
+<title>ce&#45;&gt;cache</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M247.44,-1091.9C256.91,-1084.92 266.82,-1078.03 276.5,-1072 279.69,-1070.02 282.97,-1068.05 286.31,-1066.11"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="288.28,-1069.01 295.27,-1061.04 284.84,-1062.92 288.28,-1069.01"/>
+</g>
+<!-- cache&#45;&gt;ce -->
+<g id="edge10" class="edge">
+<title>cache&#45;&gt;ce</title>
+<path fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="5,2" d="M313.8,-1061.02C300.68,-1069.19 286.54,-1077.99 272.71,-1086.59"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.5" points="270.8,-1083.66 264.16,-1091.91 274.5,-1089.6 270.8,-1083.66"/>
+<text text-anchor="middle" x="319.5" y="-1074.6" font-family="Segoe UI" font-size="8.00">x5 per batch</text>
+</g>
+<!-- quality_gate -->
+<g id="node10" class="node">
+<title>quality_gate</title>
+<polygon fill="#fbbc04" stroke="#e0a800" stroke-width="2" points="372.5,-938 322.5,-902 372.5,-866 422.5,-902 372.5,-938"/>
+<text text-anchor="middle" x="372.5" y="-905" font-family="Segoe UI" font-size="10.00" fill="#333333">Quality</text>
+<text text-anchor="middle" x="372.5" y="-894" font-family="Segoe UI" font-size="10.00" fill="#333333">Gate</text>
+</g>
+<!-- cache&#45;&gt;quality_gate -->
+<g id="edge11" class="edge">
+<title>cache&#45;&gt;quality_gate</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M372.5,-986C372.5,-974.09 372.5,-960.73 372.5,-948.26"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="376,-948.05 372.5,-938.05 369,-948.05 376,-948.05"/>
+</g>
+<!-- search_refine -->
+<g id="node11" class="node">
+<title>search_refine</title>
+<path fill="#e8d5f5" stroke="#7b4db5" stroke-width="2" d="M418,-810C418,-810 287,-810 287,-810 281,-810 275,-804 275,-798 275,-798 275,-747 275,-747 275,-741 281,-735 287,-735 287,-735 418,-735 418,-735 424,-735 430,-741 430,-747 430,-747 430,-798 430,-798 430,-804 424,-810 418,-810"/>
+<text text-anchor="start" x="285.5" y="-796.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Search Refinement (Opus)</text>
+<text text-anchor="start" x="291" y="-778.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Reads refinement_patterns</text>
+<text text-anchor="start" x="297.5" y="-768.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Adjusts filters, keywords</text>
+<text text-anchor="start" x="294.5" y="-744.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[2_Pipeline_Orchestrator.md]</text>
+</g>
+<!-- quality_gate&#45;&gt;search_refine -->
+<g id="edge12" class="edge">
+<title>quality_gate&#45;&gt;search_refine</title>
+<path fill="none" stroke="#ea4335" stroke-width="1.5" d="M361.55,-873.62C359.53,-867.58 357.69,-861.14 356.5,-855 354.35,-843.93 353.15,-831.86 352.52,-820.48"/>
+<polygon fill="#ea4335" stroke="#ea4335" stroke-width="1.5" points="356,-820.12 352.08,-810.28 349.01,-820.42 356,-820.12"/>
+<text text-anchor="middle" x="383.5" y="-848.6" font-family="Segoe UI" font-size="8.00">Fail (3 non&#45;A)</text>
+</g>
+<!-- cleanup -->
+<g id="node12" class="node">
+<title>cleanup</title>
+<path fill="#34a853" stroke="#2e8b47" stroke-width="2" d="M610,-818C610,-818 467,-818 467,-818 461,-818 455,-812 455,-806 455,-806 455,-739 455,-739 455,-733 461,-727 467,-727 467,-727 610,-727 610,-727 616,-727 622,-733 622,-739 622,-739 622,-806 622,-806 622,-812 616,-818 610,-818"/>
+<text text-anchor="start" x="465.5" y="-801.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Cleanup Agent (Sonnet)</text>
+<image xlink:href="data:image/png;base64,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" width="22px" height="16px" preserveAspectRatio="xMinYMin meet" x="596.5" y="-810.5"/>
+<text text-anchor="start" x="488.5" y="-780.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Rubric rescore, dedup</text>
+<text text-anchor="start" x="468" y="-770.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Enrichment: fills Public LI URLs</text>
+<text text-anchor="start" x="473.5" y="-760.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Writes _CLEANUP_RESULT.txt</text>
+<text text-anchor="start" x="495.5" y="-736.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Output_Cleanup.md]</text>
+</g>
+<!-- quality_gate&#45;&gt;cleanup -->
+<g id="edge14" class="edge">
+<title>quality_gate&#45;&gt;cleanup</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M396.28,-882.73C416.11,-867.51 445.33,-845.06 472.15,-824.46"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="474.58,-827.01 480.38,-818.14 470.31,-821.46 474.58,-827.01"/>
+<text text-anchor="middle" x="451" y="-848.6" font-family="Segoe UI" font-size="8.00">Pass</text>
+</g>
+<!-- search_refine&#45;&gt;url_extractor -->
+<g id="edge13" class="edge">
+<title>search_refine&#45;&gt;url_extractor</title>
+<path fill="none" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="5,2" d="M404.94,-810.13C418.92,-819.51 434.13,-829.37 448.5,-838 454.98,-841.89 459.61,-839.52 463.5,-846 493,-895.16 436.1,-924.64 463.5,-975 467.8,-982.91 476.2,-978.09 480.5,-986 503.57,-1028.4 505.14,-1169.38 470.5,-1203 464.35,-1208.97 325.05,-1210.42 316.5,-1211 252.87,-1215.32 235.05,-1206.3 173.5,-1223 172.61,-1223.24 171.72,-1223.49 170.83,-1223.75"/>
+<polygon fill="#ea4335" stroke="#ea4335" stroke-width="1.5" points="169.72,-1220.43 161.25,-1226.78 171.84,-1227.1 169.72,-1220.43"/>
+<text text-anchor="middle" x="523.5" y="-1021.6" font-family="Segoe UI" font-size="8.00">Refine &amp; retry</text>
+</g>
+<!-- uncleaned_decision -->
+<g id="node13" class="node">
+<title>uncleaned_decision</title>
+<polygon fill="#fbbc04" stroke="#e0a800" stroke-width="2" points="538.5,-696 472.5,-660 538.5,-624 604.5,-660 538.5,-696"/>
+<text text-anchor="middle" x="538.5" y="-663" font-family="Segoe UI" font-size="10.00" fill="#333333">Uncleaned</text>
+<text text-anchor="middle" x="538.5" y="-652" font-family="Segoe UI" font-size="10.00" fill="#333333">= 0?</text>
+</g>
+<!-- cleanup&#45;&gt;uncleaned_decision -->
+<g id="edge15" class="edge">
+<title>cleanup&#45;&gt;uncleaned_decision</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M538.5,-726.87C538.5,-720.19 538.5,-713.29 538.5,-706.59"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="542,-706.28 538.5,-696.28 535,-706.28 542,-706.28"/>
+</g>
+<!-- uncleaned_decision&#45;&gt;cleanup -->
+<g id="edge16" class="edge">
+<title>uncleaned_decision&#45;&gt;cleanup</title>
+<path fill="none" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="5,2" d="M544.02,-693.1C544.63,-697.75 545.16,-702.49 545.5,-707 545.73,-710.1 545.84,-713.28 545.83,-716.49"/>
+<polygon fill="#ea4335" stroke="#ea4335" stroke-width="1.5" points="542.33,-716.66 545.49,-726.77 549.32,-716.9 542.33,-716.66"/>
+<text text-anchor="middle" x="551.5" y="-709.6" font-family="Segoe UI" font-size="8.00">No</text>
+</g>
+<!-- termination -->
+<g id="node14" class="node">
+<title>termination</title>
+<polygon fill="#fbbc04" stroke="#e0a800" stroke-width="2" points="538.5,-576 481.5,-540 538.5,-504 595.5,-540 538.5,-576"/>
+<text text-anchor="middle" x="538.5" y="-543" font-family="Segoe UI" font-size="10.00" fill="#333333">60 total?</text>
+<text text-anchor="middle" x="538.5" y="-532" font-family="Segoe UI" font-size="10.00" fill="#333333">20 A?</text>
+</g>
+<!-- uncleaned_decision&#45;&gt;termination -->
+<g id="edge17" class="edge">
+<title>uncleaned_decision&#45;&gt;termination</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M538.5,-623.92C538.5,-612.13 538.5,-598.82 538.5,-586.36"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="542,-586.15 538.5,-576.15 535,-586.15 542,-586.15"/>
+<text text-anchor="middle" x="545.5" y="-606.6" font-family="Segoe UI" font-size="8.00">Yes</text>
+</g>
+<!-- termination&#45;&gt;source_decision -->
+<g id="edge22" class="edge">
+<title>termination&#45;&gt;source_decision</title>
+<path fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="5,2" d="M570.29,-556.05C595.32,-569.83 628.41,-592.84 643.5,-624 758.93,-862.38 656.51,-987.53 502.5,-1203 438.56,-1292.46 402.02,-1305.91 298.5,-1343 264.48,-1355.19 225.41,-1367.41 196.26,-1376.18"/>
+<polygon fill="#999999" stroke="#999999" stroke-width="1.5" points="194.96,-1372.92 186.38,-1379.14 196.97,-1379.63 194.96,-1372.92"/>
+<text text-anchor="middle" x="682" y="-968.6" font-family="Segoe UI" font-size="8.00">No &#45; continue</text>
+</g>
+<!-- self_destruct -->
+<g id="node15" class="node">
+<title>self_destruct</title>
+<path fill="#ea4335" stroke="#c62828" stroke-width="2" d="M538.5,-459C538.5,-459 402.5,-459 402.5,-459 396.5,-459 390.5,-453 390.5,-447 390.5,-447 390.5,-396 390.5,-396 390.5,-390 396.5,-384 402.5,-384 402.5,-384 538.5,-384 538.5,-384 544.5,-384 550.5,-390 550.5,-396 550.5,-396 550.5,-447 550.5,-447 550.5,-453 544.5,-459 538.5,-459"/>
+<text text-anchor="start" x="436.5" y="-445.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#ffffff">Self&#45;Destruct</text>
+<text text-anchor="start" x="400.5" y="-427.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Writes Context_Legacy_Prompt</text>
+<text text-anchor="start" x="417.5" y="-417.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Saves full resume state</text>
+<text text-anchor="start" x="411.5" y="-393.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Context_Legacy_Prompt.md]</text>
+</g>
+<!-- termination&#45;&gt;self_destruct -->
+<g id="edge18" class="edge">
+<title>termination&#45;&gt;self_destruct</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M523.41,-513.14C515.69,-499.92 506.06,-483.43 497.15,-468.15"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="500.06,-466.2 492,-459.33 494.02,-469.73 500.06,-466.2"/>
+<text text-anchor="middle" x="535" y="-486.6" font-family="Segoe UI" font-size="8.00">Canary fail /</text>
+<text text-anchor="middle" x="535" y="-477.6" font-family="Segoe UI" font-size="8.00">Compaction</text>
+</g>
+<!-- output_summary -->
+<g id="node16" class="node">
+<title>output_summary</title>
+<path fill="#f5a623" stroke="#e09000" stroke-width="2" d="M747,-464C747,-464 588,-464 588,-464 582,-464 576,-458 576,-452 576,-452 576,-391 576,-391 576,-385 582,-379 588,-379 588,-379 747,-379 747,-379 753,-379 759,-385 759,-391 759,-391 759,-452 759,-452 759,-458 753,-464 747,-464"/>
+<text text-anchor="start" x="586.5" y="-450.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Output Summary &#45; STOP (Opus)</text>
+<text text-anchor="start" x="621" y="-432.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Final tier distribution</text>
+<text text-anchor="start" x="607.5" y="-422.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Writes Run Learnings to JD</text>
+<text text-anchor="start" x="588.5" y="-412.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Updates Z_ChangeLog&#45;AgentMaker</text>
+<text text-anchor="start" x="609.5" y="-388.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[2_Pipeline_Orchestrator.md]</text>
+</g>
+<!-- termination&#45;&gt;output_summary -->
+<g id="edge19" class="edge">
+<title>termination&#45;&gt;output_summary</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M561.56,-518.17C576.08,-505.06 595.46,-487.56 613.68,-471.11"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="616.32,-473.44 621.39,-464.14 611.63,-468.24 616.32,-473.44"/>
+<text text-anchor="middle" x="628" y="-482.1" font-family="Segoe UI" font-size="8.00">Yes &#45; done</text>
+</g>
+<!-- save_lir -->
+<g id="node17" class="node">
+<title>save_lir</title>
+<path fill="#4285f4" stroke="#3367d6" stroke-width="2" d="M469,-354C469,-354 314,-354 314,-354 308,-354 302,-348 302,-342 302,-342 302,-285 302,-285 302,-279 308,-273 314,-273 314,-273 469,-273 469,-273 475,-273 481,-279 481,-285 481,-285 481,-342 481,-342 481,-348 475,-354 469,-354"/>
+<text text-anchor="start" x="312.5" y="-337.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#ffffff">Save to LIR (User, Chrome)</text>
+<image xlink:href="data:image/png;base64,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" width="22px" height="16px" preserveAspectRatio="xMinYMin meet" x="455.5" y="-346.5"/>
+<text text-anchor="start" x="328.5" y="-316.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Saves A&#45;rated to LIR project</text>
+<text text-anchor="start" x="325" y="-306.3" font-family="Segoe UI" font-size="9.00" fill="#ffffff">Double confirmation required</text>
+<text text-anchor="start" x="357" y="-282.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Save_To_LIR.md]</text>
+</g>
+<!-- output_summary&#45;&gt;save_lir -->
+<g id="edge20" class="edge">
+<title>output_summary&#45;&gt;save_lir</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M575.74,-383.55C571.61,-381.99 567.52,-380.47 563.5,-379 533.14,-367.89 524.84,-367.16 494.5,-356 493.28,-355.55 492.05,-355.1 490.82,-354.64"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="491.85,-351.29 481.25,-351.04 489.38,-357.84 491.85,-351.29"/>
+</g>
+<!-- greenhouse -->
+<g id="node18" class="node">
+<title>greenhouse</title>
+<path fill="#ffff00" stroke="#ccb800" stroke-width="2" d="M630.5,-342.5C630.5,-342.5 518.5,-342.5 518.5,-342.5 512.5,-342.5 506.5,-336.5 506.5,-330.5 506.5,-330.5 506.5,-296.5 506.5,-296.5 506.5,-290.5 512.5,-284.5 518.5,-284.5 518.5,-284.5 630.5,-284.5 630.5,-284.5 636.5,-284.5 642.5,-290.5 642.5,-296.5 642.5,-296.5 642.5,-330.5 642.5,-330.5 642.5,-336.5 636.5,-342.5 630.5,-342.5"/>
+<text text-anchor="start" x="522" y="-329.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Send to Greenhouse</text>
+<text text-anchor="start" x="541" y="-311.3" font-family="Segoe UI" font-size="9.00" fill="#333333">COMING SOON</text>
+<text text-anchor="start" x="516.5" y="-301.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Pushes candidates to ATS</text>
+</g>
+<!-- output_summary&#45;&gt;greenhouse -->
+<g id="edge21" class="edge">
+<title>output_summary&#45;&gt;greenhouse</title>
+<path fill="none" stroke="#555555" stroke-width="1.5" d="M631.01,-378.91C622.66,-369.39 613.86,-359.36 605.76,-350.12"/>
+<polygon fill="#555555" stroke="#555555" stroke-width="1.5" points="608.36,-347.79 599.14,-342.58 603.1,-352.4 608.36,-347.79"/>
+</g>
+<!-- company_research -->
+<g id="node19" class="node">
+<title>company_research</title>
+<path fill="#34a853" stroke="#2e8b47" stroke-width="2" d="M841,-356C841,-356 680,-356 680,-356 674,-356 668,-350 668,-344 668,-344 668,-283 668,-283 668,-277 674,-271 680,-271 680,-271 841,-271 841,-271 847,-271 853,-277 853,-283 853,-283 853,-344 853,-344 853,-350 847,-356 841,-356"/>
+<text text-anchor="start" x="688.5" y="-342.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">Company Research (Sonnet)</text>
+<text text-anchor="start" x="698" y="-324.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Discovers target companies</text>
+<text text-anchor="start" x="699.5" y="-314.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Uses WebSearch/WebFetch</text>
+<text text-anchor="start" x="678.5" y="-304.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Updates _OUTPUT&#45;Target_Companies</text>
+<text text-anchor="start" x="696" y="-280.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[Company_Research_Agent.md]</text>
+</g>
+<!-- output_summary&#45;&gt;company_research -->
+<!-- doctor -->
+<g id="node20" class="node">
+<title>doctor</title>
+<path fill="#f5a623" stroke="#e09000" stroke-width="2" d="M1043,-356C1043,-356 890,-356 890,-356 884,-356 878,-350 878,-344 878,-344 878,-283 878,-283 878,-277 884,-271 890,-271 890,-271 1043,-271 1043,-271 1049,-271 1055,-277 1055,-283 1055,-283 1055,-344 1055,-344 1055,-350 1049,-356 1043,-356"/>
+<text text-anchor="start" x="920.5" y="-342.3" font-family="Segoe UI" font-weight="bold" font-size="9.00" fill="#333333">The Doctor (Opus)</text>
+<text text-anchor="start" x="915.5" y="-324.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Pipeline integrity audit</text>
+<text text-anchor="start" x="888.5" y="-314.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Schema, scoring, cross&#45;file checks</text>
+<text text-anchor="start" x="901.5" y="-304.3" font-family="Segoe UI" font-size="9.00" fill="#333333">Programmatic xlsx validation</text>
+<text text-anchor="start" x="941" y="-280.1" font-family="Segoe UI" font-style="italic" font-size="8.00" fill="#888888">[_Doctor.md]</text>
+</g>
+<!-- output_summary&#45;&gt;doctor -->
+<!-- shared_files -->
+<g id="node21" class="node">
+<title>shared_files</title>
+<path fill="#e8eaf6" stroke="#5c6bc0" stroke-width="1.5" d="M1094.5,-248C1094.5,-248 838.5,-248 838.5,-248 832.5,-248 826.5,-242 826.5,-236 826.5,-236 826.5,-154 826.5,-154 826.5,-148 832.5,-142 838.5,-142 838.5,-142 1094.5,-142 1094.5,-142 1100.5,-142 1106.5,-148 1106.5,-154 1106.5,-154 1106.5,-236 1106.5,-236 1106.5,-242 1100.5,-248 1094.5,-248"/>
+<text text-anchor="start" x="922.5" y="-229.2" font-family="Segoe UI" font-weight="bold" font-size="11.00" fill="#333333">SHARED FILES</text>
+<text text-anchor="start" x="843" y="-209.4" font-family="Segoe UI" font-size="7.00" fill="#333333">JD&#45;&#45;Acct_Mgr.md, JD&#45;&#45;Recruiting_Coord.md, JD&#45;&#45;Sr_Sales_Recruiter.md</text>
+<text text-anchor="start" x="864" y="-191.4" font-family="Segoe UI" font-size="7.00" fill="#333333">REF&#45;&#45;Anti_Detection.md, REF&#45;&#45;LIR_Interface_Learnings.md</text>
+<text text-anchor="start" x="841.5" y="-173.4" font-family="Segoe UI" font-size="7.00" fill="#333333">_OUTPUT&#45;&#45;*.xlsx, Z_Search_Cache.json, Z_ChangeLog&#45;AgentMaker.md</text>
+<text text-anchor="start" x="849" y="-155.4" font-family="Segoe UI" font-size="7.00" fill="#333333">Ephemeral: _VERDICT.txt, _URL_BATCH.txt, _CLEANUP_RESULT.txt</text>
+<polygon fill="none" stroke="#5c6bc0" points="834.5,-146 834.5,-244 1098.5,-244 1098.5,-146 834.5,-146"/>
+</g>
+<!-- doctor&#45;&gt;shared_files -->
+<!-- legend -->
+<g id="node22" class="node">
+<title>legend</title>
+<path fill="white" stroke="gray" d="M1095.5,-119C1095.5,-119 837.5,-119 837.5,-119 831.5,-119 825.5,-113 825.5,-107 825.5,-107 825.5,-71 825.5,-71 825.5,-65 831.5,-59 837.5,-59 837.5,-59 1095.5,-59 1095.5,-59 1101.5,-59 1107.5,-65 1107.5,-71 1107.5,-71 1107.5,-107 1107.5,-107 1107.5,-113 1101.5,-119 1095.5,-119"/>
+<polygon fill="#f5a623" stroke="transparent" points="836.5,-98 836.5,-112 850.5,-112 850.5,-98 836.5,-98"/>
+<text text-anchor="start" x="875" y="-103.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Opus</text>
+<polygon fill="#34a853" stroke="transparent" points="926.5,-98 926.5,-112 940.5,-112 940.5,-98 926.5,-98"/>
+<text text-anchor="start" x="956" y="-103.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Sonnet</text>
+<polygon fill="#fbbc04" stroke="transparent" points="1008.5,-98 1008.5,-112 1022.5,-112 1022.5,-98 1008.5,-98"/>
+<text text-anchor="start" x="1039" y="-103.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Decision</text>
+<polygon fill="#4285f4" stroke="transparent" points="836.5,-82 836.5,-96 850.5,-96 850.5,-82 836.5,-82"/>
+<text text-anchor="start" x="856.5" y="-87.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">User/Manual</text>
+<polygon fill="#e8d5f5" stroke="transparent" points="926.5,-82 926.5,-96 940.5,-96 940.5,-82 926.5,-82"/>
+<text text-anchor="start" x="944.5" y="-87.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Refinement</text>
+<polygon fill="#ea4335" stroke="transparent" points="1008.5,-82 1008.5,-96 1022.5,-96 1022.5,-82 1008.5,-82"/>
+<text text-anchor="start" x="1026.5" y="-87.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Self&#45;Destruct</text>
+<polygon fill="#ffff00" stroke="transparent" points="836.5,-66 836.5,-80 850.5,-80 850.5,-66 836.5,-66"/>
+<text text-anchor="start" x="854.5" y="-71.8" font-family="Segoe UI" font-weight="bold" font-size="9.00">Coming Soon</text>
+<text text-anchor="start" x="943.5" y="-72.7" font-family="Segoe UI" font-style="italic" font-size="6.00">Chrome icon = browser automation required</text>
+<polygon fill="none" stroke="#cccccc" points="833.5,-63 833.5,-115 1099.5,-115 1099.5,-63 833.5,-63"/>
+</g>
+<!-- shared_files&#45;&gt;legend -->
+<!-- stats -->
+<g id="node23" class="node">
+<title>stats</title>
+<text text-anchor="middle" x="966.5" y="-20.4" font-family="Times,serif" font-size="7.00">AM: 37 cols, max 55.0 | RC: 42 cols, max 42.3 | SR: 43 cols, max 76.6</text>
+<text text-anchor="middle" x="966.5" y="-12.4" font-family="Times,serif" font-size="7.00">Generated by render_flowchart_graphviz.py</text>
+</g>
+<!-- legend&#45;&gt;stats -->
+</g>
 </svg>
